@@ -1,0 +1,10 @@
+Name: gateway
+Host: 0.0.0.0
+Port: 8000
+Upstreams:
+  - Name: user-api
+    Http:
+      Target: 127.0.0.1:8888   # 后端服务地址
+    Mappings:                   # 路由映射规则[reference:4]
+      - Method: Get
+        Path: /captcha

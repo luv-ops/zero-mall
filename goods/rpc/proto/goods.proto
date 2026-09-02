@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package goods;
+
+option go_package = "./goodsPb";
+message AddGoodsReq{
+    string  name=1;
+    string  cover=2;
+    string   originalPrice=3;
+    string   price=4;
+    int64   stock=5;
+    int64   categoryId=6;
+    string  desc=7;
+    string  ownUserId=8;
+}
+message AddGoodsResp{
+  bool ok=1;
+}
+// 分页查询商品请求
+message  GoodsListReq {
+    int64 categoryId=1;
+    int32 page=2;
+    int32 pageSize=3;
+}
+
+// 列表内每一项结构体，复用给列表和详情
+message GoodsItem {
+  string goodsId=1;
+  string name=2;
+  string cover=3;
+  string  price=4;
+  string  originalPrice=5;
+  int64  sales=6;
+  int64  categoryId=7;
+  int64  status=8;
+}
+message GoodsListResp{
+  repeated GoodsItem list=1;
+  int64 total=2;
+}
+message GoodsDetailReq {
+  string goodsId = 1;
+}
+
+// 商品详情响应
+message GoodsDetailResp {
+  string goodsId = 1;
+  string name = 2;
+  string cover = 3;
+  string  price=4;
+  string  originalPrice=5;
+  int64 stock = 6;
+  int64 sales = 7;
+  string desc = 8;
+  int64 status = 9;
+}
+message OnOffGoodsReq{
+  string goodsId=1;
+  int64 status=2;
+}
+message OnOffGoodsResp{
+  bool ok=1;
+}
+message  AdminGoodsListReq {
+  string userId=1;
+}
+message AdminGoodsItem {
+  string goodsId=1;
+  string name=2;
+  string cover=3;
+  string  price=4;
+  string  originalPrice=5;
+  int64  sales=6;
+  int64  stock=7;
+  int64  categoryId=8;
+  int64  status=9;
+}
+message AdminGoodsListResp{
+  repeated AdminGoodsItem list=1;
+  int64 total=2;
+}
+
+service goods{
+  rpc GetGoodsList (GoodsListReq) returns (GoodsListResp);
+  rpc GetGoodsDetail (GoodsDetailReq) returns (GoodsDetailResp);
+  rpc AddGoods (AddGoodsReq) returns (AddGoodsResp);
+  rpc OnOffGoods (OnOffGoodsReq) returns (OnOffGoodsResp);
+  rpc GetAdminGoodsList (AdminGoodsListReq) returns (AdminGoodsListResp);
+
+}

@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package cart;
+
+option go_package = "./cartPb";
+
+message GetCartListReq{
+    string userId=1;
+}
+message CartItem{
+  int64  num=1;
+  int64  selected=2;
+  string goodsId=3;
+  string name=4;
+  string cover=5;
+  string price=6;
+}
+message CartItemRedis{
+  int64 num=1;
+  int64 selected=2;
+  string name=3;
+  string cover=4;
+  string price=5;
+}
+message GetCartListResp{
+  repeated CartItem list=1;
+}
+message AddCartReq{
+  string userId=1;
+  string goodsId=2;
+  int64  addNum=3;
+}
+message AddCartResp{
+  bool ok=1;
+}
+message UpdateCartReq{
+  string userId=1;
+  string goodsId=2;
+  int64 num=3;
+  int64 selected=4;
+}
+message UpdateCartResp{
+  string goodsId=1;
+  int64 num=2;
+  int64 selected=3;
+}
+
+
+message BatchDeleteReq{
+  string userId=1;
+  repeated string goodsIds=2;
+}
+message BatchDeleteResp{
+  bool ok=1;
+}
+service Cart{
+  rpc AddCart     (AddCartReq) returns (AddCartResp);
+  rpc GetCartList (GetCartListReq) returns (GetCartListResp);
+  rpc UpdateCart (UpdateCartReq) returns (UpdateCartResp);
+  rpc BatchDelete (BatchDeleteReq) returns (BatchDeleteResp);
+}

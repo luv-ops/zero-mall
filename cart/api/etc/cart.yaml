@@ -1,0 +1,11 @@
+Name: Cart
+Host: 0.0.0.0
+Port: 8890
+Auth:
+  AccessSecret: abcdef1234567890abcdef1234567890
+  AccessExpire: 86400
+CartRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: cart.rpc

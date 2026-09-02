@@ -1,0 +1,93 @@
+syntax = "v1"
+
+info (
+	title:   "用户模块"
+	desc:    "注册，登录，获取用户信息"
+	author:  "me"
+	email:   "type email here"
+	version: "type version here"
+)
+
+type RegisterReq {
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+	Captcha  string `json:"captcha"`
+}
+
+type LoginReq {
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
+
+type LoginResp {
+	Token string `json:"token"`
+}
+
+type CaptchaReq {
+	Phone string `form:"phone"`
+}
+
+type CaptchaResp {
+	Captcha string `json:"captcha"`
+}
+
+type UserInfoResp {
+	UserName string `json:"username"`
+	UserId   string `json:"userId"`
+	Avatar   string `json:"avatar"`
+	Phone    string `json:"phone"`
+	Age      uint64 `json:"age"`
+	Sex      uint64 `json:"sex"`
+	Balance  string `json:"balance"`
+}
+
+//optional tag允许空值
+type ChangeInfoReq {
+	UserName *string `json:"username,optional,omitempty"`
+	Avatar   *string `json:"avatar,optional,omitempty"`
+	Age      *uint64 `json:"age,optional,omitempty"`
+	Sex      *uint64 `json:"sex,optional,omitempty"`
+	Region   *int64  `json:"region,optional,omitempty"`
+}
+
+type GetRegionReq {
+	Level *int64 `form:"level,omitempty"`
+	PId   *int64 `form:"pId,omitempty"`
+}
+
+type RegionItem {
+	Id    int64  `json:"id"`
+	PId   int64  `json:"pId"`
+	Name  string `json:"name"`
+	Level int64  `json:"level"`
+}
+
+type GetRegionResp {
+	List []*RegionItem `json:"list"`
+}
+
+service user {
+	@handler register
+	post /register (RegisterReq) returns (LoginResp)
+
+	@handler login
+	post /login (LoginReq) returns (LoginResp)
+
+	@handler captcha
+	get /captcha (CaptchaReq) returns (CaptchaResp)
+}
+
+@server (
+	jwt: Auth
+)
+service user {
+	@handler getUserInfo
+	get /userInfo returns (UserInfoResp)
+
+	@handler changeInfo
+	patch /userInfo (ChangeInfoReq)
+
+	@handler getRegion
+	get /region (GetRegionReq) returns (GetRegionResp)
+}
+

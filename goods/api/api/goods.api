@@ -1,0 +1,112 @@
+syntax = "v1"
+
+info (
+	title:   "type title here"
+	desc:    "type desc here"
+	author:  "type author here"
+	email:   "type email here"
+	version: "type version here"
+)
+
+type AddGoodsReq {
+	Name          string `json:"name"`
+	Cover         string `json:"cover"`
+	OriginalPrice string `json:"originalPrice"`
+	Price         string `json:"price"`
+	Stock         int64  `json:"stock"`
+	CategoryId    int64  `json:"categoryId"`
+	Desc          string `json:"desc"`
+}
+
+// 分页查询商品请求
+type GoodsListReq {
+	CategoryId int64 `form:"categoryId"` // 分类id，0代表全部分类
+	Page       int32 `form:"page,default=1"`
+	PageSize   int32 `form:"pageSize,default=10"`
+}
+
+// 列表内每一项结构体，复用给列表和详情
+type GoodsItem {
+	GoodsId       string `json:"goodsId"`
+	Name          string `json:"name"`
+	Cover         string `json:"cover"`
+	Price         string `json:"price"`
+	OriginalPrice string `json:"originalPrice"`
+	Sales         int64  `json:"sales"`
+	CategoryId    int64  `json:"categoryId"`
+	Status        int64  `json:"status"`
+}
+
+type GoodsListResp {
+	List  []*GoodsItem `json:"list"`
+	Total int64        `json:"total"`
+}
+
+// 单个商品详情请求
+type GoodsDetailReq {
+	GoodsId string `path:"goodsId"`
+}
+
+type GoodsDetailResp {
+	GoodsId       string `json:"goodsId"`
+	Name          string `json:"name"`
+	Cover         string `json:"cover"`
+	Price         string `json:"price"`
+	OriginalPrice string `json:"originalPrice"`
+	Sales         int64  `json:"sales"`
+	Desc          string `json:"desc"`
+	Status        int64  `json:"status"`
+}
+
+type OnOffGoodsReq {
+	GoodsId string `json:"goodsId"`
+	Status  int64  `path:"status"`
+}
+
+type UpdateStock {
+	GoodsId string `json:"goodsId"`
+	Num     int64  `json:"num"`
+}
+
+type SelfGoodsItem {
+	GoodsId       string `json:"goodsId"`
+	Name          string `json:"name"`
+	Cover         string `json:"cover"`
+	Price         string `json:"price"`
+	OriginalPrice string `json:"originalPrice"`
+	Stock         int64  `json:"stone"`
+	Sales         int64  `json:"sales"`
+	CategoryId    int64  `json:"categoryId"`
+	Status        int64  `json:"status"`
+}
+
+type SelfGoodsListResp {
+	List  []*SelfGoodsItem `json:"list"`
+	Total int64            `json:"total"`
+}
+
+service goods {
+	@handler GetGoodsList
+	get /goods/list (GoodsListReq) returns (GoodsListResp)
+
+	@handler GetGoodsDetail
+	get /goods/detail/:goodsId (GoodsDetailReq) returns (GoodsDetailResp)
+}
+
+@server (
+	jwt: Auth
+)
+service goods {
+	@handler AddGoods
+	post /goods (AddGoodsReq)
+
+	@handler OnOffGoods
+	patch /goods/:status (OnOffGoodsReq)
+
+	@handler UpdateStock
+	patch /goods/stock (UpdateStock)
+
+	@handler GetAdminGoodsList
+	get /goods/self returns (SelfGoodsListResp)
+}
+

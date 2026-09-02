@@ -1,0 +1,61 @@
+syntax = "v1"
+
+info (
+	title:   "type title here"
+	desc:    "type desc here"
+	author:  "type author here"
+	email:   "type email here"
+	version: "type version here"
+)
+
+type AddCartReq {
+	GoodsId string `json:"goodsId"`
+	AddNum  int64  `json:"addNum"`
+}
+
+type UpdateCartReq {
+	GoodsId  string `json:"goodsId"`
+	Num      int64  `json:"num"`
+	Selected int64  `json:"selected"`
+}
+
+type UpdateCartResp {
+	GoodsId  string `json:"goodsId"`
+	Num      int64  `json:"num"`
+	Selected int64  `json:"selected"`
+}
+
+type BatchDeleteReq {
+	GoodsIds []string `json:"goodsIds"`
+}
+
+type CartItem {
+	Num      int64  `json:"num"`
+	Selected int64  `json:"selected"`
+	GoodsId  string `json:"goodsId"`
+	Name     string `json:"name"`
+	Cover    string `json:"cover"`
+	Price    string `json:"price"`
+}
+
+type CartListResp {
+	CartList []*CartItem `json:"cartList"`
+}
+
+@server (
+	jwt: Auth
+)
+service Cart {
+	@handler AddCart
+	post /cart/add (AddCartReq)
+
+	@handler UpdateCart
+	patch /cart/item (UpdateCartReq) returns (UpdateCartResp)
+
+	@handler BatchDelete
+	delete /cart/items (BatchDeleteReq)
+
+	@handler GetCartList
+	get /cart/list returns (CartListResp)
+}
+
