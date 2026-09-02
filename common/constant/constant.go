@@ -26,9 +26,10 @@ const (
 // redis
 const (
 	AreaKey            = "area:pid:%d:level:%d"
-	GoodsInfo          = "goods:info:"
-	GoodsShortTime     = 5 * 60
-	GoodsLongTime      = 30 * 60
+	UserInfoKey        = "user:info:"
+	GoodsInfoKey       = "goods:info:"
+	ShortTTL           = 5 * 60
+	LongTTL            = 60 * 60
 	CartKey            = "cart:"
 	PendingSyncCartKey = "pending:sync:users"
 	//缓存穿透

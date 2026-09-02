@@ -37,6 +37,18 @@ type LoginResp struct {
 	Token string `json:"token"`
 }
 
+type OthersBaseInfoReq struct {
+	UserId string `path:"userId"`
+}
+
+type OthersBaseInfoResp struct {
+	UserName string `json:"username"`
+	UserId   string `json:"userId"`
+	Avatar   string `json:"avatar"`
+	Age      uint64 `json:"age"`
+	Sex      uint64 `json:"sex"`
+}
+
 type RegionItem struct {
 	Id    int64  `json:"id"`
 	PId   int64  `json:"pId"`

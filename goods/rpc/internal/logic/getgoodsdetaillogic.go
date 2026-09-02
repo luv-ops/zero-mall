@@ -32,7 +32,7 @@ func NewGetGoodsDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goodsPb.GoodsDetailResp, error) {
 	// todo: add your logic here and delete this line
 	//缓存穿透
-	key := constant.GoodsInfo + in.GoodsId
+	key := constant.GoodsInfoKey + in.GoodsId
 	val, err := l.svcCtx.Redis.GetCtx(l.ctx, key)
 	var detail goodsPb.GoodsDetailResp
 	//查询到redis
@@ -53,7 +53,7 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			//缓存空值，设置ttl 5分钟较短
-			_ = l.svcCtx.Redis.SetexCtx(l.ctx, key, constant.RedisEmptyValue, constant.GoodsShortTime)
+			_ = l.svcCtx.Redis.SetexCtx(l.ctx, key, constant.RedisEmptyValue, constant.ShortTTL)
 
 			return nil, status.Error(codes.NotFound, constant.GoodsNotFound)
 		}
@@ -78,7 +78,7 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)
 	}
 	//写回redis
-	err = l.svcCtx.Redis.SetexCtx(l.ctx, key, string(jsonStr), constant.GoodsLongTime)
+	err = l.svcCtx.Redis.SetexCtx(l.ctx, key, string(jsonStr), constant.LongTTL)
 	if err != nil {
 		l.Logger.Errorf(constant.RedisFailed, "getGoodsDetail ", err)
 	}
