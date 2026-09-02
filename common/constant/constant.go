@@ -11,18 +11,26 @@ const (
 	PermissionSellError = "未获得售卖权"
 	GoodsArgError       = "商品参数错误"
 	GoodsNotFound       = "商品不存在"
+	AreaNotFound        = "地区不存在"
 )
 
 // 后端打印信息
 const (
-	RedisFailed = "%s Redis failed"
-	MysqlFailed = "%s Mysql %s failed"
-	WhereFailed = "%s %s error"
+	RedisFailed  = "%s Redis failed"
+	MysqlFailed  = "%s Mysql %s failed"
+	WhereFailed  = "%s %s error"
+	UnmarshalErr = "unmarshal err in %s: err:%v"
+	MarshalErr   = "marshal err in %s: err:%v"
 )
 
-// redis key
+// redis
 const (
 	AreaKey            = "area:pid:%d:level:%d"
+	GoodsInfo          = "goods:info:"
+	GoodsShortTime     = 5 * 60
+	GoodsLongTime      = 30 * 60
 	CartKey            = "cart:"
 	PendingSyncCartKey = "pending:sync:users"
+	//缓存穿透
+	RedisEmptyValue = "_EMPTY_VALUE" //解决go中使用redis.get时，访问不存在的key，err是nil问题
 )

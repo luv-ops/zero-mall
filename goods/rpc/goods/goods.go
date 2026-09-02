@@ -14,21 +14,18 @@ import (
 )
 
 type (
-	AddGoodsReq           = goodsPb.AddGoodsReq
-	AddGoodsResp          = goodsPb.AddGoodsResp
-	AdminGoodsItem        = goodsPb.AdminGoodsItem
-	AdminGoodsListReq     = goodsPb.AdminGoodsListReq
-	AdminGoodsListResp    = goodsPb.AdminGoodsListResp
-	BatchGetGoodsInfoReq  = goodsPb.BatchGetGoodsInfoReq
-	BatchGetGoodsInfoResp = goodsPb.BatchGetGoodsInfoResp
-	GoodsDetailReq        = goodsPb.GoodsDetailReq
-	GoodsDetailResp       = goodsPb.GoodsDetailResp
-	GoodsInfoItem         = goodsPb.GoodsInfoItem
-	GoodsItem             = goodsPb.GoodsItem
-	GoodsListReq          = goodsPb.GoodsListReq
-	GoodsListResp         = goodsPb.GoodsListResp
-	OnOffGoodsReq         = goodsPb.OnOffGoodsReq
-	OnOffGoodsResp        = goodsPb.OnOffGoodsResp
+	AddGoodsReq        = goodsPb.AddGoodsReq
+	AddGoodsResp       = goodsPb.AddGoodsResp
+	AdminGoodsItem     = goodsPb.AdminGoodsItem
+	AdminGoodsListReq  = goodsPb.AdminGoodsListReq
+	AdminGoodsListResp = goodsPb.AdminGoodsListResp
+	GoodsDetailReq     = goodsPb.GoodsDetailReq
+	GoodsDetailResp    = goodsPb.GoodsDetailResp
+	GoodsItem          = goodsPb.GoodsItem
+	GoodsListReq       = goodsPb.GoodsListReq
+	GoodsListResp      = goodsPb.GoodsListResp
+	OnOffGoodsReq      = goodsPb.OnOffGoodsReq
+	OnOffGoodsResp     = goodsPb.OnOffGoodsResp
 
 	Goods interface {
 		GetGoodsList(ctx context.Context, in *GoodsListReq, opts ...grpc.CallOption) (*GoodsListResp, error)
@@ -36,7 +33,6 @@ type (
 		AddGoods(ctx context.Context, in *AddGoodsReq, opts ...grpc.CallOption) (*AddGoodsResp, error)
 		OnOffGoods(ctx context.Context, in *OnOffGoodsReq, opts ...grpc.CallOption) (*OnOffGoodsResp, error)
 		GetAdminGoodsList(ctx context.Context, in *AdminGoodsListReq, opts ...grpc.CallOption) (*AdminGoodsListResp, error)
-		BatchGetGoodsInfo(ctx context.Context, in *BatchGetGoodsInfoReq, opts ...grpc.CallOption) (*BatchGetGoodsInfoResp, error)
 	}
 
 	defaultGoods struct {
@@ -73,9 +69,4 @@ func (m *defaultGoods) OnOffGoods(ctx context.Context, in *OnOffGoodsReq, opts .
 func (m *defaultGoods) GetAdminGoodsList(ctx context.Context, in *AdminGoodsListReq, opts ...grpc.CallOption) (*AdminGoodsListResp, error) {
 	client := goodsPb.NewGoodsClient(m.cli.Conn())
 	return client.GetAdminGoodsList(ctx, in, opts...)
-}
-
-func (m *defaultGoods) BatchGetGoodsInfo(ctx context.Context, in *BatchGetGoodsInfoReq, opts ...grpc.CallOption) (*BatchGetGoodsInfoResp, error) {
-	client := goodsPb.NewGoodsClient(m.cli.Conn())
-	return client.BatchGetGoodsInfo(ctx, in, opts...)
 }
