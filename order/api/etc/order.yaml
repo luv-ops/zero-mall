@@ -3,7 +3,7 @@ Host: 0.0.0.0
 Port: 8892
 Auth:
   AccessSecret: abcdef1234567890abcdef1234567890
-  AccessExpire: 86400
+  AccessExpire: 604800
 OrderRpcConf:
   Etcd:
     Hosts:
