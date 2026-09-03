@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"zeromall/common/Regx"
+	"zeromall/common/constant"
 	"zeromall/common/jwt"
 	"zeromall/user/api/internal/svc"
 	"zeromall/user/api/internal/types"
@@ -32,7 +33,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.LoginResp, err error) {
 	// todo: add your logic here and delete this line
 	if !Regx.IsValidPhone(req.Phone) {
-		return nil, errors.New("手机号非法")
+		return nil, errors.New(constant.PhoneIllegal)
 	}
 	rpcRes, err := l.svcCtx.UserRpc.Register(l.ctx, &userpb.RegisterReq{
 		Phone:    req.Phone,

@@ -12,6 +12,7 @@ const (
 	GoodsArgError       = "商品参数错误"
 	GoodsNotFound       = "商品不存在"
 	AreaNotFound        = "地区不存在"
+	PhoneIllegal        = "手机号非法"
 )
 
 // 后端打印信息
@@ -21,6 +22,7 @@ const (
 	WhereFailed  = "%s %s error"
 	UnmarshalErr = "unmarshal err in %s: err:%v"
 	MarshalErr   = "marshal err in %s: err:%v"
+	RpcError     = "rpc err in %s:%v"
 )
 
 // redis
@@ -33,5 +35,6 @@ const (
 	CartKey            = "cart:"
 	PendingSyncCartKey = "pending:sync:users"
 	//缓存穿透
-	RedisEmptyValue = "_EMPTY_VALUE" //解决go中使用redis.get时，访问不存在的key，err是nil问题
+	RedisEmptyValue    = "_EMPTY_VALUE" //解决go中使用redis.get时，访问不存在的key，err是nil问题
+	DefaultReceiveArea = "area:default:"
 )

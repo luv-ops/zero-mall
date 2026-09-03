@@ -53,8 +53,7 @@ type OrderItemVO {
 }
 
 type OrderPreviewReq {
-	GoodsIds         []string `json:"goodsIds"`
-	ReceiveAddressId int64    `json:"receiveAddressId"`
+	GoodsIds []string `json:"goodsIds"`
 }
 
 type OrderPreviewResp {

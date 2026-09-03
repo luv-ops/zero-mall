@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"zeromall/common/Regx"
+	"zeromall/common/constant"
 	"zeromall/common/jwt"
 	"zeromall/user/api/internal/svc"
 	"zeromall/user/api/internal/types"
@@ -33,7 +34,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	// todo: add your logic here and delete this line
 	//验证手机号
 	if !Regx.IsValidPhone(req.Phone) {
-		return nil, errors.New("手机号非法")
+		return nil, errors.New(constant.PhoneIllegal)
 	}
 	res, err := l.svcCtx.UserRpc.Login(l.ctx, &userpb.LoginReq{
 		Phone:    req.Phone,

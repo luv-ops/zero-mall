@@ -57,9 +57,8 @@ message OrderItemVO {
 
 // 订单预览（确认订单页）请求
 message OrderPreviewReq {
-  string user_id=3;
+  string user_id=2;
   repeated string goods_ids =1;
-  int64 receive_address_id =2;
 }
 
 // 订单预览响应

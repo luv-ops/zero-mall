@@ -30,14 +30,13 @@ func NewPreviewOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Prev
 
 func (l *PreviewOrderLogic) PreviewOrder(req *types.OrderPreviewReq) (resp *types.OrderPreviewResp, err error) {
 	// todo: add your logic here and delete this line
-	if len(req.GoodsIds) == 0 || req.ReceiveAddressId == 0 {
+	if len(req.GoodsIds) == 0 {
 		return nil, errors.New("param error")
 	}
 	userId := l.ctx.Value("userId").(string)
 	res, err := l.svcCtx.OrderRpc.PreviewOrder(l.ctx, &orderPb.OrderPreviewReq{
-		UserId:           userId,
-		GoodsIds:         req.GoodsIds,
-		ReceiveAddressId: req.ReceiveAddressId,
+		UserId:   userId,
+		GoodsIds: req.GoodsIds,
 	})
 	var itemList []*types.PreviewItemVO
 	for _, v := range res.ItemList {

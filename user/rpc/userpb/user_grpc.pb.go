@@ -19,13 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_Register_FullMethodName     = "/user.User/Register"
-	User_Login_FullMethodName        = "/user.User/Login"
-	User_Captcha_FullMethodName      = "/user.User/Captcha"
-	User_UserInfo_FullMethodName     = "/user.User/UserInfo"
-	User_ChangeInfo_FullMethodName   = "/user.User/ChangeInfo"
-	User_GetRegion_FullMethodName    = "/user.User/GetRegion"
-	User_GetSellPower_FullMethodName = "/user.User/GetSellPower"
+	User_Register_FullMethodName          = "/user.User/Register"
+	User_Login_FullMethodName             = "/user.User/Login"
+	User_Captcha_FullMethodName           = "/user.User/Captcha"
+	User_UserInfo_FullMethodName          = "/user.User/UserInfo"
+	User_ChangeInfo_FullMethodName        = "/user.User/ChangeInfo"
+	User_GetRegion_FullMethodName         = "/user.User/GetRegion"
+	User_GetSellPower_FullMethodName      = "/user.User/GetSellPower"
+	User_AddRecAddress_FullMethodName     = "/user.User/AddRecAddress"
+	User_GetReceiveAddress_FullMethodName = "/user.User/GetReceiveAddress"
+	User_GetDefaultArea_FullMethodName    = "/user.User/GetDefaultArea"
 )
 
 // UserClient is the client API for User service.
@@ -39,6 +42,9 @@ type UserClient interface {
 	ChangeInfo(ctx context.Context, in *ChangeInfoReq, opts ...grpc.CallOption) (*ChangeInfoResp, error)
 	GetRegion(ctx context.Context, in *GetRegionReq, opts ...grpc.CallOption) (*GetRegionResp, error)
 	GetSellPower(ctx context.Context, in *GetSellPowerReq, opts ...grpc.CallOption) (*GetSellPowerResp, error)
+	AddRecAddress(ctx context.Context, in *AddReceiveAddressReq, opts ...grpc.CallOption) (*AddReceiveAddressResp, error)
+	GetReceiveAddress(ctx context.Context, in *GetReceiveAddressReq, opts ...grpc.CallOption) (*GetReceiveAddressResp, error)
+	GetDefaultArea(ctx context.Context, in *GetDefaultAreaReq, opts ...grpc.CallOption) (*GetDefaultAreaResp, error)
 }
 
 type userClient struct {
@@ -119,6 +125,36 @@ func (c *userClient) GetSellPower(ctx context.Context, in *GetSellPowerReq, opts
 	return out, nil
 }
 
+func (c *userClient) AddRecAddress(ctx context.Context, in *AddReceiveAddressReq, opts ...grpc.CallOption) (*AddReceiveAddressResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddReceiveAddressResp)
+	err := c.cc.Invoke(ctx, User_AddRecAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetReceiveAddress(ctx context.Context, in *GetReceiveAddressReq, opts ...grpc.CallOption) (*GetReceiveAddressResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetReceiveAddressResp)
+	err := c.cc.Invoke(ctx, User_GetReceiveAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetDefaultArea(ctx context.Context, in *GetDefaultAreaReq, opts ...grpc.CallOption) (*GetDefaultAreaResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDefaultAreaResp)
+	err := c.cc.Invoke(ctx, User_GetDefaultArea_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -130,6 +166,9 @@ type UserServer interface {
 	ChangeInfo(context.Context, *ChangeInfoReq) (*ChangeInfoResp, error)
 	GetRegion(context.Context, *GetRegionReq) (*GetRegionResp, error)
 	GetSellPower(context.Context, *GetSellPowerReq) (*GetSellPowerResp, error)
+	AddRecAddress(context.Context, *AddReceiveAddressReq) (*AddReceiveAddressResp, error)
+	GetReceiveAddress(context.Context, *GetReceiveAddressReq) (*GetReceiveAddressResp, error)
+	GetDefaultArea(context.Context, *GetDefaultAreaReq) (*GetDefaultAreaResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -160,6 +199,15 @@ func (UnimplementedUserServer) GetRegion(context.Context, *GetRegionReq) (*GetRe
 }
 func (UnimplementedUserServer) GetSellPower(context.Context, *GetSellPowerReq) (*GetSellPowerResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSellPower not implemented")
+}
+func (UnimplementedUserServer) AddRecAddress(context.Context, *AddReceiveAddressReq) (*AddReceiveAddressResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddRecAddress not implemented")
+}
+func (UnimplementedUserServer) GetReceiveAddress(context.Context, *GetReceiveAddressReq) (*GetReceiveAddressResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetReceiveAddress not implemented")
+}
+func (UnimplementedUserServer) GetDefaultArea(context.Context, *GetDefaultAreaReq) (*GetDefaultAreaResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDefaultArea not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -308,6 +356,60 @@ func _User_GetSellPower_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_AddRecAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddReceiveAddressReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).AddRecAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_AddRecAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).AddRecAddress(ctx, req.(*AddReceiveAddressReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetReceiveAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReceiveAddressReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetReceiveAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetReceiveAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetReceiveAddress(ctx, req.(*GetReceiveAddressReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetDefaultArea_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultAreaReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetDefaultArea(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetDefaultArea_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetDefaultArea(ctx, req.(*GetDefaultAreaReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,6 +444,18 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSellPower",
 			Handler:    _User_GetSellPower_Handler,
+		},
+		{
+			MethodName: "AddRecAddress",
+			Handler:    _User_AddRecAddress_Handler,
+		},
+		{
+			MethodName: "GetReceiveAddress",
+			Handler:    _User_GetReceiveAddress_Handler,
+		},
+		{
+			MethodName: "GetDefaultArea",
+			Handler:    _User_GetDefaultArea_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

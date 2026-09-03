@@ -833,6 +833,402 @@ func (x *GetSellPowerResp) GetOk() bool {
 	return false
 }
 
+type AddReceiveAddressReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ReceiveName   string                 `protobuf:"bytes,1,opt,name=receiveName,proto3" json:"receiveName,omitempty"`
+	ReceivePhone  string                 `protobuf:"bytes,2,opt,name=receivePhone,proto3" json:"receivePhone,omitempty"`
+	AddressId     int64                  `protobuf:"varint,3,opt,name=addressId,proto3" json:"addressId,omitempty"`
+	Detail        string                 `protobuf:"bytes,4,opt,name=detail,proto3" json:"detail,omitempty"`
+	UserId        string                 `protobuf:"bytes,5,opt,name=userId,proto3" json:"userId,omitempty"`
+	IsDefault     int64                  `protobuf:"varint,6,opt,name=isDefault,proto3" json:"isDefault,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddReceiveAddressReq) Reset() {
+	*x = AddReceiveAddressReq{}
+	mi := &file_proto_user_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddReceiveAddressReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddReceiveAddressReq) ProtoMessage() {}
+
+func (x *AddReceiveAddressReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddReceiveAddressReq.ProtoReflect.Descriptor instead.
+func (*AddReceiveAddressReq) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *AddReceiveAddressReq) GetReceiveName() string {
+	if x != nil {
+		return x.ReceiveName
+	}
+	return ""
+}
+
+func (x *AddReceiveAddressReq) GetReceivePhone() string {
+	if x != nil {
+		return x.ReceivePhone
+	}
+	return ""
+}
+
+func (x *AddReceiveAddressReq) GetAddressId() int64 {
+	if x != nil {
+		return x.AddressId
+	}
+	return 0
+}
+
+func (x *AddReceiveAddressReq) GetDetail() string {
+	if x != nil {
+		return x.Detail
+	}
+	return ""
+}
+
+func (x *AddReceiveAddressReq) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *AddReceiveAddressReq) GetIsDefault() int64 {
+	if x != nil {
+		return x.IsDefault
+	}
+	return 0
+}
+
+type AddReceiveAddressResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ok            bool                   `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddReceiveAddressResp) Reset() {
+	*x = AddReceiveAddressResp{}
+	mi := &file_proto_user_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddReceiveAddressResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddReceiveAddressResp) ProtoMessage() {}
+
+func (x *AddReceiveAddressResp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddReceiveAddressResp.ProtoReflect.Descriptor instead.
+func (*AddReceiveAddressResp) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *AddReceiveAddressResp) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
+type GetReceiveAddressReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetReceiveAddressReq) Reset() {
+	*x = GetReceiveAddressReq{}
+	mi := &file_proto_user_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetReceiveAddressReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetReceiveAddressReq) ProtoMessage() {}
+
+func (x *GetReceiveAddressReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetReceiveAddressReq.ProtoReflect.Descriptor instead.
+func (*GetReceiveAddressReq) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetReceiveAddressReq) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type GetReceiveAddressResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*AddressItem         `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetReceiveAddressResp) Reset() {
+	*x = GetReceiveAddressResp{}
+	mi := &file_proto_user_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetReceiveAddressResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetReceiveAddressResp) ProtoMessage() {}
+
+func (x *GetReceiveAddressResp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetReceiveAddressResp.ProtoReflect.Descriptor instead.
+func (*GetReceiveAddressResp) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *GetReceiveAddressResp) GetList() []*AddressItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type AddressItem struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	ReceiveName      string                 `protobuf:"bytes,1,opt,name=receive_name,json=receiveName,proto3" json:"receive_name,omitempty"`
+	ReceivePhone     string                 `protobuf:"bytes,2,opt,name=receive_phone,json=receivePhone,proto3" json:"receive_phone,omitempty"`
+	AddressMergeName string                 `protobuf:"bytes,3,opt,name=address_merge_name,json=addressMergeName,proto3" json:"address_merge_name,omitempty"`
+	IsDefault        int64                  `protobuf:"varint,4,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Detail           string                 `protobuf:"bytes,5,opt,name=detail,proto3" json:"detail,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *AddressItem) Reset() {
+	*x = AddressItem{}
+	mi := &file_proto_user_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddressItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddressItem) ProtoMessage() {}
+
+func (x *AddressItem) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddressItem.ProtoReflect.Descriptor instead.
+func (*AddressItem) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *AddressItem) GetReceiveName() string {
+	if x != nil {
+		return x.ReceiveName
+	}
+	return ""
+}
+
+func (x *AddressItem) GetReceivePhone() string {
+	if x != nil {
+		return x.ReceivePhone
+	}
+	return ""
+}
+
+func (x *AddressItem) GetAddressMergeName() string {
+	if x != nil {
+		return x.AddressMergeName
+	}
+	return ""
+}
+
+func (x *AddressItem) GetIsDefault() int64 {
+	if x != nil {
+		return x.IsDefault
+	}
+	return 0
+}
+
+func (x *AddressItem) GetDetail() string {
+	if x != nil {
+		return x.Detail
+	}
+	return ""
+}
+
+type GetDefaultAreaReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDefaultAreaReq) Reset() {
+	*x = GetDefaultAreaReq{}
+	mi := &file_proto_user_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDefaultAreaReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDefaultAreaReq) ProtoMessage() {}
+
+func (x *GetDefaultAreaReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDefaultAreaReq.ProtoReflect.Descriptor instead.
+func (*GetDefaultAreaReq) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *GetDefaultAreaReq) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type GetDefaultAreaResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ReceiverName    string                 `protobuf:"bytes,1,opt,name=receiver_name,json=receiverName,proto3" json:"receiver_name,omitempty"`
+	ReceiverPhone   string                 `protobuf:"bytes,2,opt,name=receiver_phone,json=receiverPhone,proto3" json:"receiver_phone,omitempty"`
+	ReceiverAddress string                 `protobuf:"bytes,3,opt,name=receiver_address,json=receiverAddress,proto3" json:"receiver_address,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *GetDefaultAreaResp) Reset() {
+	*x = GetDefaultAreaResp{}
+	mi := &file_proto_user_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDefaultAreaResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDefaultAreaResp) ProtoMessage() {}
+
+func (x *GetDefaultAreaResp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDefaultAreaResp.ProtoReflect.Descriptor instead.
+func (*GetDefaultAreaResp) Descriptor() ([]byte, []int) {
+	return file_proto_user_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetDefaultAreaResp) GetReceiverName() string {
+	if x != nil {
+		return x.ReceiverName
+	}
+	return ""
+}
+
+func (x *GetDefaultAreaResp) GetReceiverPhone() string {
+	if x != nil {
+		return x.ReceiverPhone
+	}
+	return ""
+}
+
+func (x *GetDefaultAreaResp) GetReceiverAddress() string {
+	if x != nil {
+		return x.ReceiverAddress
+	}
+	return ""
+}
+
 var File_proto_user_proto protoreflect.FileDescriptor
 
 const file_proto_user_proto_rawDesc = "" +
@@ -895,7 +1291,33 @@ const file_proto_user_proto_rawDesc = "" +
 	"\x0fGetSellPowerReq\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\"\"\n" +
 	"\x10GetSellPowerResp\x12\x0e\n" +
-	"\x02ok\x18\x01 \x01(\bR\x02ok2\xf4\x02\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok\"\xc8\x01\n" +
+	"\x14AddReceiveAddressReq\x12 \n" +
+	"\vreceiveName\x18\x01 \x01(\tR\vreceiveName\x12\"\n" +
+	"\freceivePhone\x18\x02 \x01(\tR\freceivePhone\x12\x1c\n" +
+	"\taddressId\x18\x03 \x01(\x03R\taddressId\x12\x16\n" +
+	"\x06detail\x18\x04 \x01(\tR\x06detail\x12\x16\n" +
+	"\x06userId\x18\x05 \x01(\tR\x06userId\x12\x1c\n" +
+	"\tisDefault\x18\x06 \x01(\x03R\tisDefault\"'\n" +
+	"\x15AddReceiveAddressResp\x12\x0e\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok\".\n" +
+	"\x14GetReceiveAddressReq\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\">\n" +
+	"\x15GetReceiveAddressResp\x12%\n" +
+	"\x04list\x18\x01 \x03(\v2\x11.user.AddressItemR\x04list\"\xba\x01\n" +
+	"\vAddressItem\x12!\n" +
+	"\freceive_name\x18\x01 \x01(\tR\vreceiveName\x12#\n" +
+	"\rreceive_phone\x18\x02 \x01(\tR\freceivePhone\x12,\n" +
+	"\x12address_merge_name\x18\x03 \x01(\tR\x10addressMergeName\x12\x1d\n" +
+	"\n" +
+	"is_default\x18\x04 \x01(\x03R\tisDefault\x12\x16\n" +
+	"\x06detail\x18\x05 \x01(\tR\x06detail\"+\n" +
+	"\x11GetDefaultAreaReq\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\"\x8b\x01\n" +
+	"\x12GetDefaultAreaResp\x12#\n" +
+	"\rreceiver_name\x18\x01 \x01(\tR\freceiverName\x12%\n" +
+	"\x0ereceiver_phone\x18\x02 \x01(\tR\rreceiverPhone\x12)\n" +
+	"\x10receiver_address\x18\x03 \x01(\tR\x0freceiverAddress2\xd1\x04\n" +
 	"\x04User\x121\n" +
 	"\bRegister\x12\x11.user.RegisterReq\x1a\x12.user.RegisterResp\x12(\n" +
 	"\x05Login\x12\x0e.user.LoginReq\x1a\x0f.user.LoginResp\x12.\n" +
@@ -904,7 +1326,10 @@ const file_proto_user_proto_rawDesc = "" +
 	"\n" +
 	"ChangeInfo\x12\x13.user.ChangeInfoReq\x1a\x14.user.ChangeInfoResp\x124\n" +
 	"\tGetRegion\x12\x12.user.GetRegionReq\x1a\x13.user.GetRegionResp\x12=\n" +
-	"\fGetSellPower\x12\x15.user.GetSellPowerReq\x1a\x16.user.GetSellPowerRespB\n" +
+	"\fGetSellPower\x12\x15.user.GetSellPowerReq\x1a\x16.user.GetSellPowerResp\x12H\n" +
+	"\rAddRecAddress\x12\x1a.user.AddReceiveAddressReq\x1a\x1b.user.AddReceiveAddressResp\x12L\n" +
+	"\x11GetReceiveAddress\x12\x1a.user.GetReceiveAddressReq\x1a\x1b.user.GetReceiveAddressResp\x12C\n" +
+	"\x0eGetDefaultArea\x12\x17.user.GetDefaultAreaReq\x1a\x18.user.GetDefaultAreaRespB\n" +
 	"Z\b./userpbb\x06proto3"
 
 var (
@@ -919,45 +1344,59 @@ func file_proto_user_proto_rawDescGZIP() []byte {
 	return file_proto_user_proto_rawDescData
 }
 
-var file_proto_user_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_proto_user_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_proto_user_proto_goTypes = []any{
-	(*RegisterReq)(nil),      // 0: user.RegisterReq
-	(*RegisterResp)(nil),     // 1: user.RegisterResp
-	(*LoginReq)(nil),         // 2: user.LoginReq
-	(*LoginResp)(nil),        // 3: user.LoginResp
-	(*CaptchaReq)(nil),       // 4: user.CaptchaReq
-	(*CaptchaResp)(nil),      // 5: user.CaptchaResp
-	(*UserInfoReq)(nil),      // 6: user.UserInfoReq
-	(*UserInfoResp)(nil),     // 7: user.UserInfoResp
-	(*ChangeInfoReq)(nil),    // 8: user.ChangeInfoReq
-	(*ChangeInfoResp)(nil),   // 9: user.ChangeInfoResp
-	(*GetRegionReq)(nil),     // 10: user.GetRegionReq
-	(*RegionItem)(nil),       // 11: user.RegionItem
-	(*GetRegionResp)(nil),    // 12: user.GetRegionResp
-	(*GetSellPowerReq)(nil),  // 13: user.GetSellPowerReq
-	(*GetSellPowerResp)(nil), // 14: user.GetSellPowerResp
+	(*RegisterReq)(nil),           // 0: user.RegisterReq
+	(*RegisterResp)(nil),          // 1: user.RegisterResp
+	(*LoginReq)(nil),              // 2: user.LoginReq
+	(*LoginResp)(nil),             // 3: user.LoginResp
+	(*CaptchaReq)(nil),            // 4: user.CaptchaReq
+	(*CaptchaResp)(nil),           // 5: user.CaptchaResp
+	(*UserInfoReq)(nil),           // 6: user.UserInfoReq
+	(*UserInfoResp)(nil),          // 7: user.UserInfoResp
+	(*ChangeInfoReq)(nil),         // 8: user.ChangeInfoReq
+	(*ChangeInfoResp)(nil),        // 9: user.ChangeInfoResp
+	(*GetRegionReq)(nil),          // 10: user.GetRegionReq
+	(*RegionItem)(nil),            // 11: user.RegionItem
+	(*GetRegionResp)(nil),         // 12: user.GetRegionResp
+	(*GetSellPowerReq)(nil),       // 13: user.GetSellPowerReq
+	(*GetSellPowerResp)(nil),      // 14: user.GetSellPowerResp
+	(*AddReceiveAddressReq)(nil),  // 15: user.AddReceiveAddressReq
+	(*AddReceiveAddressResp)(nil), // 16: user.AddReceiveAddressResp
+	(*GetReceiveAddressReq)(nil),  // 17: user.GetReceiveAddressReq
+	(*GetReceiveAddressResp)(nil), // 18: user.GetReceiveAddressResp
+	(*AddressItem)(nil),           // 19: user.AddressItem
+	(*GetDefaultAreaReq)(nil),     // 20: user.GetDefaultAreaReq
+	(*GetDefaultAreaResp)(nil),    // 21: user.GetDefaultAreaResp
 }
 var file_proto_user_proto_depIdxs = []int32{
 	11, // 0: user.GetRegionResp.list:type_name -> user.RegionItem
-	0,  // 1: user.User.Register:input_type -> user.RegisterReq
-	2,  // 2: user.User.Login:input_type -> user.LoginReq
-	4,  // 3: user.User.Captcha:input_type -> user.CaptchaReq
-	6,  // 4: user.User.UserInfo:input_type -> user.UserInfoReq
-	8,  // 5: user.User.ChangeInfo:input_type -> user.ChangeInfoReq
-	10, // 6: user.User.GetRegion:input_type -> user.GetRegionReq
-	13, // 7: user.User.GetSellPower:input_type -> user.GetSellPowerReq
-	1,  // 8: user.User.Register:output_type -> user.RegisterResp
-	3,  // 9: user.User.Login:output_type -> user.LoginResp
-	5,  // 10: user.User.Captcha:output_type -> user.CaptchaResp
-	7,  // 11: user.User.UserInfo:output_type -> user.UserInfoResp
-	9,  // 12: user.User.ChangeInfo:output_type -> user.ChangeInfoResp
-	12, // 13: user.User.GetRegion:output_type -> user.GetRegionResp
-	14, // 14: user.User.GetSellPower:output_type -> user.GetSellPowerResp
-	8,  // [8:15] is the sub-list for method output_type
-	1,  // [1:8] is the sub-list for method input_type
-	1,  // [1:1] is the sub-list for extension type_name
-	1,  // [1:1] is the sub-list for extension extendee
-	0,  // [0:1] is the sub-list for field type_name
+	19, // 1: user.GetReceiveAddressResp.list:type_name -> user.AddressItem
+	0,  // 2: user.User.Register:input_type -> user.RegisterReq
+	2,  // 3: user.User.Login:input_type -> user.LoginReq
+	4,  // 4: user.User.Captcha:input_type -> user.CaptchaReq
+	6,  // 5: user.User.UserInfo:input_type -> user.UserInfoReq
+	8,  // 6: user.User.ChangeInfo:input_type -> user.ChangeInfoReq
+	10, // 7: user.User.GetRegion:input_type -> user.GetRegionReq
+	13, // 8: user.User.GetSellPower:input_type -> user.GetSellPowerReq
+	15, // 9: user.User.AddRecAddress:input_type -> user.AddReceiveAddressReq
+	17, // 10: user.User.GetReceiveAddress:input_type -> user.GetReceiveAddressReq
+	20, // 11: user.User.GetDefaultArea:input_type -> user.GetDefaultAreaReq
+	1,  // 12: user.User.Register:output_type -> user.RegisterResp
+	3,  // 13: user.User.Login:output_type -> user.LoginResp
+	5,  // 14: user.User.Captcha:output_type -> user.CaptchaResp
+	7,  // 15: user.User.UserInfo:output_type -> user.UserInfoResp
+	9,  // 16: user.User.ChangeInfo:output_type -> user.ChangeInfoResp
+	12, // 17: user.User.GetRegion:output_type -> user.GetRegionResp
+	14, // 18: user.User.GetSellPower:output_type -> user.GetSellPowerResp
+	16, // 19: user.User.AddRecAddress:output_type -> user.AddReceiveAddressResp
+	18, // 20: user.User.GetReceiveAddress:output_type -> user.GetReceiveAddressResp
+	21, // 21: user.User.GetDefaultArea:output_type -> user.GetDefaultAreaResp
+	12, // [12:22] is the sub-list for method output_type
+	2,  // [2:12] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_user_proto_init() }
@@ -973,7 +1412,7 @@ func file_proto_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_user_proto_rawDesc), len(file_proto_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -35,6 +35,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodPost,
+				Path:    "/address/receive",
+				Handler: addReceiveAddressHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/address/receive",
+				Handler: getReceiveAddressHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
 				Path:    "/region",
 				Handler: getRegionHandler(serverCtx),

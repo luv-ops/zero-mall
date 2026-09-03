@@ -13,4 +13,5 @@ type Config struct {
 	RedisConf    redis.RedisConf
 	CartRpcConf  zrpc.RpcClientConf
 	GoodsRpcConf zrpc.RpcClientConf
+	UserRpcConf  zrpc.RpcClientConf
 }

@@ -48,8 +48,7 @@ type OrderItemVO struct {
 }
 
 type OrderPreviewReq struct {
-	GoodsIds         []string `json:"goodsIds"`
-	ReceiveAddressId int64    `json:"receiveAddressId"`
+	GoodsIds []string `json:"goodsIds"`
 }
 
 type OrderPreviewResp struct {

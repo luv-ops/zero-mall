@@ -29,6 +29,10 @@ type (
 		FindOne(ctx context.Context, id int64) (*UserReceiveAddress, error)
 		Update(ctx context.Context, data *UserReceiveAddress) error
 		Delete(ctx context.Context, id int64) error
+		FindAddressWithArea(ctx context.Context, userId string) ([]*AddressDBRow, error)
+		ExistReceiveAddr(ctx context.Context, userId string) (bool, error)
+		TxRecAddrInsert(ctx context.Context, data *UserReceiveAddress) (int64, error)
+		FindOneByUIdWithDefault(ctx context.Context, userId string) (*AddressDBRow, error)
 	}
 
 	defaultUserReceiveAddressModel struct {
@@ -38,7 +42,7 @@ type (
 
 	UserReceiveAddress struct {
 		Id            int64     `db:"id"`             // 主键ID
-		UserId        int64     `db:"user_id"`        // 用户ID
+		UserId        string    `db:"user_id"`        // 用户ID
 		ReceiverName  string    `db:"receiver_name"`  // 收件人姓名
 		ReceiverPhone string    `db:"receiver_phone"` // 收件人手机号
 		AddressId     int64     `db:"address_id"`     // 地区areaId

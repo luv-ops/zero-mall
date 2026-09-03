@@ -57,3 +57,18 @@ func (s *UserServer) GetSellPower(ctx context.Context, in *userpb.GetSellPowerRe
 	l := logic.NewGetSellPowerLogic(ctx, s.svcCtx)
 	return l.GetSellPower(in)
 }
+
+func (s *UserServer) AddRecAddress(ctx context.Context, in *userpb.AddReceiveAddressReq) (*userpb.AddReceiveAddressResp, error) {
+	l := logic.NewAddRecAddressLogic(ctx, s.svcCtx)
+	return l.AddRecAddress(in)
+}
+
+func (s *UserServer) GetReceiveAddress(ctx context.Context, in *userpb.GetReceiveAddressReq) (*userpb.GetReceiveAddressResp, error) {
+	l := logic.NewGetReceiveAddressLogic(ctx, s.svcCtx)
+	return l.GetReceiveAddress(in)
+}
+
+func (s *UserServer) GetDefaultArea(ctx context.Context, in *userpb.GetDefaultAreaReq) (*userpb.GetDefaultAreaResp, error) {
+	l := logic.NewGetDefaultAreaLogic(ctx, s.svcCtx)
+	return l.GetDefaultArea(in)
+}

@@ -448,12 +448,11 @@ func (x *OrderItemVO) GetSubtotalPrice() string {
 
 // 订单预览（确认订单页）请求
 type OrderPreviewReq struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	UserId           string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	GoodsIds         []string               `protobuf:"bytes,1,rep,name=goods_ids,json=goodsIds,proto3" json:"goods_ids,omitempty"`
-	ReceiveAddressId int64                  `protobuf:"varint,2,opt,name=receive_address_id,json=receiveAddressId,proto3" json:"receive_address_id,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	GoodsIds      []string               `protobuf:"bytes,1,rep,name=goods_ids,json=goodsIds,proto3" json:"goods_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *OrderPreviewReq) Reset() {
@@ -498,13 +497,6 @@ func (x *OrderPreviewReq) GetGoodsIds() []string {
 		return x.GoodsIds
 	}
 	return nil
-}
-
-func (x *OrderPreviewReq) GetReceiveAddressId() int64 {
-	if x != nil {
-		return x.ReceiveAddressId
-	}
-	return 0
 }
 
 // 订单预览响应
@@ -734,11 +726,10 @@ const file_proto_order_proto_rawDesc = "" +
 	"\vgoods_price\x18\x05 \x01(\tR\n" +
 	"goodsPrice\x12\x1b\n" +
 	"\tgoods_num\x18\x06 \x01(\x03R\bgoodsNum\x12%\n" +
-	"\x0esubtotal_price\x18\a \x01(\tR\rsubtotalPrice\"u\n" +
+	"\x0esubtotal_price\x18\a \x01(\tR\rsubtotalPrice\"G\n" +
 	"\x0fOrderPreviewReq\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1b\n" +
-	"\tgoods_ids\x18\x01 \x03(\tR\bgoodsIds\x12,\n" +
-	"\x12receive_address_id\x18\x02 \x01(\x03R\x10receiveAddressId\"\xfe\x01\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n" +
+	"\tgoods_ids\x18\x01 \x03(\tR\bgoodsIds\"\xfe\x01\n" +
 	"\x10OrderPreviewResp\x12#\n" +
 	"\rreceiver_name\x18\x01 \x01(\tR\freceiverName\x12%\n" +
 	"\x0ereceiver_phone\x18\x02 \x01(\tR\rreceiverPhone\x12)\n" +

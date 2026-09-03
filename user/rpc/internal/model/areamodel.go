@@ -2,6 +2,8 @@ package model
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -43,4 +45,17 @@ func (m *defaultAreaModel) SelectFields(ctx context.Context, level int64, pId in
 		return nil, err
 	}
 	return list, nil
+}
+
+func (m *defaultAreaModel) AreaLevel3IsExist(ctx context.Context, addressId int64) (bool, error) {
+	sqlStr := fmt.Sprintf("select level from %s where id=? ", m.table)
+	var level int64
+	err := m.conn.QueryRowPartialCtx(ctx, &level, sqlStr, addressId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, err
+	}
+	return level == 3, nil
 }

@@ -1,6 +1,6 @@
 Name: goods
 Host: 0.0.0.0
-Port: 8889
+Port: 8890
 GoodsRpcConf:
   Etcd:
     Hosts:
@@ -9,4 +9,7 @@ GoodsRpcConf:
 Auth:
   AccessSecret: abcdef1234567890abcdef1234567890
   AccessExpire: 86400
-
+Log:
+  Mode: console
+  Encoding: plain
+  Level: info

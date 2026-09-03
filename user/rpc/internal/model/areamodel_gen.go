@@ -29,6 +29,7 @@ type (
 		Update(ctx context.Context, data *Area) error
 		Delete(ctx context.Context, id int64) error
 		SelectFields(ctx context.Context, level int64, pId int64) ([]*Area, error)
+		AreaLevel3IsExist(ctx context.Context, addressId int64) (bool, error)
 	}
 
 	defaultAreaModel struct {

@@ -3,6 +3,22 @@
 
 package types
 
+type AddReceiveAddressReq struct {
+	ReceiveName  string `json:"receiveName"`
+	ReceivePhone string `json:"receivePhone"`
+	AddressId    int64  `json:"addressId"`
+	Detail       string `json:"detail"`
+	IsDefault    int64  `json:"isDefault"`
+}
+
+type AddressItem struct {
+	ReceiveName      string `json:"receiveName"`
+	ReceivePhone     string `json:"receivePhone"`
+	AddressMergeName string `json:"addressMergeName"`
+	IsDefault        int64  `json:"isDefault"`
+	Detail           string `json:"detail"`
+}
+
 type CaptchaReq struct {
 	Phone string `form:"phone"`
 }
@@ -17,6 +33,10 @@ type ChangeInfoReq struct {
 	Age      *uint64 `json:"age,optional,omitempty"`
 	Sex      *uint64 `json:"sex,optional,omitempty"`
 	Region   *int64  `json:"region,optional,omitempty"`
+}
+
+type GetReceiveAddressResp struct {
+	List []*AddressItem `json:"list"`
 }
 
 type GetRegionReq struct {

@@ -5,6 +5,7 @@ import (
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/common/constant"
 	"zeromall/goods/rpc/goodsPb"
+	"zeromall/user/rpc/userpb"
 
 	"zeromall/order/rpc/internal/svc"
 	"zeromall/order/rpc/orderPb"
@@ -78,12 +79,20 @@ func (l *PreviewOrderLogic) PreviewOrder(in *orderPb.OrderPreviewReq) (*orderPb.
 			SubtotalPrice:    mulTotal.String(),
 		})
 	}
+	//TODO查询用户默认收获地址
+	res, err := l.svcCtx.UserRpc.GetDefaultArea(l.ctx, &userpb.GetDefaultAreaReq{
+		UserId: in.UserId,
+	})
+	if err != nil {
+		l.Logger.Errorf(constant.RpcError, "previewOrder", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
 	return &orderPb.OrderPreviewResp{
 		TotalAmount:     totalAmount.String(),
 		PayAmount:       payAmount.String(),
 		ItemList:        items,
-		ReceiverAddress: "123",
-		ReceiverPhone:   "1256",
-		ReceiverName:    "abc",
+		ReceiverAddress: res.ReceiverAddress,
+		ReceiverPhone:   res.ReceiverPhone,
+		ReceiverName:    res.ReceiverName,
 	}, nil
 }
