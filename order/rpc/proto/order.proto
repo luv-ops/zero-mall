@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "./orderPb";
+
+
+// 创建订单请求
+message CreateOrderReq {
+  repeated string goods_ids = 1;
+  string receiver_name = 2;
+  string receiver_phone = 3;
+  string receiver_address = 4;
+  optional string remark = 5;
+  string user_id=6;
+}
+
+// 创建订单响应
+message CreateOrderResp {
+  string order_no = 1;
+  string pay_amount = 2;
+  string total_amount = 3;
+}
+
+// 订单详情请求 orderNo来自url路径参数
+message OrderDetailReq {
+  string order_no = 1;
+}
+
+// 订单详情响应
+message OrderDetailResp {
+  string order_no = 1;                  //雪花业务订单号
+  int64 status = 2;                    //订单状态码
+  string receiver_name = 3;
+  string receiver_phone = 4;
+  string receiver_address = 5;
+  string remark = 6;                   //用户备注
+  string total_goods_amount = 7;
+  string pay_amount = 8;               //用户实际支付金额
+  int64 pay_type = 9;                  //0未选择 1微信 2支付宝
+  int64 create_time = 10;              //创建时间 毫秒时间戳
+  int64 pay_time = 11;                 //支付成功时间，0未支付
+  int64 expire_time = 12;              //待支付过期时间
+  repeated OrderItemVO item_list =13;  //订单商品明细
+}
+
+// 订单明细VO
+message OrderItemVO {
+  string goods_id =1;
+  string goods_name =2;
+  string goods_cover =3;
+  string goods_spec =4;     //商品规格
+  string goods_price =5;    //下单快照单价
+  int64 goods_num =6;       //购买数量
+  string subtotal_price =7; //单行商品小计 =单价*数量（优惠前）
+}
+
+// 订单预览（确认订单页）请求
+message OrderPreviewReq {
+  string user_id=3;
+  repeated string goods_ids =1;
+  int64 receive_address_id =2;
+}
+
+// 订单预览响应
+message OrderPreviewResp {
+  string receiver_name =1;
+  string receiver_phone =2;
+  string receiver_address =3;
+  string total_amount =4;
+  string pay_amount =5;
+  repeated PreviewItemVO item_list =6;
+}
+
+//预览商品VO
+message PreviewItemVO {
+  string goods_id =1;
+  string goods_name =2;
+  string goods_cover =3;
+  string goods_price =4;   //单品单价，string存decimal
+  string goods_origin_price=7;
+  int64 goods_num =5;     //购买数量
+  string subtotal_price =6;//该商品小计
+}
+
+service order{
+  rpc CreateOrder (CreateOrderReq) returns (CreateOrderResp);
+  rpc GetOrderDetail (OrderDetailReq) returns (OrderDetailResp);
+  rpc PreviewOrder (OrderPreviewReq) returns (OrderPreviewResp);
+}

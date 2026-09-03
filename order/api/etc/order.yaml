@@ -1,0 +1,11 @@
+Name: order
+Host: 0.0.0.0
+Port: 8891
+Auth:
+  AccessSecret: abcdef1234567890abcdef1234567890
+  AccessExpire: 86400
+OrderRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: order.rpc
