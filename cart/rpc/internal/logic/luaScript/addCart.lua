@@ -21,7 +21,8 @@ else
             selected=Selected,
             name="",
             cover="",
-            price=""
+            price="",
+            originPrice="",
         })
         redis.call("HSET",cartKey,GoodsField,placeholder)
         return 1

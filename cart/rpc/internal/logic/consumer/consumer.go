@@ -167,14 +167,16 @@ func (c *Consumer) syncCartToMysql(ctx context.Context, userId string) error {
 			log.Println("price转化失败", err)
 			continue
 		}
+		originPriceCent, _ := convert.YuanStrToCents(item.OriginPrice)
 		redisItemMap[goodsId] = &model.Cart{
-			UserId:    userId,
-			GoodsId:   goodsId,
-			Num:       item.Num,
-			Selected:  item.Selected,
-			PriceCent: priceCent,
-			Name:      item.Name,
-			Cover:     item.Cover,
+			UserId:          userId,
+			GoodsId:         goodsId,
+			Num:             item.Num,
+			Selected:        item.Selected,
+			PriceCent:       priceCent,
+			Name:            item.Name,
+			Cover:           item.Cover,
+			OriginPriceCent: originPriceCent,
 		}
 	}
 	//获取mysql数据也
@@ -202,7 +204,7 @@ func (c *Consumer) syncCartToMysql(ctx context.Context, userId string) error {
 			//比较他们的各个字段
 			if redisItem.Num != dbItem.Num || redisItem.Selected != dbItem.Selected ||
 				redisItem.UserId != dbItem.UserId || redisItem.Cover != dbItem.Cover ||
-				redisItem.PriceCent != dbItem.PriceCent {
+				redisItem.PriceCent != dbItem.PriceCent || redisItem.OriginPriceCent != dbItem.OriginPriceCent {
 				//有一个字段不一样，就加入待更新
 				toUpdate = append(toUpdate, redisItem)
 			}

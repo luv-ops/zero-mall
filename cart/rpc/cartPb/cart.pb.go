@@ -73,6 +73,7 @@ type CartItem struct {
 	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	Cover         string                 `protobuf:"bytes,5,opt,name=cover,proto3" json:"cover,omitempty"`
 	Price         string                 `protobuf:"bytes,6,opt,name=price,proto3" json:"price,omitempty"`
+	OriginPrice   string                 `protobuf:"bytes,7,opt,name=originPrice,proto3" json:"originPrice,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -149,6 +150,13 @@ func (x *CartItem) GetPrice() string {
 	return ""
 }
 
+func (x *CartItem) GetOriginPrice() string {
+	if x != nil {
+		return x.OriginPrice
+	}
+	return ""
+}
+
 type CartItemRedis struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Num           int64                  `protobuf:"varint,1,opt,name=num,proto3" json:"num,omitempty"`
@@ -156,6 +164,7 @@ type CartItemRedis struct {
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Cover         string                 `protobuf:"bytes,4,opt,name=cover,proto3" json:"cover,omitempty"`
 	Price         string                 `protobuf:"bytes,5,opt,name=price,proto3" json:"price,omitempty"`
+	OriginPrice   string                 `protobuf:"bytes,6,opt,name=originPrice,proto3" json:"originPrice,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -221,6 +230,13 @@ func (x *CartItemRedis) GetCover() string {
 func (x *CartItemRedis) GetPrice() string {
 	if x != nil {
 		return x.Price
+	}
+	return ""
+}
+
+func (x *CartItemRedis) GetOriginPrice() string {
+	if x != nil {
+		return x.OriginPrice
 	}
 	return ""
 }
@@ -597,26 +613,176 @@ func (x *BatchDeleteResp) GetOk() bool {
 	return false
 }
 
+type BatchGetCartReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	GoodsIds      []string               `protobuf:"bytes,2,rep,name=goodsIds,proto3" json:"goodsIds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetCartReq) Reset() {
+	*x = BatchGetCartReq{}
+	mi := &file_proto_cart_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetCartReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetCartReq) ProtoMessage() {}
+
+func (x *BatchGetCartReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_cart_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetCartReq.ProtoReflect.Descriptor instead.
+func (*BatchGetCartReq) Descriptor() ([]byte, []int) {
+	return file_proto_cart_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *BatchGetCartReq) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *BatchGetCartReq) GetGoodsIds() []string {
+	if x != nil {
+		return x.GoodsIds
+	}
+	return nil
+}
+
+type BatchGetCartResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ItemList      []*PreviewItemVO       `protobuf:"bytes,1,rep,name=item_list,json=itemList,proto3" json:"item_list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetCartResp) Reset() {
+	*x = BatchGetCartResp{}
+	mi := &file_proto_cart_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetCartResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetCartResp) ProtoMessage() {}
+
+func (x *BatchGetCartResp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_cart_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetCartResp.ProtoReflect.Descriptor instead.
+func (*BatchGetCartResp) Descriptor() ([]byte, []int) {
+	return file_proto_cart_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *BatchGetCartResp) GetItemList() []*PreviewItemVO {
+	if x != nil {
+		return x.ItemList
+	}
+	return nil
+}
+
+type PreviewItemVO struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GoodsId       string                 `protobuf:"bytes,1,opt,name=goods_id,json=goodsId,proto3" json:"goods_id,omitempty"`
+	GoodsNum      int64                  `protobuf:"varint,2,opt,name=goods_num,json=goodsNum,proto3" json:"goods_num,omitempty"` //购买数量
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PreviewItemVO) Reset() {
+	*x = PreviewItemVO{}
+	mi := &file_proto_cart_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PreviewItemVO) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PreviewItemVO) ProtoMessage() {}
+
+func (x *PreviewItemVO) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_cart_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PreviewItemVO.ProtoReflect.Descriptor instead.
+func (*PreviewItemVO) Descriptor() ([]byte, []int) {
+	return file_proto_cart_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *PreviewItemVO) GetGoodsId() string {
+	if x != nil {
+		return x.GoodsId
+	}
+	return ""
+}
+
+func (x *PreviewItemVO) GetGoodsNum() int64 {
+	if x != nil {
+		return x.GoodsNum
+	}
+	return 0
+}
+
 var File_proto_cart_proto protoreflect.FileDescriptor
 
 const file_proto_cart_proto_rawDesc = "" +
 	"\n" +
 	"\x10proto/cart.proto\x12\x04cart\"(\n" +
 	"\x0eGetCartListReq\x12\x16\n" +
-	"\x06userId\x18\x01 \x01(\tR\x06userId\"\x92\x01\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\"\xb4\x01\n" +
 	"\bCartItem\x12\x10\n" +
 	"\x03num\x18\x01 \x01(\x03R\x03num\x12\x1a\n" +
 	"\bselected\x18\x02 \x01(\x03R\bselected\x12\x18\n" +
 	"\agoodsId\x18\x03 \x01(\tR\agoodsId\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x14\n" +
 	"\x05cover\x18\x05 \x01(\tR\x05cover\x12\x14\n" +
-	"\x05price\x18\x06 \x01(\tR\x05price\"}\n" +
+	"\x05price\x18\x06 \x01(\tR\x05price\x12 \n" +
+	"\voriginPrice\x18\a \x01(\tR\voriginPrice\"\x9f\x01\n" +
 	"\rCartItemRedis\x12\x10\n" +
 	"\x03num\x18\x01 \x01(\x03R\x03num\x12\x1a\n" +
 	"\bselected\x18\x02 \x01(\x03R\bselected\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x14\n" +
 	"\x05cover\x18\x04 \x01(\tR\x05cover\x12\x14\n" +
-	"\x05price\x18\x05 \x01(\tR\x05price\"5\n" +
+	"\x05price\x18\x05 \x01(\tR\x05price\x12 \n" +
+	"\voriginPrice\x18\x06 \x01(\tR\voriginPrice\"5\n" +
 	"\x0fGetCartListResp\x12\"\n" +
 	"\x04list\x18\x01 \x03(\v2\x0e.cart.CartItemR\x04list\"V\n" +
 	"\n" +
@@ -639,13 +805,22 @@ const file_proto_cart_proto_rawDesc = "" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\bgoodsIds\x18\x02 \x03(\tR\bgoodsIds\"!\n" +
 	"\x0fBatchDeleteResp\x12\x0e\n" +
-	"\x02ok\x18\x01 \x01(\bR\x02ok2\xe7\x01\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok\"E\n" +
+	"\x0fBatchGetCartReq\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
+	"\bgoodsIds\x18\x02 \x03(\tR\bgoodsIds\"D\n" +
+	"\x10BatchGetCartResp\x120\n" +
+	"\titem_list\x18\x01 \x03(\v2\x13.cart.PreviewItemVOR\bitemList\"G\n" +
+	"\rPreviewItemVO\x12\x19\n" +
+	"\bgoods_id\x18\x01 \x01(\tR\agoodsId\x12\x1b\n" +
+	"\tgoods_num\x18\x02 \x01(\x03R\bgoodsNum2\xa6\x02\n" +
 	"\x04Cart\x12.\n" +
 	"\aAddCart\x12\x10.cart.AddCartReq\x1a\x11.cart.AddCartResp\x12:\n" +
 	"\vGetCartList\x12\x14.cart.GetCartListReq\x1a\x15.cart.GetCartListResp\x127\n" +
 	"\n" +
 	"UpdateCart\x12\x13.cart.UpdateCartReq\x1a\x14.cart.UpdateCartResp\x12:\n" +
-	"\vBatchDelete\x12\x14.cart.BatchDeleteReq\x1a\x15.cart.BatchDeleteRespB\n" +
+	"\vBatchDelete\x12\x14.cart.BatchDeleteReq\x1a\x15.cart.BatchDeleteResp\x12=\n" +
+	"\fBatchGetCart\x12\x15.cart.BatchGetCartReq\x1a\x16.cart.BatchGetCartRespB\n" +
 	"Z\b./cartPbb\x06proto3"
 
 var (
@@ -660,34 +835,40 @@ func file_proto_cart_proto_rawDescGZIP() []byte {
 	return file_proto_cart_proto_rawDescData
 }
 
-var file_proto_cart_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_proto_cart_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_proto_cart_proto_goTypes = []any{
-	(*GetCartListReq)(nil),  // 0: cart.GetCartListReq
-	(*CartItem)(nil),        // 1: cart.CartItem
-	(*CartItemRedis)(nil),   // 2: cart.CartItemRedis
-	(*GetCartListResp)(nil), // 3: cart.GetCartListResp
-	(*AddCartReq)(nil),      // 4: cart.AddCartReq
-	(*AddCartResp)(nil),     // 5: cart.AddCartResp
-	(*UpdateCartReq)(nil),   // 6: cart.UpdateCartReq
-	(*UpdateCartResp)(nil),  // 7: cart.UpdateCartResp
-	(*BatchDeleteReq)(nil),  // 8: cart.BatchDeleteReq
-	(*BatchDeleteResp)(nil), // 9: cart.BatchDeleteResp
+	(*GetCartListReq)(nil),   // 0: cart.GetCartListReq
+	(*CartItem)(nil),         // 1: cart.CartItem
+	(*CartItemRedis)(nil),    // 2: cart.CartItemRedis
+	(*GetCartListResp)(nil),  // 3: cart.GetCartListResp
+	(*AddCartReq)(nil),       // 4: cart.AddCartReq
+	(*AddCartResp)(nil),      // 5: cart.AddCartResp
+	(*UpdateCartReq)(nil),    // 6: cart.UpdateCartReq
+	(*UpdateCartResp)(nil),   // 7: cart.UpdateCartResp
+	(*BatchDeleteReq)(nil),   // 8: cart.BatchDeleteReq
+	(*BatchDeleteResp)(nil),  // 9: cart.BatchDeleteResp
+	(*BatchGetCartReq)(nil),  // 10: cart.BatchGetCartReq
+	(*BatchGetCartResp)(nil), // 11: cart.BatchGetCartResp
+	(*PreviewItemVO)(nil),    // 12: cart.PreviewItemVO
 }
 var file_proto_cart_proto_depIdxs = []int32{
-	1, // 0: cart.GetCartListResp.list:type_name -> cart.CartItem
-	4, // 1: cart.Cart.AddCart:input_type -> cart.AddCartReq
-	0, // 2: cart.Cart.GetCartList:input_type -> cart.GetCartListReq
-	6, // 3: cart.Cart.UpdateCart:input_type -> cart.UpdateCartReq
-	8, // 4: cart.Cart.BatchDelete:input_type -> cart.BatchDeleteReq
-	5, // 5: cart.Cart.AddCart:output_type -> cart.AddCartResp
-	3, // 6: cart.Cart.GetCartList:output_type -> cart.GetCartListResp
-	7, // 7: cart.Cart.UpdateCart:output_type -> cart.UpdateCartResp
-	9, // 8: cart.Cart.BatchDelete:output_type -> cart.BatchDeleteResp
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1,  // 0: cart.GetCartListResp.list:type_name -> cart.CartItem
+	12, // 1: cart.BatchGetCartResp.item_list:type_name -> cart.PreviewItemVO
+	4,  // 2: cart.Cart.AddCart:input_type -> cart.AddCartReq
+	0,  // 3: cart.Cart.GetCartList:input_type -> cart.GetCartListReq
+	6,  // 4: cart.Cart.UpdateCart:input_type -> cart.UpdateCartReq
+	8,  // 5: cart.Cart.BatchDelete:input_type -> cart.BatchDeleteReq
+	10, // 6: cart.Cart.BatchGetCart:input_type -> cart.BatchGetCartReq
+	5,  // 7: cart.Cart.AddCart:output_type -> cart.AddCartResp
+	3,  // 8: cart.Cart.GetCartList:output_type -> cart.GetCartListResp
+	7,  // 9: cart.Cart.UpdateCart:output_type -> cart.UpdateCartResp
+	9,  // 10: cart.Cart.BatchDelete:output_type -> cart.BatchDeleteResp
+	11, // 11: cart.Cart.BatchGetCart:output_type -> cart.BatchGetCartResp
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_cart_proto_init() }
@@ -701,7 +882,7 @@ func file_proto_cart_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_cart_proto_rawDesc), len(file_proto_cart_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

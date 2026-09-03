@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Cart_AddCart_FullMethodName     = "/cart.Cart/AddCart"
-	Cart_GetCartList_FullMethodName = "/cart.Cart/GetCartList"
-	Cart_UpdateCart_FullMethodName  = "/cart.Cart/UpdateCart"
-	Cart_BatchDelete_FullMethodName = "/cart.Cart/BatchDelete"
+	Cart_AddCart_FullMethodName      = "/cart.Cart/AddCart"
+	Cart_GetCartList_FullMethodName  = "/cart.Cart/GetCartList"
+	Cart_UpdateCart_FullMethodName   = "/cart.Cart/UpdateCart"
+	Cart_BatchDelete_FullMethodName  = "/cart.Cart/BatchDelete"
+	Cart_BatchGetCart_FullMethodName = "/cart.Cart/BatchGetCart"
 )
 
 // CartClient is the client API for Cart service.
@@ -33,6 +34,7 @@ type CartClient interface {
 	GetCartList(ctx context.Context, in *GetCartListReq, opts ...grpc.CallOption) (*GetCartListResp, error)
 	UpdateCart(ctx context.Context, in *UpdateCartReq, opts ...grpc.CallOption) (*UpdateCartResp, error)
 	BatchDelete(ctx context.Context, in *BatchDeleteReq, opts ...grpc.CallOption) (*BatchDeleteResp, error)
+	BatchGetCart(ctx context.Context, in *BatchGetCartReq, opts ...grpc.CallOption) (*BatchGetCartResp, error)
 }
 
 type cartClient struct {
@@ -83,6 +85,16 @@ func (c *cartClient) BatchDelete(ctx context.Context, in *BatchDeleteReq, opts .
 	return out, nil
 }
 
+func (c *cartClient) BatchGetCart(ctx context.Context, in *BatchGetCartReq, opts ...grpc.CallOption) (*BatchGetCartResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetCartResp)
+	err := c.cc.Invoke(ctx, Cart_BatchGetCart_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CartServer is the server API for Cart service.
 // All implementations must embed UnimplementedCartServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type CartServer interface {
 	GetCartList(context.Context, *GetCartListReq) (*GetCartListResp, error)
 	UpdateCart(context.Context, *UpdateCartReq) (*UpdateCartResp, error)
 	BatchDelete(context.Context, *BatchDeleteReq) (*BatchDeleteResp, error)
+	BatchGetCart(context.Context, *BatchGetCartReq) (*BatchGetCartResp, error)
 	mustEmbedUnimplementedCartServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedCartServer) UpdateCart(context.Context, *UpdateCartReq) (*Upd
 }
 func (UnimplementedCartServer) BatchDelete(context.Context, *BatchDeleteReq) (*BatchDeleteResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchDelete not implemented")
+}
+func (UnimplementedCartServer) BatchGetCart(context.Context, *BatchGetCartReq) (*BatchGetCartResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchGetCart not implemented")
 }
 func (UnimplementedCartServer) mustEmbedUnimplementedCartServer() {}
 func (UnimplementedCartServer) testEmbeddedByValue()              {}
@@ -206,6 +222,24 @@ func _Cart_BatchDelete_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Cart_BatchGetCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetCartReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServer).BatchGetCart(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cart_BatchGetCart_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServer).BatchGetCart(ctx, req.(*BatchGetCartReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Cart_ServiceDesc is the grpc.ServiceDesc for Cart service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var Cart_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BatchDelete",
 			Handler:    _Cart_BatchDelete_Handler,
+		},
+		{
+			MethodName: "BatchGetCart",
+			Handler:    _Cart_BatchGetCart_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -79,3 +79,15 @@ func (m *defaultGoodsModel) UpdateFields(ctx context.Context, goodsId string, se
 	}
 	return num, nil
 }
+func (m *defaultGoodsModel) FindRowsByGoodsId(ctx context.Context, goodsIds []string) ([]*Goods, error) {
+	placeHolder := strings.Repeat("?,", len(goodsIds))
+	placeHolder = placeHolder[:len(placeHolder)-1]
+	sqlStr := fmt.Sprintf("select goods_id,name,cover,price_cent,original_price_cent from %s where goods_id in (%s) ", m.table, placeHolder)
+	var list []*Goods
+	var anyIds []any
+	for _, goodsId := range goodsIds {
+		anyIds = append(anyIds, goodsId)
+	}
+	err := m.conn.QueryRowsPartialCtx(ctx, &list, sqlStr, anyIds...)
+	return list, err
+}

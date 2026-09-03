@@ -56,12 +56,28 @@ func (l *AddCartLogic) AddCart(in *cartPb.AddCartReq) (*cartPb.AddCartResp, erro
 			GoodsId: in.GoodsId,
 		})
 		if err != nil {
-			return nil, err
+			_, err = l.svcCtx.Redis.HdelCtx(l.ctx, key, in.GoodsId)
+			if err != nil {
+				l.Logger.Errorf("redis hdel err: %v:%v", "addCart", err.Error())
+				return nil, status.Error(codes.Internal, constant.MiddlewareError)
+			}
+			return nil, status.Error(codes.NotFound, constant.GoodsNotFound)
+		}
+		if goodsRes == nil {
+			//goodsRes不存在，则删除key，不需要回填
+			_, err = l.svcCtx.Redis.HdelCtx(l.ctx, key, in.GoodsId)
+			if err != nil {
+				l.Logger.Errorf("redis hdel err: %v:%v", "addCart", err.Error())
+				return nil, status.Error(codes.Internal, constant.MiddlewareError)
+			}
+
+			return nil, status.Error(codes.NotFound, constant.GoodsNotFound)
 		}
 		obj := Obj{
-			Name:  goodsRes.Name,
-			Cover: goodsRes.Cover,
-			Price: goodsRes.Price,
+			Name:        goodsRes.Name,
+			Cover:       goodsRes.Cover,
+			Price:       goodsRes.Price,
+			OriginPrice: goodsRes.OriginalPrice,
 		}
 		snapJson, _ := json.Marshal(obj)
 		resp, err := l.svcCtx.Redis.EvalShaCtx(l.ctx, l.svcCtx.BackFillSha, keys, in.GoodsId, snapJson)
@@ -97,7 +113,8 @@ func (l *AddCartLogic) AddCart(in *cartPb.AddCartReq) (*cartPb.AddCartResp, erro
 }
 
 type Obj struct {
-	Name  string `json:"name"`
-	Cover string `json:"cover"`
-	Price string `json:"price"`
+	Name        string `json:"name"`
+	Cover       string `json:"cover"`
+	Price       string `json:"price"`
+	OriginPrice string `json:"originPrice"`
 }

@@ -47,3 +47,8 @@ func (s *GoodsServer) GetAdminGoodsList(ctx context.Context, in *goodsPb.AdminGo
 	l := logic.NewGetAdminGoodsListLogic(ctx, s.svcCtx)
 	return l.GetAdminGoodsList(in)
 }
+
+func (s *GoodsServer) BatchGetGoodsInfo(ctx context.Context, in *goodsPb.BatchGetGoodsInfoReq) (*goodsPb.BatchGetGoodsInfoResp, error) {
+	l := logic.NewBatchGetGoodsInfoLogic(ctx, s.svcCtx)
+	return l.BatchGetGoodsInfo(in)
+}

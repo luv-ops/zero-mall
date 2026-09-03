@@ -14,22 +14,26 @@ import (
 )
 
 type (
-	AddCartReq      = cartPb.AddCartReq
-	AddCartResp     = cartPb.AddCartResp
-	BatchDeleteReq  = cartPb.BatchDeleteReq
-	BatchDeleteResp = cartPb.BatchDeleteResp
-	CartItem        = cartPb.CartItem
-	CartItemRedis   = cartPb.CartItemRedis
-	GetCartListReq  = cartPb.GetCartListReq
-	GetCartListResp = cartPb.GetCartListResp
-	UpdateCartReq   = cartPb.UpdateCartReq
-	UpdateCartResp  = cartPb.UpdateCartResp
+	AddCartReq       = cartPb.AddCartReq
+	AddCartResp      = cartPb.AddCartResp
+	BatchDeleteReq   = cartPb.BatchDeleteReq
+	BatchDeleteResp  = cartPb.BatchDeleteResp
+	BatchGetCartReq  = cartPb.BatchGetCartReq
+	BatchGetCartResp = cartPb.BatchGetCartResp
+	CartItem         = cartPb.CartItem
+	CartItemRedis    = cartPb.CartItemRedis
+	GetCartListReq   = cartPb.GetCartListReq
+	GetCartListResp  = cartPb.GetCartListResp
+	PreviewItemVO    = cartPb.PreviewItemVO
+	UpdateCartReq    = cartPb.UpdateCartReq
+	UpdateCartResp   = cartPb.UpdateCartResp
 
 	Cart interface {
 		AddCart(ctx context.Context, in *AddCartReq, opts ...grpc.CallOption) (*AddCartResp, error)
 		GetCartList(ctx context.Context, in *GetCartListReq, opts ...grpc.CallOption) (*GetCartListResp, error)
 		UpdateCart(ctx context.Context, in *UpdateCartReq, opts ...grpc.CallOption) (*UpdateCartResp, error)
 		BatchDelete(ctx context.Context, in *BatchDeleteReq, opts ...grpc.CallOption) (*BatchDeleteResp, error)
+		BatchGetCart(ctx context.Context, in *BatchGetCartReq, opts ...grpc.CallOption) (*BatchGetCartResp, error)
 	}
 
 	defaultCart struct {
@@ -61,4 +65,9 @@ func (m *defaultCart) UpdateCart(ctx context.Context, in *UpdateCartReq, opts ..
 func (m *defaultCart) BatchDelete(ctx context.Context, in *BatchDeleteReq, opts ...grpc.CallOption) (*BatchDeleteResp, error) {
 	client := cartPb.NewCartClient(m.cli.Conn())
 	return client.BatchDelete(ctx, in, opts...)
+}
+
+func (m *defaultCart) BatchGetCart(ctx context.Context, in *BatchGetCartReq, opts ...grpc.CallOption) (*BatchGetCartResp, error) {
+	client := cartPb.NewCartClient(m.cli.Conn())
+	return client.BatchGetCart(ctx, in, opts...)
 }

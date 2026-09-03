@@ -111,10 +111,10 @@ func (m *defaultCartModel) BatchInsertTx(ctx context.Context, session sqlx.Sessi
 	var args []any
 	var placeholders []string
 	for _, v := range toInsert {
-		placeholders = append(placeholders, "(?,?,?,?,?,?,?)")
-		args = append(args, v.UserId, v.GoodsId, v.Num, v.Selected, v.Name, v.Cover, v.PriceCent)
+		placeholders = append(placeholders, "(?,?,?,?,?,?,?,?)")
+		args = append(args, v.UserId, v.GoodsId, v.Num, v.Selected, v.Name, v.Cover, v.PriceCent, v.OriginPriceCent)
 	}
-	sqlStr := fmt.Sprintf("insert into %s (user_id, goods_id,num,selected,name,cover,price_cent) values %s", m.table, strings.Join(placeholders, ","))
+	sqlStr := fmt.Sprintf("insert into %s (user_id, goods_id,num,selected,name,cover,price_cent,origin_price_cent) values %s", m.table, strings.Join(placeholders, ","))
 	res, err := session.ExecCtx(ctx, sqlStr, args...)
 	if err != nil {
 		return err

@@ -52,7 +52,6 @@ type (
 		CreateTime  time.Time      `db:"create_time"`  // 创建时间
 		UpdateTime  time.Time      `db:"update_time"`  // 更新时间
 		DeletedAt   sql.NullTime   `db:"deleted_at"`   // 软删除时间，NULL=未删除
-		Region      sql.NullInt64  `db:"region"`       // 地区
 		BalanceCent int64          `db:"balance_cent"` // 余额(分)
 		IsSeller    int64          `db:"is_seller"`
 	}
@@ -114,14 +113,14 @@ func (m *defaultUserModel) FindOneByUserId(ctx context.Context, userId string) (
 }
 
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Username, data.Password, data.Age, data.Phone, data.Sex, data.Avatar, data.DeletedAt, data.Region, data.BalanceCent, data.IsSeller)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Username, data.Password, data.Age, data.Phone, data.Sex, data.Avatar, data.DeletedAt, data.BalanceCent, data.IsSeller)
 	return ret, err
 }
 
 func (m *defaultUserModel) Update(ctx context.Context, newData *User) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.Username, newData.Password, newData.Age, newData.Phone, newData.Sex, newData.Avatar, newData.DeletedAt, newData.Region, newData.BalanceCent, newData.IsSeller, newData.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.Username, newData.Password, newData.Age, newData.Phone, newData.Sex, newData.Avatar, newData.DeletedAt, newData.BalanceCent, newData.IsSeller, newData.Id)
 	return err
 }
 

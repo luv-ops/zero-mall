@@ -79,12 +79,24 @@ message AdminGoodsListResp{
   repeated AdminGoodsItem list=1;
   int64 total=2;
 }
-
+message BatchGetGoodsInfoReq{
+  repeated string goodsIds=1;
+}
+message BatchGetGoodsInfoResp{
+  repeated GoodsInfoItem list=1;
+}
+message GoodsInfoItem{
+  string goodsId=1;
+  string name=2;
+  string cover=3;
+  string  price=4;
+  string  originalPrice=5;
+}
 service goods{
   rpc GetGoodsList (GoodsListReq) returns (GoodsListResp);
   rpc GetGoodsDetail (GoodsDetailReq) returns (GoodsDetailResp);
   rpc AddGoods (AddGoodsReq) returns (AddGoodsResp);
   rpc OnOffGoods (OnOffGoodsReq) returns (OnOffGoodsResp);
   rpc GetAdminGoodsList (AdminGoodsListReq) returns (AdminGoodsListResp);
-
+  rpc BatchGetGoodsInfo (BatchGetGoodsInfoReq) returns (BatchGetGoodsInfoResp);
 }

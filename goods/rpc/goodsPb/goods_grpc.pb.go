@@ -24,6 +24,7 @@ const (
 	Goods_AddGoods_FullMethodName          = "/goods.goods/AddGoods"
 	Goods_OnOffGoods_FullMethodName        = "/goods.goods/OnOffGoods"
 	Goods_GetAdminGoodsList_FullMethodName = "/goods.goods/GetAdminGoodsList"
+	Goods_BatchGetGoodsInfo_FullMethodName = "/goods.goods/BatchGetGoodsInfo"
 )
 
 // GoodsClient is the client API for Goods service.
@@ -35,6 +36,7 @@ type GoodsClient interface {
 	AddGoods(ctx context.Context, in *AddGoodsReq, opts ...grpc.CallOption) (*AddGoodsResp, error)
 	OnOffGoods(ctx context.Context, in *OnOffGoodsReq, opts ...grpc.CallOption) (*OnOffGoodsResp, error)
 	GetAdminGoodsList(ctx context.Context, in *AdminGoodsListReq, opts ...grpc.CallOption) (*AdminGoodsListResp, error)
+	BatchGetGoodsInfo(ctx context.Context, in *BatchGetGoodsInfoReq, opts ...grpc.CallOption) (*BatchGetGoodsInfoResp, error)
 }
 
 type goodsClient struct {
@@ -95,6 +97,16 @@ func (c *goodsClient) GetAdminGoodsList(ctx context.Context, in *AdminGoodsListR
 	return out, nil
 }
 
+func (c *goodsClient) BatchGetGoodsInfo(ctx context.Context, in *BatchGetGoodsInfoReq, opts ...grpc.CallOption) (*BatchGetGoodsInfoResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetGoodsInfoResp)
+	err := c.cc.Invoke(ctx, Goods_BatchGetGoodsInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GoodsServer is the server API for Goods service.
 // All implementations must embed UnimplementedGoodsServer
 // for forward compatibility.
@@ -104,6 +116,7 @@ type GoodsServer interface {
 	AddGoods(context.Context, *AddGoodsReq) (*AddGoodsResp, error)
 	OnOffGoods(context.Context, *OnOffGoodsReq) (*OnOffGoodsResp, error)
 	GetAdminGoodsList(context.Context, *AdminGoodsListReq) (*AdminGoodsListResp, error)
+	BatchGetGoodsInfo(context.Context, *BatchGetGoodsInfoReq) (*BatchGetGoodsInfoResp, error)
 	mustEmbedUnimplementedGoodsServer()
 }
 
@@ -128,6 +141,9 @@ func (UnimplementedGoodsServer) OnOffGoods(context.Context, *OnOffGoodsReq) (*On
 }
 func (UnimplementedGoodsServer) GetAdminGoodsList(context.Context, *AdminGoodsListReq) (*AdminGoodsListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAdminGoodsList not implemented")
+}
+func (UnimplementedGoodsServer) BatchGetGoodsInfo(context.Context, *BatchGetGoodsInfoReq) (*BatchGetGoodsInfoResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchGetGoodsInfo not implemented")
 }
 func (UnimplementedGoodsServer) mustEmbedUnimplementedGoodsServer() {}
 func (UnimplementedGoodsServer) testEmbeddedByValue()               {}
@@ -240,6 +256,24 @@ func _Goods_GetAdminGoodsList_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Goods_BatchGetGoodsInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetGoodsInfoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoodsServer).BatchGetGoodsInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Goods_BatchGetGoodsInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoodsServer).BatchGetGoodsInfo(ctx, req.(*BatchGetGoodsInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Goods_ServiceDesc is the grpc.ServiceDesc for Goods service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +300,10 @@ var Goods_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAdminGoodsList",
 			Handler:    _Goods_GetAdminGoodsList_Handler,
+		},
+		{
+			MethodName: "BatchGetGoodsInfo",
+			Handler:    _Goods_BatchGetGoodsInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

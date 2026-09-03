@@ -33,6 +33,7 @@ type (
 		PageBreakFind(ctx context.Context, categoryId int64, page int32, pageSize int32) ([]*Goods, error)
 		FindByOwnId(ctx context.Context, userId string) ([]*Goods, error)
 		UpdateFields(ctx context.Context, goodsId string, setMap map[string]any) (int64, error)
+		FindRowsByGoodsId(ctx context.Context, goodsIds []string) ([]*Goods, error)
 	}
 
 	defaultGoodsModel struct {

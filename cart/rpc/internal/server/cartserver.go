@@ -42,3 +42,8 @@ func (s *CartServer) BatchDelete(ctx context.Context, in *cartPb.BatchDeleteReq)
 	l := logic.NewBatchDeleteLogic(ctx, s.svcCtx)
 	return l.BatchDelete(in)
 }
+
+func (s *CartServer) BatchGetCart(ctx context.Context, in *cartPb.BatchGetCartReq) (*cartPb.BatchGetCartResp, error) {
+	l := logic.NewBatchGetCartLogic(ctx, s.svcCtx)
+	return l.BatchGetCart(in)
+}

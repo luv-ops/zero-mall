@@ -40,16 +40,17 @@ type (
 	}
 
 	Cart struct {
-		Id        int64     `db:"id"`         // 本表主键
-		UserId    string    `db:"user_id"`    // 用户ID（来自user‑rpc）
-		GoodsId   string    `db:"goods_id"`   // 商品UUID字符串
-		Num       int64     `db:"num"`        // 购买数量
-		Selected  int64     `db:"selected"`   // 0未勾选 1勾选结算
-		PriceCent int64     `db:"price_cent"` // 加购时的价格
-		Name      string    `db:"name"`
-		Cover     string    `db:"cover"`
-		CreatedAt time.Time `db:"created_at"`
-		UpdatedAt time.Time `db:"updated_at"`
+		Id              int64     `db:"id"`         // 本表主键
+		UserId          string    `db:"user_id"`    // 用户ID（来自user‑rpc）
+		GoodsId         string    `db:"goods_id"`   // 商品UUID字符串
+		Num             int64     `db:"num"`        // 购买数量
+		Selected        int64     `db:"selected"`   // 0未勾选 1勾选结算
+		PriceCent       int64     `db:"price_cent"` // 加购时的价格
+		Name            string    `db:"name"`
+		Cover           string    `db:"cover"`
+		CreatedAt       time.Time `db:"created_at"`
+		UpdatedAt       time.Time `db:"updated_at"`
+		OriginPriceCent int64     `db:"origin_price_cent"`
 	}
 )
 
@@ -95,14 +96,14 @@ func (m *defaultCartModel) FindOneByUserIdGoodsId(ctx context.Context, userId st
 }
 
 func (m *defaultCartModel) Insert(ctx context.Context, data *Cart) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, cartRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.GoodsId, data.Num, data.Selected, data.PriceCent, data.Name, data.Cover)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, cartRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.GoodsId, data.Num, data.Selected, data.PriceCent, data.Name, data.Cover, data.OriginPriceCent)
 	return ret, err
 }
 
 func (m *defaultCartModel) Update(ctx context.Context, newData *Cart) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, cartRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.GoodsId, newData.Num, newData.Selected, newData.PriceCent, newData.Name, newData.Cover, newData.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.GoodsId, newData.Num, newData.Selected, newData.PriceCent, newData.Name, newData.Cover, newData.OriginPriceCent, newData.Id)
 	return err
 }
 

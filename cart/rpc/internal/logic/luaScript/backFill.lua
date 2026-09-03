@@ -18,5 +18,6 @@ local snap=cjson.decode(snapJson)
 obj.name=snap.name
 obj.cover=snap.cover
 obj.price=snap.price
+obj.originPrice=snap.originPrice
 redis.call("HSET",cartKey,goodsFiled,cjson.encode(obj))
 return 1

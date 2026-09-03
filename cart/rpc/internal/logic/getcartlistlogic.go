@@ -49,12 +49,13 @@ func (l *GetCartListLogic) GetCartList(in *cartPb.GetCartListReq) (*cartPb.GetCa
 			continue
 		}
 		list = append(list, &cartPb.CartItem{
-			GoodsId:  goodsId,
-			Num:      item.Num,
-			Selected: item.Selected,
-			Name:     item.Name,
-			Cover:    item.Cover,
-			Price:    item.Price,
+			GoodsId:     goodsId,
+			Num:         item.Num,
+			Selected:    item.Selected,
+			Name:        item.Name,
+			Cover:       item.Cover,
+			Price:       item.Price,
+			OriginPrice: item.OriginPrice,
 		})
 	}
 	return &cartPb.GetCartListResp{
