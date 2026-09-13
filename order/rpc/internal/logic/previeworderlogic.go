@@ -32,6 +32,7 @@ func NewPreviewOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Prev
 
 func (l *PreviewOrderLogic) PreviewOrder(in *orderPb.OrderPreviewReq) (*orderPb.OrderPreviewResp, error) {
 	// todo: add your logic here and delete this line
+	//调用cartRpc主要是获取对应商品数量
 	cartResp, err := l.svcCtx.CartRpc.BatchGetCart(l.ctx, &cartPb.BatchGetCartReq{
 		UserId:   in.UserId,
 		GoodsIds: in.GoodsIds,
@@ -57,7 +58,7 @@ func (l *PreviewOrderLogic) PreviewOrder(in *orderPb.OrderPreviewReq) (*orderPb.
 		goodsMap[v.GoodsId] = v
 	}
 	var items []*orderPb.PreviewItemVO
-	var totalAmount, payAmount decimal.Decimal = decimal.Zero, decimal.Zero
+	var totalAmount, payAmount = decimal.Zero, decimal.Zero
 
 	for goodsId, cartItem := range cartMap {
 		goodsItem, _ := goodsMap[goodsId]

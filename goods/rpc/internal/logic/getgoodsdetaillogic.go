@@ -32,7 +32,7 @@ func NewGetGoodsDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goodsPb.GoodsDetailResp, error) {
 	// todo: add your logic here and delete this line
 	//缓存穿透
-	key := constant.GoodsInfoKey + in.GoodsId
+	key := constant.GoodsBaseKey + in.GoodsId
 	val, err := l.svcCtx.Redis.GetCtx(l.ctx, key)
 	var detail goodsPb.GoodsDetailResp
 	//查询到redis
@@ -49,7 +49,7 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 		}
 	}
 	//redis不存在查mysql
-	res, err := l.svcCtx.GoodsModel.FindOneByGoodsId(l.ctx, in.GoodsId)
+	res, err := l.svcCtx.GoodsModel.FindRowByGoodsId(l.ctx, in.GoodsId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			//缓存空值，设置ttl 5分钟较短
@@ -67,7 +67,6 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 		Cover:         res.Cover,
 		Price:         convert.CentsToYuanStr(res.PriceCent),
 		OriginalPrice: convert.CentsToYuanStr(res.OriginalPriceCent),
-		Stock:         res.Stock,
 		Sales:         res.Sales,
 		Desc:          res.Desc,
 		Status:        res.Status,

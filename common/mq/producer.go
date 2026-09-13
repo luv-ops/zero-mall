@@ -2,62 +2,73 @@ package mq
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"time"
 
 	rmq_client "github.com/apache/rocketmq-clients/golang/v5"
 )
 
 type Producer struct {
-	producer rmq_client.Producer
+	p rmq_client.Producer
 }
 
-func NewProducer(endPoint string, topic string) (*Producer, error) {
-	config := &rmq_client.Config{
-		Endpoint:    endPoint,
-		Credentials: nil,
+func NewProducer(c *ProducerConfig) (*Producer, error) {
+	if c.Endpoint == "" {
+		return nil, fmt.Errorf("mq: producer Endpoint is empty")
 	}
-	//必须加withTopics防止死锁
-	pro, err := rmq_client.NewProducer(config, rmq_client.WithTopics(topic))
+	if len(c.Topics) == 0 {
+		return nil, fmt.Errorf("mq: producer Topics is empty")
+	}
+	producer, err := rmq_client.NewProducer(
+		&rmq_client.Config{
+			Endpoint:    c.Endpoint,
+			Credentials: nil,
+		},
+		rmq_client.WithTopics(c.Topics...),
+	)
 	if err != nil {
-		log.Printf("fail to create producer: %v", err)
-		return nil, err
+		return nil, fmt.Errorf("mq: new producer failed: %w", err)
 	}
-	if err = pro.Start(); err != nil {
-		log.Printf("fail to start producer: %v", err)
-		_ = pro.GracefulStop()
-		return nil, err
-	}
-	return &Producer{
-		producer: pro,
-	}, err
-}
 
-func (p *Producer) Send(ctx context.Context, topic string, message []byte) error {
-	//组装message
-	msg := rmq_client.Message{
+	if err = producer.Start(); err != nil {
+		return nil, fmt.Errorf("mq: start producer failed: %w", err)
+	}
+	return &Producer{producer}, nil
+
+}
+func (pr *Producer) Send(ctx context.Context, topic string, body []byte) error {
+	msg := &rmq_client.Message{
 		Topic: topic,
-		Body:  message,
+		Body:  body,
 	}
-	_, err := p.producer.Send(ctx, &msg)
+
+	resp, err := pr.p.Send(ctx, msg)
 	if err != nil {
-		return err
+		return fmt.Errorf("mq: send topic=%s failed: %w", topic, err)
+	}
+	if len(resp) == 0 {
+		return fmt.Errorf("mq: send topic=%s returned empty response", topic)
 	}
 	return nil
 }
-func (p *Producer) SendDelay(ctx context.Context, topic string, message []byte, delay time.Duration) error {
-	msg := rmq_client.Message{
+func (pr *Producer) SendDelay(ctx context.Context, topic string, body []byte, duration time.Duration) error {
+	msg := &rmq_client.Message{
 		Topic: topic,
-		Body:  message,
+		Body:  body,
 	}
-	//设置消息延时
-	msg.SetDelayTimestamp(time.Now().Add(delay))
-	_, err := p.producer.Send(ctx, &msg)
+	msg.SetDelayTimestamp(time.Now().Add(duration))
+	resp, err := pr.p.Send(ctx, msg)
 	if err != nil {
-		return err
+		return fmt.Errorf("mq: send topic=%s failed: %w", topic, err)
+	}
+	if len(resp) == 0 {
+		return fmt.Errorf("mq: send topic=%s returned empty response", topic)
 	}
 	return nil
 }
-func (p *Producer) Stop() error {
-	return p.producer.GracefulStop()
+func (pr *Producer) Stop() error {
+	if pr.p == nil {
+		return nil
+	}
+	return pr.p.GracefulStop()
 }

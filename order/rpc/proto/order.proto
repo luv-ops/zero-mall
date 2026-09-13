@@ -18,8 +18,6 @@ message CreateOrderReq {
 // 创建订单响应
 message CreateOrderResp {
   string order_no = 1;
-  string pay_amount = 2;
-  string total_amount = 3;
 }
 
 // 订单详情请求 orderNo来自url路径参数

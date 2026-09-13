@@ -1,6 +1,11 @@
 package model
 
-import "github.com/zeromicro/go-zero/core/stores/sqlx"
+import (
+	"context"
+	"fmt"
+
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 var _ OrderItemModel = (*customOrderItemModel)(nil)
 
@@ -26,4 +31,11 @@ func NewOrderItemModel(conn sqlx.SqlConn) OrderItemModel {
 
 func (m *customOrderItemModel) withSession(session sqlx.Session) OrderItemModel {
 	return NewOrderItemModel(sqlx.NewSqlConnFromSession(session))
+}
+
+func (m *defaultOrderModel) FindGIdsByOrderNo(ctx context.Context, orderNo string) ([]*OrderItem, error) {
+	sqlStr := fmt.Sprintf(`select goods_id,num from %s where order_no=?`, m.table)
+	var list []*OrderItem
+	err := m.conn.QueryRowsPartialCtx(ctx, &list, sqlStr, orderNo)
+	return list, err
 }

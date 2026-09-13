@@ -41,7 +41,6 @@ func (l *GetAdminGoodsListLogic) GetAdminGoodsList(in *goodsPb.AdminGoodsListReq
 			Cover:         v.Cover,
 			Price:         convert.CentsToYuanStr(v.PriceCent),
 			OriginalPrice: convert.CentsToYuanStr(v.OriginalPriceCent),
-			Stock:         v.Stock,
 			Sales:         v.Sales,
 			CategoryId:    v.CategoryId,
 			Status:        v.Status,

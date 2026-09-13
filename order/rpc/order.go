@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"zeromall/order/rpc/internal/config"
+	"zeromall/order/rpc/internal/logic/consumer"
 	"zeromall/order/rpc/internal/server"
 	"zeromall/order/rpc/internal/svc"
 	"zeromall/order/rpc/orderPb"
@@ -32,8 +32,18 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
-	defer s.Stop()
+	mgr, err := consumer.NewConsumerManager(ctx)
+	if err != nil {
+		panic(err)
+	}
+	group := service.NewServiceGroup()
+	group.Add(s)
+	group.Add(mgr)
+	defer func() {
+		group.Stop()
+		_ = ctx.Producer.Stop()
+	}()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
-	s.Start()
+	group.Start()
 }

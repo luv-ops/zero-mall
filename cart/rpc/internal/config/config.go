@@ -14,15 +14,18 @@ type Config struct {
 	RedisConf    redis.RedisConf
 	RocketMqConf struct {
 		Endpoint string
-		Producer struct {
+		Topics   struct {
 			TopicSyncFiling string
+			TopicDelCart    string
 		}
 		Consumer struct {
-			TopicSyncFiling string
-			Group           string
-			AwaitDuration   time.Duration
-			MaxMsgNum       int32
-			LoopDuration    time.Duration
+			Group struct {
+				GroupCartFiling string
+				GroupCartDel    string
+			}
+			AwaitDuration     time.Duration
+			MaxMsgNum         int32
+			InvisibleDuration time.Duration
 		}
 	}
 	GoodsRpcConf zrpc.RpcClientConf

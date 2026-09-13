@@ -4,9 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/cart/rpc/internal/config"
+	"zeromall/cart/rpc/internal/logic/Timer"
 	"zeromall/cart/rpc/internal/logic/consumer"
 	"zeromall/cart/rpc/internal/server"
 	"zeromall/cart/rpc/internal/svc"
@@ -34,27 +34,28 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	// 组装消费者
+	mgr, err := consumer.NewConsumerManager(ctx)
+	if err != nil {
+		panic(err)
+	}
+	//统一管理API服务和消费者管理
+	group := service.NewServiceGroup()
+	group.Add(s)
+	group.Add(mgr)
 
+	//开始定时器
 	rootCtx, cancel := context.WithCancel(context.Background())
+	timer := Timer.NewTimer(ctx)
+	timer.StartTicker(rootCtx)
 
-	consume, err := consumer.NewConsumer(ctx)
-	if err != nil {
-		log.Fatal("构造消费者失败", err)
-	}
-	//开始消费循环和计时器
-	//TODO 如果多实例部署，ticker必须单例，因为如果非单例，多个ticker会同时spop redis，造成无效redis Io
-	consume.StartTicker(rootCtx)
-	err = consume.StartConsumer(ctx.Config.RocketMqConf.Consumer.TopicSyncFiling)
-	if err != nil {
-		log.Fatal("消费循环启动失败", err)
-	}
 	defer func() {
-		_ = consume.StopConsumer()
 		cancel()
-		s.Stop()
+		group.Stop()
 		_ = ctx.Producer.Stop()
+
 	}()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
-	s.Start()
+	group.Start()
 }

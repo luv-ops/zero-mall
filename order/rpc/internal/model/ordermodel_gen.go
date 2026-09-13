@@ -27,9 +27,11 @@ type (
 	orderModel interface {
 		Insert(ctx context.Context, data *Order) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Order, error)
-		FindOneByOrderNo(ctx context.Context, orderNo string) (*Order, error)
+		FindOneByOrderNo(ctx context.Context, orderNo int64) (*Order, error)
 		Update(ctx context.Context, data *Order) error
 		Delete(ctx context.Context, id int64) error
+		TxInsert(ctx context.Context, orderData *Order, orderItemData []*OrderItem) (int64, error)
+		CloseConditional(ctx context.Context, orderNo string) (int64, error)
 	}
 
 	defaultOrderModel struct {
@@ -38,9 +40,10 @@ type (
 	}
 
 	Order struct {
-		Id          int64          `db:"id"`           // 内部自增主键，不对外
-		OrderNo     string         `db:"order_no"`     // 雪花业务订单号，全局唯一，对外使用
-		UserId      int64          `db:"user_id"`      // 下单用户ID（来自user服务）
+		Id          int64          `db:"id"`           // 自增主键id
+		OrderNo     int64          `db:"order_no"`     // 雪花id
+		UserId      string         `db:"user_id"`      // 下单用户ID（来自user服务）
+		TotalCent   int64          `db:"total_cent"`   // 订单原价
 		PayCent     int64          `db:"pay_cent"`     // 实付金额(分，优惠后)
 		Status      int64          `db:"status"`       // 0待支付 1已支付 2已发货 3已完成 4已取消 5已退款
 		PayType     sql.NullInt64  `db:"pay_type"`     // 支付方式 1余额 2微信 3支付宝
@@ -83,7 +86,7 @@ func (m *defaultOrderModel) FindOne(ctx context.Context, id int64) (*Order, erro
 	}
 }
 
-func (m *defaultOrderModel) FindOneByOrderNo(ctx context.Context, orderNo string) (*Order, error) {
+func (m *defaultOrderModel) FindOneByOrderNo(ctx context.Context, orderNo int64) (*Order, error) {
 	var resp Order
 	query := fmt.Sprintf("select %s from %s where `order_no` = ? limit 1", orderRows, m.table)
 	err := m.conn.QueryRowCtx(ctx, &resp, query, orderNo)
@@ -98,14 +101,14 @@ func (m *defaultOrderModel) FindOneByOrderNo(ctx context.Context, orderNo string
 }
 
 func (m *defaultOrderModel) Insert(ctx context.Context, data *Order) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, orderRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.OrderNo, data.UserId, data.PayCent, data.Status, data.PayType, data.PayTime, data.DeliverTime, data.ReceiveTime, data.CancelTime, data.Remark, data.ExpireTime, data.DeletedAt)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, orderRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.OrderNo, data.UserId, data.TotalCent, data.PayCent, data.Status, data.PayType, data.PayTime, data.DeliverTime, data.ReceiveTime, data.CancelTime, data.Remark, data.ExpireTime, data.DeletedAt)
 	return ret, err
 }
 
 func (m *defaultOrderModel) Update(ctx context.Context, newData *Order) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, orderRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.OrderNo, newData.UserId, newData.PayCent, newData.Status, newData.PayType, newData.PayTime, newData.DeliverTime, newData.ReceiveTime, newData.CancelTime, newData.Remark, newData.ExpireTime, newData.DeletedAt, newData.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.OrderNo, newData.UserId, newData.TotalCent, newData.PayCent, newData.Status, newData.PayType, newData.PayTime, newData.DeliverTime, newData.ReceiveTime, newData.CancelTime, newData.Remark, newData.ExpireTime, newData.DeletedAt, newData.Id)
 	return err
 }
 

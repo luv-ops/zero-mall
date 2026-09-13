@@ -38,7 +38,7 @@ type (
 
 	OrderLogistics struct {
 		Id              int64          `db:"id"`               // 物流表自身主键
-		OrderNo         string         `db:"order_no"`         // 关联订单业务号
+		OrderId         int64          `db:"order_id"`         // 关联订单主键id
 		ReceiverName    string         `db:"receiver_name"`    // 收件人姓名快照
 		ReceiverPhone   string         `db:"receiver_phone"`   // 收件手机号快照
 		ReceiverAddress string         `db:"receiver_address"` // 完整收货地址快照
@@ -78,13 +78,13 @@ func (m *defaultOrderLogisticsModel) FindOne(ctx context.Context, id int64) (*Or
 
 func (m *defaultOrderLogisticsModel) Insert(ctx context.Context, data *OrderLogistics) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, orderLogisticsRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.OrderNo, data.ReceiverName, data.ReceiverPhone, data.ReceiverAddress, data.LogisticsName, data.TrackingNo)
+	ret, err := m.conn.ExecCtx(ctx, query, data.OrderId, data.ReceiverName, data.ReceiverPhone, data.ReceiverAddress, data.LogisticsName, data.TrackingNo)
 	return ret, err
 }
 
 func (m *defaultOrderLogisticsModel) Update(ctx context.Context, data *OrderLogistics) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, orderLogisticsRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.OrderNo, data.ReceiverName, data.ReceiverPhone, data.ReceiverAddress, data.LogisticsName, data.TrackingNo, data.Id)
+	_, err := m.conn.ExecCtx(ctx, query, data.OrderId, data.ReceiverName, data.ReceiverPhone, data.ReceiverAddress, data.LogisticsName, data.TrackingNo, data.Id)
 	return err
 }
 

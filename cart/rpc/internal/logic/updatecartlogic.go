@@ -67,7 +67,7 @@ func (l *UpdateCartLogic) UpdateCart(in *cartPb.UpdateCartReq) (*cartPb.UpdateCa
 		l.Logger.Errorf("json marshell err %v in %v", err, "UpdateCart")
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)
 	}
-	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Producer.TopicSyncFiling, jsonStr)
+	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicSyncFiling, jsonStr)
 	if err != nil {
 		logx.Errorf("send msg err %v", err)
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)

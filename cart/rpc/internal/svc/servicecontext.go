@@ -5,7 +5,6 @@ import (
 	"log"
 	"zeromall/cart/rpc/internal/config"
 	"zeromall/cart/rpc/internal/logic/luaScript"
-
 	"zeromall/cart/rpc/internal/model"
 	"zeromall/common/mq"
 	"zeromall/goods/rpc/goodsPb"
@@ -48,7 +47,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	client := zrpc.MustNewClient(c.GoodsRpcConf)
 
 	//挂载全局生产者
-	pro, err := mq.NewProducer(c.RocketMqConf.Endpoint, c.RocketMqConf.Producer.TopicSyncFiling)
+	pg := mq.ProducerConfig{
+		Endpoint: c.RocketMqConf.Endpoint,
+		Topics:   []string{c.RocketMqConf.Topics.TopicSyncFiling, c.RocketMqConf.Topics.TopicDelCart},
+	}
+	pro, err := mq.NewProducer(&pg)
 	if err != nil {
 		log.Fatalf("NewProducer failed: %v", err)
 	}
@@ -63,4 +66,5 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UpdateCartSha: sha3,
 		Producer:      pro,
 	}
+
 }

@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"zeromall/common/mq"
 	"zeromall/goods/rpc/internal/config"
 	"zeromall/goods/rpc/internal/model"
 	"zeromall/user/rpc/userpb"
@@ -15,16 +16,26 @@ type ServiceContext struct {
 	GoodsModel model.GoodsModel
 	UserRpc    userpb.UserClient
 	Redis      *redis.Redis
+	Producer   *mq.Producer
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Mysql.DataSource)
 	client := zrpc.MustNewClient(c.UserRpcConf)
 	rdb := redis.MustNewRedis(c.RedisConf)
+	pg := mq.ProducerConfig{
+		Endpoint: c.RocketMQConf.Endpoint,
+		Topics:   []string{c.RocketMQConf.Topics.TopicInsertStock},
+	}
+	pro, err := mq.NewProducer(&pg)
+	if err != nil {
+		panic(err)
+	}
 	return &ServiceContext{
 		Config:     c,
 		GoodsModel: model.NewGoodsModel(conn),
 		UserRpc:    userpb.NewUserClient(client.Conn()),
 		Redis:      rdb,
+		Producer:   pro,
 	}
 }

@@ -34,6 +34,7 @@ type (
 		FindByOwnId(ctx context.Context, userId string) ([]*Goods, error)
 		UpdateFields(ctx context.Context, goodsId string, setMap map[string]any) (int64, error)
 		FindRowsByGoodsId(ctx context.Context, goodsIds []string) ([]*Goods, error)
+		FindRowByGoodsId(ctx context.Context, goodsId string) (*Goods, error)
 	}
 
 	defaultGoodsModel struct {
@@ -48,7 +49,6 @@ type (
 		Cover             string         `db:"cover"`               // 商品封面图
 		PriceCent         int64          `db:"price_cent"`          // 售价(分)
 		OriginalPriceCent int64          `db:"original_price_cent"` // 原价(分)
-		Stock             int64          `db:"stock"`               // 库存
 		Sales             int64          `db:"sales"`               // 销量
 		CategoryId        int64          `db:"category_id"`         // 分类id
 		Desc              string         `db:"desc"`                // 商品详情
@@ -102,14 +102,14 @@ func (m *defaultGoodsModel) FindOneByGoodsId(ctx context.Context, goodsId string
 }
 
 func (m *defaultGoodsModel) Insert(ctx context.Context, data *Goods) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, goodsRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.GoodsId, data.Name, data.Cover, data.PriceCent, data.OriginalPriceCent, data.Stock, data.Sales, data.CategoryId, data.Desc, data.Status, data.DeletedAt, data.OwnUserId)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, goodsRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.GoodsId, data.Name, data.Cover, data.PriceCent, data.OriginalPriceCent, data.Sales, data.CategoryId, data.Desc, data.Status, data.DeletedAt, data.OwnUserId)
 	return ret, err
 }
 
 func (m *defaultGoodsModel) Update(ctx context.Context, newData *Goods) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, goodsRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.GoodsId, newData.Name, newData.Cover, newData.PriceCent, newData.OriginalPriceCent, newData.Stock, newData.Sales, newData.CategoryId, newData.Desc, newData.Status, newData.DeletedAt, newData.OwnUserId, newData.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.GoodsId, newData.Name, newData.Cover, newData.PriceCent, newData.OriginalPriceCent, newData.Sales, newData.CategoryId, newData.Desc, newData.Status, newData.DeletedAt, newData.OwnUserId, newData.Id)
 	return err
 }
 

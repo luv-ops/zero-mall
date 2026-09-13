@@ -49,7 +49,6 @@ message GoodsDetailResp {
   string cover = 3;
   string  price=4;
   string  originalPrice=5;
-  int64 stock = 6;
   int64 sales = 7;
   string desc = 8;
   int64 status = 9;
@@ -81,7 +80,7 @@ message AdminGoodsListResp{
 }
 message BatchGetGoodsInfoReq{
   repeated string goodsIds=1;
-}
+};
 message BatchGetGoodsInfoResp{
   repeated GoodsInfoItem list=1;
 }

@@ -7,6 +7,7 @@ import (
 	"context"
 	"zeromall/order/api/internal/svc"
 	"zeromall/order/api/internal/types"
+	"zeromall/order/rpc/orderPb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,5 +28,15 @@ func NewCreateOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 
 func (l *CreateOrderLogic) CreateOrder(req *types.CreateOrderReq) (resp *types.CreateOrderResp, err error) {
 	// todo: add your logic here and delete this line
-	return &types.CreateOrderResp{}, nil
+	userId := l.ctx.Value("userId").(string)
+	res, err := l.svcCtx.OrderRpc.CreateOrder(l.ctx, &orderPb.CreateOrderReq{
+		UserId:   userId,
+		GoodsIds: req.GoodsIds,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &types.CreateOrderResp{
+		OrderNo: res.OrderNo,
+	}, nil
 }

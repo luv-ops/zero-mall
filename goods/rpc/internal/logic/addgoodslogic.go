@@ -3,8 +3,11 @@ package logic
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"time"
 	"zeromall/common/constant"
 	"zeromall/common/convert"
+	"zeromall/common/mq"
 	"zeromall/goods/rpc/internal/model"
 	"zeromall/user/rpc/userpb"
 
@@ -44,23 +47,13 @@ func (l *AddGoodsLogic) AddGoods(in *goodsPb.AddGoodsReq) (*goodsPb.AddGoodsResp
 	if res.Ok != true {
 		return nil, status.Error(codes.PermissionDenied, constant.PermissionSellError)
 	}
-	//金额转换
-	price, err := convert.YuanStrToCents(in.Price)
-	if err != nil {
-		l.Logger.Errorf(constant.WhereFailed, "addGoods", "YuanStrToCents", err.Error())
-		return nil, status.Error(codes.InvalidArgument, constant.GoodsArgError)
-	}
-	original, err := convert.YuanStrToCents(in.OriginalPrice)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, constant.GoodsArgError)
-	}
+	goodsId := uuid.NewString()
 	goods := model.Goods{
-		GoodsId:           uuid.NewString(),
+		GoodsId:           goodsId,
 		Name:              in.Name,
 		Cover:             in.Cover,
-		PriceCent:         price,
-		OriginalPriceCent: original,
-		Stock:             in.Stock,
+		PriceCent:         convert.YuanStrToCents(in.Price),
+		OriginalPriceCent: convert.YuanStrToCents(in.OriginalPrice),
 		CategoryId:        in.CategoryId,
 		OwnUserId:         sql.NullString{String: in.OwnUserId, Valid: true},
 		Desc:              in.Desc,
@@ -71,7 +64,22 @@ func (l *AddGoodsLogic) AddGoods(in *goodsPb.AddGoodsReq) (*goodsPb.AddGoodsResp
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)
 	}
 	num, _ := result.RowsAffected()
-
+	//库存已从goods表移除，发送一条消息，插入库存
+	msg := &mq.InsertStockMsg{
+		Stock:     in.Stock,
+		GoodsId:   goodsId,
+		TimeStamp: time.Now().Unix(),
+	}
+	data, err := json.Marshal(msg)
+	if err != nil {
+		l.Logger.Errorf(constant.MarshalErr, "addFoods", "jsonMarshal", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
+	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMQConf.Topics.TopicInsertStock, data)
+	if err != nil {
+		l.Logger.Errorf(constant.WhereFailed, "addFoods", "send", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
 	return &goodsPb.AddGoodsResp{
 		Ok: num > 0,
 	}, nil

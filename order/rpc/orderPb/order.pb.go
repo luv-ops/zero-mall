@@ -110,8 +110,6 @@ func (x *CreateOrderReq) GetUserId() string {
 type CreateOrderResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
-	PayAmount     string                 `protobuf:"bytes,2,opt,name=pay_amount,json=payAmount,proto3" json:"pay_amount,omitempty"`
-	TotalAmount   string                 `protobuf:"bytes,3,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -149,20 +147,6 @@ func (*CreateOrderResp) Descriptor() ([]byte, []int) {
 func (x *CreateOrderResp) GetOrderNo() string {
 	if x != nil {
 		return x.OrderNo
-	}
-	return ""
-}
-
-func (x *CreateOrderResp) GetPayAmount() string {
-	if x != nil {
-		return x.PayAmount
-	}
-	return ""
-}
-
-func (x *CreateOrderResp) GetTotalAmount() string {
-	if x != nil {
-		return x.TotalAmount
 	}
 	return ""
 }
@@ -689,12 +673,9 @@ const file_proto_order_proto_rawDesc = "" +
 	"\x10receiver_address\x18\x04 \x01(\tR\x0freceiverAddress\x12\x1b\n" +
 	"\x06remark\x18\x05 \x01(\tH\x00R\x06remark\x88\x01\x01\x12\x17\n" +
 	"\auser_id\x18\x06 \x01(\tR\x06userIdB\t\n" +
-	"\a_remark\"n\n" +
+	"\a_remark\",\n" +
 	"\x0fCreateOrderResp\x12\x19\n" +
-	"\border_no\x18\x01 \x01(\tR\aorderNo\x12\x1d\n" +
-	"\n" +
-	"pay_amount\x18\x02 \x01(\tR\tpayAmount\x12!\n" +
-	"\ftotal_amount\x18\x03 \x01(\tR\vtotalAmount\"+\n" +
+	"\border_no\x18\x01 \x01(\tR\aorderNo\"+\n" +
 	"\x0eOrderDetailReq\x12\x19\n" +
 	"\border_no\x18\x01 \x01(\tR\aorderNo\"\xc9\x03\n" +
 	"\x0fOrderDetailResp\x12\x19\n" +

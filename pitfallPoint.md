@@ -108,3 +108,5 @@ err := m.conn.QueryRowCtx(ctx, user, sqlStr, userId)
     比如:json unmarshal error  json: cannot unmarshal string into Go struct field CartItem.selected of type int64
 
 ### golang使用redis时，如果getCtx ,key不存在会返回空串和nil，key存在但是值为空也是返回空串,nil
+
+### rocketmq consumer中invisibleDuration（消息不可见时间）最小必须 10000ms = 10 秒！

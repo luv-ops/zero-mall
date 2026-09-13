@@ -101,7 +101,7 @@ func (l *AddCartLogic) AddCart(in *cartPb.AddCartReq) (*cartPb.AddCartResp, erro
 		logc.Infof(l.ctx, "json marshell err %v", err)
 		return nil, err
 	}
-	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Producer.TopicSyncFiling, jsonStr)
+	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicSyncFiling, jsonStr)
 	if err != nil {
 		logc.Infof(l.ctx, "send msg err %v", err)
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)

@@ -29,6 +29,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*OrderItem, error)
 		Update(ctx context.Context, data *OrderItem) error
 		Delete(ctx context.Context, id int64) error
+		FindGIdsByOrderNo(ctx context.Context, orderNo string) ([]*OrderItem, error)
 	}
 
 	defaultOrderItemModel struct {
@@ -38,8 +39,8 @@ type (
 
 	OrderItem struct {
 		Id         int64     `db:"id"`          // 明细表自身主键
-		OrderNo    string    `db:"order_no"`    // 关联订单业务号
-		GoodsId    int64     `db:"goods_id"`    // 商品ID（来自goods服务）
+		OrderNo    int64     `db:"order_no"`    // 关联订单号
+		GoodsId    string    `db:"goods_id"`    // 商品ID（来自goods服务）
 		GoodsName  string    `db:"goods_name"`  // 下单时商品名称快照
 		GoodsCover string    `db:"goods_cover"` // 下单时商品封面快照
 		PriceCent  int64     `db:"price_cent"`  // 下单时单件价格(分)

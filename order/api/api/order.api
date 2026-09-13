@@ -17,17 +17,15 @@ type CreateOrderReq {
 }
 
 type CreateOrderResp {
-	OrderNo     string `json:"orderNo"`
-	PayAmount   string `json:"payAmount"`
-	TotalAmount string `json:"totalAmount"`
+	OrderNo string `json:"orderNo"`
 }
 
 type OrderDetailReq {
-	OrderNo string `path:"orderNo"`
+	OrderNo string `json:"orderNo"`
 }
 
 type OrderDetailResp {
-	OrderNo          string         `json:"orderNo"` //雪花业务订单号
+	OrderNo          string         `json:"orderNo"`
 	Status           int64          `json:"status"` //订单状态码
 	ReceiverName     string         `json:"receiverName"`
 	ReceiverPhone    string         `json:"receiverPhone"`

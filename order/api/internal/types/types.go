@@ -12,18 +12,16 @@ type CreateOrderReq struct {
 }
 
 type CreateOrderResp struct {
-	OrderNo     string `json:"orderNo"`
-	PayAmount   string `json:"payAmount"`
-	TotalAmount string `json:"totalAmount"`
+	OrderNo string `json:"orderNo"`
 }
 
 type OrderDetailReq struct {
-	OrderNo string `path:"orderNo"`
+	OrderNo string `json:"orderNo"`
 }
 
 type OrderDetailResp struct {
-	OrderNo          string         `json:"orderNo"` //雪花业务订单号
-	Status           int64          `json:"status"`  //订单状态码
+	OrderNo          string         `json:"orderNo"`
+	Status           int64          `json:"status"` //订单状态码
 	ReceiverName     string         `json:"receiverName"`
 	ReceiverPhone    string         `json:"receiverPhone"`
 	ReceiverAddress  string         `json:"receiverAddress"`

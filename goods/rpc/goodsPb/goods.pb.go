@@ -431,7 +431,6 @@ type GoodsDetailResp struct {
 	Cover         string                 `protobuf:"bytes,3,opt,name=cover,proto3" json:"cover,omitempty"`
 	Price         string                 `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
 	OriginalPrice string                 `protobuf:"bytes,5,opt,name=originalPrice,proto3" json:"originalPrice,omitempty"`
-	Stock         int64                  `protobuf:"varint,6,opt,name=stock,proto3" json:"stock,omitempty"`
 	Sales         int64                  `protobuf:"varint,7,opt,name=sales,proto3" json:"sales,omitempty"`
 	Desc          string                 `protobuf:"bytes,8,opt,name=desc,proto3" json:"desc,omitempty"`
 	Status        int64                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
@@ -502,13 +501,6 @@ func (x *GoodsDetailResp) GetOriginalPrice() string {
 		return x.OriginalPrice
 	}
 	return ""
-}
-
-func (x *GoodsDetailResp) GetStock() int64 {
-	if x != nil {
-		return x.Stock
-	}
-	return 0
 }
 
 func (x *GoodsDetailResp) GetSales() int64 {
@@ -1035,14 +1027,13 @@ const file_proto_goods_proto_rawDesc = "" +
 	"\x04list\x18\x01 \x03(\v2\x10.goods.GoodsItemR\x04list\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"*\n" +
 	"\x0eGoodsDetailReq\x12\x18\n" +
-	"\agoodsId\x18\x01 \x01(\tR\agoodsId\"\xe9\x01\n" +
+	"\agoodsId\x18\x01 \x01(\tR\agoodsId\"\xd3\x01\n" +
 	"\x0fGoodsDetailResp\x12\x18\n" +
 	"\agoodsId\x18\x01 \x01(\tR\agoodsId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05cover\x18\x03 \x01(\tR\x05cover\x12\x14\n" +
 	"\x05price\x18\x04 \x01(\tR\x05price\x12$\n" +
 	"\roriginalPrice\x18\x05 \x01(\tR\roriginalPrice\x12\x14\n" +
-	"\x05stock\x18\x06 \x01(\x03R\x05stock\x12\x14\n" +
 	"\x05sales\x18\a \x01(\x03R\x05sales\x12\x12\n" +
 	"\x04desc\x18\b \x01(\tR\x04desc\x12\x16\n" +
 	"\x06status\x18\t \x01(\x03R\x06status\"A\n" +

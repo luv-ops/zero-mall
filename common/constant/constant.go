@@ -29,12 +29,20 @@ const (
 const (
 	AreaKey            = "area:pid:%d:level:%d"
 	UserInfoKey        = "user:info:"
-	GoodsInfoKey       = "goods:info:"
-	ShortTTL           = 5 * 60
-	LongTTL            = 60 * 60
 	CartKey            = "cart:"
 	PendingSyncCartKey = "pending:sync:users"
+	OrderPreviewKey    = "order:preview"
 	//缓存穿透
 	RedisEmptyValue    = "_EMPTY_VALUE" //解决go中使用redis.get时，访问不存在的key，err是nil问题
 	DefaultReceiveArea = "area:default:"
+	GoodsBaseKey       = "goods:base:"
+	GoodsStockKey      = "goods:stock:"
+	MinShortTTL        = 30
+	ShortTTL           = 5 * 60
+	LongTTL            = 60 * 60
+)
+
+// mysql
+const (
+	OrderStatusClose = 4
 )
