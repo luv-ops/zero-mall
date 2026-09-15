@@ -30,7 +30,6 @@ type AddGoodsReq struct {
 	Stock         int64                  `protobuf:"varint,5,opt,name=stock,proto3" json:"stock,omitempty"`
 	CategoryId    int64                  `protobuf:"varint,6,opt,name=categoryId,proto3" json:"categoryId,omitempty"`
 	Desc          string                 `protobuf:"bytes,7,opt,name=desc,proto3" json:"desc,omitempty"`
-	OwnUserId     string                 `protobuf:"bytes,8,opt,name=ownUserId,proto3" json:"ownUserId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -110,13 +109,6 @@ func (x *AddGoodsReq) GetCategoryId() int64 {
 func (x *AddGoodsReq) GetDesc() string {
 	if x != nil {
 		return x.Desc
-	}
-	return ""
-}
-
-func (x *AddGoodsReq) GetOwnUserId() string {
-	if x != nil {
-		return x.OwnUserId
 	}
 	return ""
 }
@@ -620,210 +612,6 @@ func (x *OnOffGoodsResp) GetOk() bool {
 	return false
 }
 
-type AdminGoodsListReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AdminGoodsListReq) Reset() {
-	*x = AdminGoodsListReq{}
-	mi := &file_proto_goods_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AdminGoodsListReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AdminGoodsListReq) ProtoMessage() {}
-
-func (x *AdminGoodsListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_goods_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AdminGoodsListReq.ProtoReflect.Descriptor instead.
-func (*AdminGoodsListReq) Descriptor() ([]byte, []int) {
-	return file_proto_goods_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *AdminGoodsListReq) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
-type AdminGoodsItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	GoodsId       string                 `protobuf:"bytes,1,opt,name=goodsId,proto3" json:"goodsId,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Cover         string                 `protobuf:"bytes,3,opt,name=cover,proto3" json:"cover,omitempty"`
-	Price         string                 `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
-	OriginalPrice string                 `protobuf:"bytes,5,opt,name=originalPrice,proto3" json:"originalPrice,omitempty"`
-	Sales         int64                  `protobuf:"varint,6,opt,name=sales,proto3" json:"sales,omitempty"`
-	Stock         int64                  `protobuf:"varint,7,opt,name=stock,proto3" json:"stock,omitempty"`
-	CategoryId    int64                  `protobuf:"varint,8,opt,name=categoryId,proto3" json:"categoryId,omitempty"`
-	Status        int64                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AdminGoodsItem) Reset() {
-	*x = AdminGoodsItem{}
-	mi := &file_proto_goods_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AdminGoodsItem) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AdminGoodsItem) ProtoMessage() {}
-
-func (x *AdminGoodsItem) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_goods_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AdminGoodsItem.ProtoReflect.Descriptor instead.
-func (*AdminGoodsItem) Descriptor() ([]byte, []int) {
-	return file_proto_goods_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *AdminGoodsItem) GetGoodsId() string {
-	if x != nil {
-		return x.GoodsId
-	}
-	return ""
-}
-
-func (x *AdminGoodsItem) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *AdminGoodsItem) GetCover() string {
-	if x != nil {
-		return x.Cover
-	}
-	return ""
-}
-
-func (x *AdminGoodsItem) GetPrice() string {
-	if x != nil {
-		return x.Price
-	}
-	return ""
-}
-
-func (x *AdminGoodsItem) GetOriginalPrice() string {
-	if x != nil {
-		return x.OriginalPrice
-	}
-	return ""
-}
-
-func (x *AdminGoodsItem) GetSales() int64 {
-	if x != nil {
-		return x.Sales
-	}
-	return 0
-}
-
-func (x *AdminGoodsItem) GetStock() int64 {
-	if x != nil {
-		return x.Stock
-	}
-	return 0
-}
-
-func (x *AdminGoodsItem) GetCategoryId() int64 {
-	if x != nil {
-		return x.CategoryId
-	}
-	return 0
-}
-
-func (x *AdminGoodsItem) GetStatus() int64 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-type AdminGoodsListResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*AdminGoodsItem      `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AdminGoodsListResp) Reset() {
-	*x = AdminGoodsListResp{}
-	mi := &file_proto_goods_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AdminGoodsListResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AdminGoodsListResp) ProtoMessage() {}
-
-func (x *AdminGoodsListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_goods_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AdminGoodsListResp.ProtoReflect.Descriptor instead.
-func (*AdminGoodsListResp) Descriptor() ([]byte, []int) {
-	return file_proto_goods_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *AdminGoodsListResp) GetList() []*AdminGoodsItem {
-	if x != nil {
-		return x.List
-	}
-	return nil
-}
-
-func (x *AdminGoodsListResp) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
 type BatchGetGoodsInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GoodsIds      []string               `protobuf:"bytes,1,rep,name=goodsIds,proto3" json:"goodsIds,omitempty"`
@@ -833,7 +621,7 @@ type BatchGetGoodsInfoReq struct {
 
 func (x *BatchGetGoodsInfoReq) Reset() {
 	*x = BatchGetGoodsInfoReq{}
-	mi := &file_proto_goods_proto_msgTypes[12]
+	mi := &file_proto_goods_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -845,7 +633,7 @@ func (x *BatchGetGoodsInfoReq) String() string {
 func (*BatchGetGoodsInfoReq) ProtoMessage() {}
 
 func (x *BatchGetGoodsInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_goods_proto_msgTypes[12]
+	mi := &file_proto_goods_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -858,7 +646,7 @@ func (x *BatchGetGoodsInfoReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetGoodsInfoReq.ProtoReflect.Descriptor instead.
 func (*BatchGetGoodsInfoReq) Descriptor() ([]byte, []int) {
-	return file_proto_goods_proto_rawDescGZIP(), []int{12}
+	return file_proto_goods_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *BatchGetGoodsInfoReq) GetGoodsIds() []string {
@@ -877,7 +665,7 @@ type BatchGetGoodsInfoResp struct {
 
 func (x *BatchGetGoodsInfoResp) Reset() {
 	*x = BatchGetGoodsInfoResp{}
-	mi := &file_proto_goods_proto_msgTypes[13]
+	mi := &file_proto_goods_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -889,7 +677,7 @@ func (x *BatchGetGoodsInfoResp) String() string {
 func (*BatchGetGoodsInfoResp) ProtoMessage() {}
 
 func (x *BatchGetGoodsInfoResp) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_goods_proto_msgTypes[13]
+	mi := &file_proto_goods_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -902,7 +690,7 @@ func (x *BatchGetGoodsInfoResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetGoodsInfoResp.ProtoReflect.Descriptor instead.
 func (*BatchGetGoodsInfoResp) Descriptor() ([]byte, []int) {
-	return file_proto_goods_proto_rawDescGZIP(), []int{13}
+	return file_proto_goods_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *BatchGetGoodsInfoResp) GetList() []*GoodsInfoItem {
@@ -925,7 +713,7 @@ type GoodsInfoItem struct {
 
 func (x *GoodsInfoItem) Reset() {
 	*x = GoodsInfoItem{}
-	mi := &file_proto_goods_proto_msgTypes[14]
+	mi := &file_proto_goods_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -937,7 +725,7 @@ func (x *GoodsInfoItem) String() string {
 func (*GoodsInfoItem) ProtoMessage() {}
 
 func (x *GoodsInfoItem) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_goods_proto_msgTypes[14]
+	mi := &file_proto_goods_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -950,7 +738,7 @@ func (x *GoodsInfoItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GoodsInfoItem.ProtoReflect.Descriptor instead.
 func (*GoodsInfoItem) Descriptor() ([]byte, []int) {
-	return file_proto_goods_proto_rawDescGZIP(), []int{14}
+	return file_proto_goods_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GoodsInfoItem) GetGoodsId() string {
@@ -992,7 +780,7 @@ var File_proto_goods_proto protoreflect.FileDescriptor
 
 const file_proto_goods_proto_rawDesc = "" +
 	"\n" +
-	"\x11proto/goods.proto\x12\x05goods\"\xdb\x01\n" +
+	"\x11proto/goods.proto\x12\x05goods\"\xbd\x01\n" +
 	"\vAddGoodsReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05cover\x18\x02 \x01(\tR\x05cover\x12$\n" +
@@ -1002,8 +790,7 @@ const file_proto_goods_proto_rawDesc = "" +
 	"\n" +
 	"categoryId\x18\x06 \x01(\x03R\n" +
 	"categoryId\x12\x12\n" +
-	"\x04desc\x18\a \x01(\tR\x04desc\x12\x1c\n" +
-	"\townUserId\x18\b \x01(\tR\townUserId\"\x1e\n" +
+	"\x04desc\x18\a \x01(\tR\x04desc\"\x1e\n" +
 	"\fAddGoodsResp\x12\x0e\n" +
 	"\x02ok\x18\x01 \x01(\bR\x02ok\"^\n" +
 	"\fGoodsListReq\x12\x1e\n" +
@@ -1041,24 +828,7 @@ const file_proto_goods_proto_rawDesc = "" +
 	"\agoodsId\x18\x01 \x01(\tR\agoodsId\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x03R\x06status\" \n" +
 	"\x0eOnOffGoodsResp\x12\x0e\n" +
-	"\x02ok\x18\x01 \x01(\bR\x02ok\"+\n" +
-	"\x11AdminGoodsListReq\x12\x16\n" +
-	"\x06userId\x18\x01 \x01(\tR\x06userId\"\xf4\x01\n" +
-	"\x0eAdminGoodsItem\x12\x18\n" +
-	"\agoodsId\x18\x01 \x01(\tR\agoodsId\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
-	"\x05cover\x18\x03 \x01(\tR\x05cover\x12\x14\n" +
-	"\x05price\x18\x04 \x01(\tR\x05price\x12$\n" +
-	"\roriginalPrice\x18\x05 \x01(\tR\roriginalPrice\x12\x14\n" +
-	"\x05sales\x18\x06 \x01(\x03R\x05sales\x12\x14\n" +
-	"\x05stock\x18\a \x01(\x03R\x05stock\x12\x1e\n" +
-	"\n" +
-	"categoryId\x18\b \x01(\x03R\n" +
-	"categoryId\x12\x16\n" +
-	"\x06status\x18\t \x01(\x03R\x06status\"U\n" +
-	"\x12AdminGoodsListResp\x12)\n" +
-	"\x04list\x18\x01 \x03(\v2\x15.goods.AdminGoodsItemR\x04list\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"2\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok\"2\n" +
 	"\x14BatchGetGoodsInfoReq\x12\x1a\n" +
 	"\bgoodsIds\x18\x01 \x03(\tR\bgoodsIds\"A\n" +
 	"\x15BatchGetGoodsInfoResp\x12(\n" +
@@ -1068,14 +838,13 @@ const file_proto_goods_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05cover\x18\x03 \x01(\tR\x05cover\x12\x14\n" +
 	"\x05price\x18\x04 \x01(\tR\x05price\x12$\n" +
-	"\roriginalPrice\x18\x05 \x01(\tR\roriginalPrice2\x8d\x03\n" +
+	"\roriginalPrice\x18\x05 \x01(\tR\roriginalPrice2\xc3\x02\n" +
 	"\x05goods\x129\n" +
 	"\fGetGoodsList\x12\x13.goods.GoodsListReq\x1a\x14.goods.GoodsListResp\x12?\n" +
 	"\x0eGetGoodsDetail\x12\x15.goods.GoodsDetailReq\x1a\x16.goods.GoodsDetailResp\x123\n" +
 	"\bAddGoods\x12\x12.goods.AddGoodsReq\x1a\x13.goods.AddGoodsResp\x129\n" +
 	"\n" +
-	"OnOffGoods\x12\x14.goods.OnOffGoodsReq\x1a\x15.goods.OnOffGoodsResp\x12H\n" +
-	"\x11GetAdminGoodsList\x12\x18.goods.AdminGoodsListReq\x1a\x19.goods.AdminGoodsListResp\x12N\n" +
+	"OnOffGoods\x12\x14.goods.OnOffGoodsReq\x1a\x15.goods.OnOffGoodsResp\x12N\n" +
 	"\x11BatchGetGoodsInfo\x12\x1b.goods.BatchGetGoodsInfoReq\x1a\x1c.goods.BatchGetGoodsInfoRespB\vZ\t./goodsPbb\x06proto3"
 
 var (
@@ -1090,7 +859,7 @@ func file_proto_goods_proto_rawDescGZIP() []byte {
 	return file_proto_goods_proto_rawDescData
 }
 
-var file_proto_goods_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_proto_goods_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_goods_proto_goTypes = []any{
 	(*AddGoodsReq)(nil),           // 0: goods.AddGoodsReq
 	(*AddGoodsResp)(nil),          // 1: goods.AddGoodsResp
@@ -1101,34 +870,28 @@ var file_proto_goods_proto_goTypes = []any{
 	(*GoodsDetailResp)(nil),       // 6: goods.GoodsDetailResp
 	(*OnOffGoodsReq)(nil),         // 7: goods.OnOffGoodsReq
 	(*OnOffGoodsResp)(nil),        // 8: goods.OnOffGoodsResp
-	(*AdminGoodsListReq)(nil),     // 9: goods.AdminGoodsListReq
-	(*AdminGoodsItem)(nil),        // 10: goods.AdminGoodsItem
-	(*AdminGoodsListResp)(nil),    // 11: goods.AdminGoodsListResp
-	(*BatchGetGoodsInfoReq)(nil),  // 12: goods.BatchGetGoodsInfoReq
-	(*BatchGetGoodsInfoResp)(nil), // 13: goods.BatchGetGoodsInfoResp
-	(*GoodsInfoItem)(nil),         // 14: goods.GoodsInfoItem
+	(*BatchGetGoodsInfoReq)(nil),  // 9: goods.BatchGetGoodsInfoReq
+	(*BatchGetGoodsInfoResp)(nil), // 10: goods.BatchGetGoodsInfoResp
+	(*GoodsInfoItem)(nil),         // 11: goods.GoodsInfoItem
 }
 var file_proto_goods_proto_depIdxs = []int32{
 	3,  // 0: goods.GoodsListResp.list:type_name -> goods.GoodsItem
-	10, // 1: goods.AdminGoodsListResp.list:type_name -> goods.AdminGoodsItem
-	14, // 2: goods.BatchGetGoodsInfoResp.list:type_name -> goods.GoodsInfoItem
-	2,  // 3: goods.goods.GetGoodsList:input_type -> goods.GoodsListReq
-	5,  // 4: goods.goods.GetGoodsDetail:input_type -> goods.GoodsDetailReq
-	0,  // 5: goods.goods.AddGoods:input_type -> goods.AddGoodsReq
-	7,  // 6: goods.goods.OnOffGoods:input_type -> goods.OnOffGoodsReq
-	9,  // 7: goods.goods.GetAdminGoodsList:input_type -> goods.AdminGoodsListReq
-	12, // 8: goods.goods.BatchGetGoodsInfo:input_type -> goods.BatchGetGoodsInfoReq
-	4,  // 9: goods.goods.GetGoodsList:output_type -> goods.GoodsListResp
-	6,  // 10: goods.goods.GetGoodsDetail:output_type -> goods.GoodsDetailResp
-	1,  // 11: goods.goods.AddGoods:output_type -> goods.AddGoodsResp
-	8,  // 12: goods.goods.OnOffGoods:output_type -> goods.OnOffGoodsResp
-	11, // 13: goods.goods.GetAdminGoodsList:output_type -> goods.AdminGoodsListResp
-	13, // 14: goods.goods.BatchGetGoodsInfo:output_type -> goods.BatchGetGoodsInfoResp
-	9,  // [9:15] is the sub-list for method output_type
-	3,  // [3:9] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	11, // 1: goods.BatchGetGoodsInfoResp.list:type_name -> goods.GoodsInfoItem
+	2,  // 2: goods.goods.GetGoodsList:input_type -> goods.GoodsListReq
+	5,  // 3: goods.goods.GetGoodsDetail:input_type -> goods.GoodsDetailReq
+	0,  // 4: goods.goods.AddGoods:input_type -> goods.AddGoodsReq
+	7,  // 5: goods.goods.OnOffGoods:input_type -> goods.OnOffGoodsReq
+	9,  // 6: goods.goods.BatchGetGoodsInfo:input_type -> goods.BatchGetGoodsInfoReq
+	4,  // 7: goods.goods.GetGoodsList:output_type -> goods.GoodsListResp
+	6,  // 8: goods.goods.GetGoodsDetail:output_type -> goods.GoodsDetailResp
+	1,  // 9: goods.goods.AddGoods:output_type -> goods.AddGoodsResp
+	8,  // 10: goods.goods.OnOffGoods:output_type -> goods.OnOffGoodsResp
+	10, // 11: goods.goods.BatchGetGoodsInfo:output_type -> goods.BatchGetGoodsInfoResp
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_goods_proto_init() }
@@ -1142,7 +905,7 @@ func file_proto_goods_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_goods_proto_rawDesc), len(file_proto_goods_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

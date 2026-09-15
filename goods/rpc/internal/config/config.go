@@ -9,7 +9,6 @@ import (
 type Config struct {
 	zrpc.RpcServerConf
 	Mysql        sqlx.SqlConf
-	UserRpcConf  zrpc.RpcClientConf
 	RedisConf    redis.RedisConf
 	RocketMQConf struct {
 		Endpoint string

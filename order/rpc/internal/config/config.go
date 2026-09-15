@@ -25,6 +25,7 @@ type Config struct {
 			TopicOrderOff    string
 			TopicDelCart     string
 			TopicReturnStock string
+			TopicFrozenStock string
 		}
 		Consumer struct {
 			Group struct {
@@ -34,5 +35,6 @@ type Config struct {
 			MaxMsgNum         int32
 			InvisibleDuration time.Duration
 		}
+		DelayOffOrderDuration time.Duration
 	}
 }

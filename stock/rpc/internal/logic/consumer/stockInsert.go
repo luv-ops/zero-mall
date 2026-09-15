@@ -37,6 +37,7 @@ func (l *StockInsertConsumer) stockInsert(ctx context.Context, stockMsg *mq.Inse
 	stock := model.Stock{
 		GoodsId:        stockMsg.GoodsId,
 		AvailableStock: stockMsg.Stock,
+		Version:        1,
 	}
 	_, err := l.svc.StockModel.Insert(ctx, &stock)
 	return err

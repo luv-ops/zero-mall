@@ -10,9 +10,12 @@ type CartDelMsg struct {
 	TimeStamp int64    `json:"timeStamp"`
 }
 type OrderOffMessage struct {
-	OrderNo   string `json:"orderNo"`
+	OrderNo   int64  `json:"orderNo"`
 	UserId    string `json:"userId"`
 	TimeStamp int64  `json:"timeStamp"`
+}
+type OrderTransactionMsg struct {
+	OrderNo int64 `json:"orderNo"`
 }
 type InsertStockMsg struct {
 	Stock     int64  `json:"stock"`
@@ -25,4 +28,12 @@ type ReturnStockItem struct {
 }
 type ReturnStockMsg struct {
 	List []*ReturnStockItem `json:"list"`
+}
+type FrozenStockMsg struct {
+	List []*FrozenItem `json:"list"`
+}
+type FrozenItem struct {
+	OrderNo int64  `json:"orderNo"`
+	GoodsId string `json:"goodsId"`
+	Num     int64  `json:"num"`
 }

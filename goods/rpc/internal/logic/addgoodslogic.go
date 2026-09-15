@@ -2,16 +2,13 @@ package logic
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"time"
 	"zeromall/common/constant"
 	"zeromall/common/convert"
 	"zeromall/common/mq"
-	"zeromall/goods/rpc/internal/model"
-	"zeromall/user/rpc/userpb"
-
 	"zeromall/goods/rpc/goodsPb"
+	"zeromall/goods/rpc/internal/model"
 	"zeromall/goods/rpc/internal/svc"
 
 	"github.com/google/uuid"
@@ -36,17 +33,6 @@ func NewAddGoodsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddGoods
 
 func (l *AddGoodsLogic) AddGoods(in *goodsPb.AddGoodsReq) (*goodsPb.AddGoodsResp, error) {
 	// todo: add your logic here and delete this line
-	//查上架人员是否有售卖权
-	res, err := l.svcCtx.UserRpc.GetSellPower(l.ctx, &userpb.GetSellPowerReq{
-		UserId: in.OwnUserId,
-	})
-	if err != nil {
-		l.Logger.Error("调用GetSellPower失败", err.Error())
-		return nil, status.Error(codes.Internal, "检验售卖权失败")
-	}
-	if res.Ok != true {
-		return nil, status.Error(codes.PermissionDenied, constant.PermissionSellError)
-	}
 	goodsId := uuid.NewString()
 	goods := model.Goods{
 		GoodsId:           goodsId,
@@ -55,7 +41,7 @@ func (l *AddGoodsLogic) AddGoods(in *goodsPb.AddGoodsReq) (*goodsPb.AddGoodsResp
 		PriceCent:         convert.YuanStrToCents(in.Price),
 		OriginalPriceCent: convert.YuanStrToCents(in.OriginalPrice),
 		CategoryId:        in.CategoryId,
-		OwnUserId:         sql.NullString{String: in.OwnUserId, Valid: true},
+		Status:            1,
 		Desc:              in.Desc,
 	}
 	result, err := l.svcCtx.GoodsModel.Insert(l.ctx, &goods)

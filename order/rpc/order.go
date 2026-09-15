@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"zeromall/common/mq"
 	"zeromall/order/rpc/internal/config"
 	"zeromall/order/rpc/internal/logic/consumer"
+	"zeromall/order/rpc/internal/logic/txProducer"
 	"zeromall/order/rpc/internal/server"
 	"zeromall/order/rpc/internal/svc"
 	"zeromall/order/rpc/orderPb"
@@ -36,12 +38,23 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	checker := txProducer.NewOrderTransactionChecker(ctx)
+	pg := mq.ProducerConfig{
+		Endpoint: c.RocketMqConf.Endpoint,
+		Topics:   []string{c.RocketMqConf.Topics.TopicFrozenStock},
+	}
+	txPro, err := mq.NewTxProducer(&pg, checker)
+	if err != nil {
+		panic(err)
+	}
+	ctx.TxProducer = txPro
 	group := service.NewServiceGroup()
 	group.Add(s)
 	group.Add(mgr)
 	defer func() {
 		group.Stop()
 		_ = ctx.Producer.Stop()
+		_ = txPro.Stop()
 	}()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)

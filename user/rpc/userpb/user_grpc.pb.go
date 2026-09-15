@@ -25,7 +25,6 @@ const (
 	User_UserInfo_FullMethodName          = "/user.User/UserInfo"
 	User_ChangeInfo_FullMethodName        = "/user.User/ChangeInfo"
 	User_GetRegion_FullMethodName         = "/user.User/GetRegion"
-	User_GetSellPower_FullMethodName      = "/user.User/GetSellPower"
 	User_AddRecAddress_FullMethodName     = "/user.User/AddRecAddress"
 	User_GetReceiveAddress_FullMethodName = "/user.User/GetReceiveAddress"
 	User_GetDefaultArea_FullMethodName    = "/user.User/GetDefaultArea"
@@ -41,7 +40,6 @@ type UserClient interface {
 	UserInfo(ctx context.Context, in *UserInfoReq, opts ...grpc.CallOption) (*UserInfoResp, error)
 	ChangeInfo(ctx context.Context, in *ChangeInfoReq, opts ...grpc.CallOption) (*ChangeInfoResp, error)
 	GetRegion(ctx context.Context, in *GetRegionReq, opts ...grpc.CallOption) (*GetRegionResp, error)
-	GetSellPower(ctx context.Context, in *GetSellPowerReq, opts ...grpc.CallOption) (*GetSellPowerResp, error)
 	AddRecAddress(ctx context.Context, in *AddReceiveAddressReq, opts ...grpc.CallOption) (*AddReceiveAddressResp, error)
 	GetReceiveAddress(ctx context.Context, in *GetReceiveAddressReq, opts ...grpc.CallOption) (*GetReceiveAddressResp, error)
 	GetDefaultArea(ctx context.Context, in *GetDefaultAreaReq, opts ...grpc.CallOption) (*GetDefaultAreaResp, error)
@@ -115,16 +113,6 @@ func (c *userClient) GetRegion(ctx context.Context, in *GetRegionReq, opts ...gr
 	return out, nil
 }
 
-func (c *userClient) GetSellPower(ctx context.Context, in *GetSellPowerReq, opts ...grpc.CallOption) (*GetSellPowerResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetSellPowerResp)
-	err := c.cc.Invoke(ctx, User_GetSellPower_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userClient) AddRecAddress(ctx context.Context, in *AddReceiveAddressReq, opts ...grpc.CallOption) (*AddReceiveAddressResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AddReceiveAddressResp)
@@ -165,7 +153,6 @@ type UserServer interface {
 	UserInfo(context.Context, *UserInfoReq) (*UserInfoResp, error)
 	ChangeInfo(context.Context, *ChangeInfoReq) (*ChangeInfoResp, error)
 	GetRegion(context.Context, *GetRegionReq) (*GetRegionResp, error)
-	GetSellPower(context.Context, *GetSellPowerReq) (*GetSellPowerResp, error)
 	AddRecAddress(context.Context, *AddReceiveAddressReq) (*AddReceiveAddressResp, error)
 	GetReceiveAddress(context.Context, *GetReceiveAddressReq) (*GetReceiveAddressResp, error)
 	GetDefaultArea(context.Context, *GetDefaultAreaReq) (*GetDefaultAreaResp, error)
@@ -196,9 +183,6 @@ func (UnimplementedUserServer) ChangeInfo(context.Context, *ChangeInfoReq) (*Cha
 }
 func (UnimplementedUserServer) GetRegion(context.Context, *GetRegionReq) (*GetRegionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRegion not implemented")
-}
-func (UnimplementedUserServer) GetSellPower(context.Context, *GetSellPowerReq) (*GetSellPowerResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetSellPower not implemented")
 }
 func (UnimplementedUserServer) AddRecAddress(context.Context, *AddReceiveAddressReq) (*AddReceiveAddressResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddRecAddress not implemented")
@@ -338,24 +322,6 @@ func _User_GetRegion_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetSellPower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSellPowerReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).GetSellPower(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_GetSellPower_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetSellPower(ctx, req.(*GetSellPowerReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _User_AddRecAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddReceiveAddressReq)
 	if err := dec(in); err != nil {
@@ -440,10 +406,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRegion",
 			Handler:    _User_GetRegion_Handler,
-		},
-		{
-			MethodName: "GetSellPower",
-			Handler:    _User_GetSellPower_Handler,
 		},
 		{
 			MethodName: "AddRecAddress",

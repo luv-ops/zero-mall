@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 	"zeromall/common/constant"
 	"zeromall/common/mq"
 	"zeromall/order/rpc/internal/svc"
@@ -35,6 +36,21 @@ func (l *OrderOffConsumer) Consume(ctx context.Context, mvs []*rmq_client.Messag
 
 // 消费逻辑
 func (l *OrderOffConsumer) orderOff(ctx context.Context, msg *mq.OrderOffMessage) error {
+	//先查一下expireTime和status
+	order, err := l.svc.OrderModel.FindOneByOrderNo(ctx, msg.OrderNo)
+	if err != nil {
+		return err
+	}
+	//因为不能消息延迟消息的延迟时间，可能会导致消息还没有到设置的延迟时间就被投递
+	if order.Status != int64(0) {
+		//订单状态已变化，不再归还库存，直接丢弃消息
+		return nil
+	}
+	if order.ExpireTime.After(time.Now()) {
+		//订单还没有过期，也直接丢弃
+		return nil
+	}
+
 	//先查询订单状态是否为未支付，如果未支付才能取消订单
 	num, err := l.svc.OrderModel.CloseConditional(ctx, msg.OrderNo)
 	if err != nil {

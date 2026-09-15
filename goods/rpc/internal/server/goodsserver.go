@@ -43,11 +43,6 @@ func (s *GoodsServer) OnOffGoods(ctx context.Context, in *goodsPb.OnOffGoodsReq)
 	return l.OnOffGoods(in)
 }
 
-func (s *GoodsServer) GetAdminGoodsList(ctx context.Context, in *goodsPb.AdminGoodsListReq) (*goodsPb.AdminGoodsListResp, error) {
-	l := logic.NewGetAdminGoodsListLogic(ctx, s.svcCtx)
-	return l.GetAdminGoodsList(in)
-}
-
 func (s *GoodsServer) BatchGetGoodsInfo(ctx context.Context, in *goodsPb.BatchGetGoodsInfoReq) (*goodsPb.BatchGetGoodsInfoResp, error) {
 	l := logic.NewBatchGetGoodsInfoLogic(ctx, s.svcCtx)
 	return l.BatchGetGoodsInfo(in)

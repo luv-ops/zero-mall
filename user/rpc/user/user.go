@@ -27,8 +27,6 @@ type (
 	GetReceiveAddressResp = userpb.GetReceiveAddressResp
 	GetRegionReq          = userpb.GetRegionReq
 	GetRegionResp         = userpb.GetRegionResp
-	GetSellPowerReq       = userpb.GetSellPowerReq
-	GetSellPowerResp      = userpb.GetSellPowerResp
 	LoginReq              = userpb.LoginReq
 	LoginResp             = userpb.LoginResp
 	RegionItem            = userpb.RegionItem
@@ -44,7 +42,6 @@ type (
 		UserInfo(ctx context.Context, in *UserInfoReq, opts ...grpc.CallOption) (*UserInfoResp, error)
 		ChangeInfo(ctx context.Context, in *ChangeInfoReq, opts ...grpc.CallOption) (*ChangeInfoResp, error)
 		GetRegion(ctx context.Context, in *GetRegionReq, opts ...grpc.CallOption) (*GetRegionResp, error)
-		GetSellPower(ctx context.Context, in *GetSellPowerReq, opts ...grpc.CallOption) (*GetSellPowerResp, error)
 		AddRecAddress(ctx context.Context, in *AddReceiveAddressReq, opts ...grpc.CallOption) (*AddReceiveAddressResp, error)
 		GetReceiveAddress(ctx context.Context, in *GetReceiveAddressReq, opts ...grpc.CallOption) (*GetReceiveAddressResp, error)
 		GetDefaultArea(ctx context.Context, in *GetDefaultAreaReq, opts ...grpc.CallOption) (*GetDefaultAreaResp, error)
@@ -89,11 +86,6 @@ func (m *defaultUser) ChangeInfo(ctx context.Context, in *ChangeInfoReq, opts ..
 func (m *defaultUser) GetRegion(ctx context.Context, in *GetRegionReq, opts ...grpc.CallOption) (*GetRegionResp, error) {
 	client := userpb.NewUserClient(m.cli.Conn())
 	return client.GetRegion(ctx, in, opts...)
-}
-
-func (m *defaultUser) GetSellPower(ctx context.Context, in *GetSellPowerReq, opts ...grpc.CallOption) (*GetSellPowerResp, error) {
-	client := userpb.NewUserClient(m.cli.Conn())
-	return client.GetSellPower(ctx, in, opts...)
 }
 
 func (m *defaultUser) AddRecAddress(ctx context.Context, in *AddReceiveAddressReq, opts ...grpc.CallOption) (*AddReceiveAddressResp, error) {

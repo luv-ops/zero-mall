@@ -89,47 +89,125 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 			Num:        cartItem.GoodsNum,
 		})
 	}
-
-	orderData := &model.Order{
-		Id:         snowId,
+	var remark string
+	var remarkBool bool
+	if in.Remark != nil {
+		remark = *in.Remark
+		remarkBool = true
+	} else {
+		remark = ""
+		remarkBool = false
+	}
+	orderData := &model.Orders{
+		OrderNo:    snowId,
 		UserId:     in.UserId,
 		PayCent:    payAmount.Round(2).Mul(decimal.NewFromInt(100)).IntPart(),
 		TotalCent:  totalAmount.Round(2).Mul(decimal.NewFromInt(100)).IntPart(),
-		ExpireTime: time.Now().Add(30 * time.Minute),
-		Remark:     sql.NullString{String: *in.Remark, Valid: true},
+		ExpireTime: time.Now().Add(l.svcCtx.Config.RocketMqConf.DelayOffOrderDuration),
+		Remark:     sql.NullString{String: remark, Valid: remarkBool},
 	}
-	//插入两张表 order,order_item TODO 分布式事务
-	sum, err := l.svcCtx.OrderModel.TxInsert(l.ctx, orderData, orderItemData)
+	//调用redis预扣减库存
+	var successList []*model.OrderItem
+	ok := true
+	for _, v := range orderItemData {
+		key := constant.StockGoodsKey + v.GoodsId
+		res, err := l.svcCtx.Redis.EvalShaCtx(l.ctx, l.svcCtx.StockFrozenSha, []string{key}, v.Num)
+		if err != nil {
+			ok = false
+			break
+		}
+		ret, _ := res.(int64)
+		if ret != int64(1) {
+			ok = false
+			break
+		}
+		successList = append(successList, v)
+	}
+	//有一个商品扣减失败，回滚
+	if !ok {
+		for _, v := range successList {
+			key := constant.StockGoodsKey + v.GoodsId
+			_, err := l.svcCtx.Redis.EvalShaCtx(l.ctx, l.svcCtx.UnFrozenStockSha, []string{key}, v.Num)
+			if err != nil {
+				l.Logger.Errorf("回滚失败", "unFrozenStockSha", err.Error())
+				continue
+			}
+			return nil, status.Error(codes.Internal, "库存不足")
+		}
+	}
+	//插入三张表 order,order_item,transactionLog
+	//开启消息事务
+
+	//发送给库存服务的消息
+	var stockItems []*mq.FrozenItem
+	for _, v := range orderItemData {
+		stockItems = append(stockItems, &mq.FrozenItem{
+			OrderNo: v.OrderNo,
+			GoodsId: v.GoodsId,
+			Num:     v.Num,
+		})
+	}
+	var stockMsg mq.FrozenStockMsg
+	stockMsg.List = stockItems
+	stockData, err := json.Marshal(stockMsg)
 	if err != nil {
-		l.Logger.Errorf(constant.WhereFailed, "previewOrder", err.Error())
+		l.Logger.Errorf(constant.MarshalErr, "createOrder", err.Error())
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)
 	}
-	if sum <= 0 {
-		return nil, status.Error(codes.Internal, "创建订单失败")
-	}
-	//创建订单成功后删除购物车,发送消息异步删除
-	cartMsg := mq.CartDelMsg{
-		UserId:    in.UserId,
-		GoodsIds:  in.GoodsIds,
-		TimeStamp: time.Now().Unix(),
-	}
-	message, _ := json.Marshal(cartMsg)
-	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicDelCart, message)
+	//开启消息事务
+	tx := l.svcCtx.TxProducer.BeginTransaction()
+	//发送半消息,预冻结库存
+	receipt, err := l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicFrozenStock, stockData, tx)
 	if err != nil {
-		l.Logger.Errorf(constant.WhereFailed, "createOrder send err", err.Error())
+		l.Logger.Errorf(constant.WhereFailed, "createOrder", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
+	transactionData := &model.TransactionLog{
+		TxId:    receipt.TransactionId,
+		OrderNo: snowId,
+	}
+	//插入三张表 order,order_item,transactionLog
+	num, err := l.svcCtx.OrderModel.TxInsert(l.ctx, orderData, orderItemData, transactionData)
+	if err != nil {
+		//回滚
+		_ = tx.RollBack()
+		l.Logger.Errorf(constant.WhereFailed, "createOrder", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
+	//提交后，消费者才能真正收到消息
+	if err := tx.Commit(); err != nil {
+		l.Logger.Errorf(constant.WhereFailed, "commit err", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
+	if num == 0 {
+		l.Logger.Infof("createOrder没有出现错误，但是没有任何行被影响")
 	}
 	// 发送延迟消息，用于超时关闭订单
 	msg := mq.OrderOffMessage{
-		OrderNo:   strconv.FormatInt(snowId, 10),
+		OrderNo:   snowId,
 		UserId:    in.UserId,
 		TimeStamp: time.Now().Unix(),
 	}
 	data, _ := json.Marshal(msg)
-	err = l.svcCtx.Producer.SendDelay(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicOrderOff, data, 30*time.Minute)
+	err = l.svcCtx.Producer.SendDelay(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicOrderOff, data, l.svcCtx.Config.RocketMqConf.DelayOffOrderDuration)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "createOrder send delay", err.Error())
 		//TODO 投递失败插入本地消息表，人工介入
 	}
+	//创建订单成功后删除购物车,发送消息异步删除
+	go func() {
+		cartMsg := mq.CartDelMsg{
+			UserId:    in.UserId,
+			GoodsIds:  in.GoodsIds,
+			TimeStamp: time.Now().Unix(),
+		}
+		message, _ := json.Marshal(cartMsg)
+		//协程中不能用l.ctx,因为预计执行时间可能请求链路已结束
+		err = l.svcCtx.Producer.Send(context.TODO(), l.svcCtx.Config.RocketMqConf.Topics.TopicDelCart, message)
+		if err != nil {
+			l.Logger.Errorf(constant.WhereFailed, "createOrder send err", err.Error())
+		}
+	}()
 	return &orderPb.CreateOrderResp{
 		OrderNo: strconv.FormatInt(snowId, 10),
 	}, nil

@@ -64,12 +64,6 @@ message RegionItem{
 message GetRegionResp{
   repeated RegionItem list=1;
 }
-message GetSellPowerReq{
-  string userId=1;
-}
-message GetSellPowerResp{
-  bool ok=1;
-}
 message AddReceiveAddressReq{
   string receiveName=1;
   string receivePhone=2;
@@ -109,7 +103,6 @@ service User {
   rpc UserInfo (UserInfoReq) returns (UserInfoResp);
   rpc ChangeInfo (ChangeInfoReq) returns (ChangeInfoResp);
   rpc GetRegion (GetRegionReq) returns (GetRegionResp);
-  rpc GetSellPower (GetSellPowerReq) returns (GetSellPowerResp);
   rpc AddRecAddress (AddReceiveAddressReq) returns (AddReceiveAddressResp);
   rpc GetReceiveAddress (GetReceiveAddressReq) returns (GetReceiveAddressResp);
   rpc GetDefaultArea (GetDefaultAreaReq) returns (GetDefaultAreaResp);

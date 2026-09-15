@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Stock_InsertStock_FullMethodName = "/stock.stock/insertStock"
-	Stock_GetStock_FullMethodName    = "/stock.stock/getStock"
+	Stock_InsertStock_FullMethodName  = "/stock.stock/insertStock"
+	Stock_GetStock_FullMethodName     = "/stock.stock/getStock"
+	Stock_PreHeatStock_FullMethodName = "/stock.stock/preHeatStock"
 )
 
 // StockClient is the client API for Stock service.
@@ -29,6 +30,7 @@ const (
 type StockClient interface {
 	InsertStock(ctx context.Context, in *InsertStockReq, opts ...grpc.CallOption) (*InsertStockResp, error)
 	GetStock(ctx context.Context, in *GetStockReq, opts ...grpc.CallOption) (*GetStockResp, error)
+	PreHeatStock(ctx context.Context, in *PreHeatStockReq, opts ...grpc.CallOption) (*PreHeatStockResp, error)
 }
 
 type stockClient struct {
@@ -59,12 +61,23 @@ func (c *stockClient) GetStock(ctx context.Context, in *GetStockReq, opts ...grp
 	return out, nil
 }
 
+func (c *stockClient) PreHeatStock(ctx context.Context, in *PreHeatStockReq, opts ...grpc.CallOption) (*PreHeatStockResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PreHeatStockResp)
+	err := c.cc.Invoke(ctx, Stock_PreHeatStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StockServer is the server API for Stock service.
 // All implementations must embed UnimplementedStockServer
 // for forward compatibility.
 type StockServer interface {
 	InsertStock(context.Context, *InsertStockReq) (*InsertStockResp, error)
 	GetStock(context.Context, *GetStockReq) (*GetStockResp, error)
+	PreHeatStock(context.Context, *PreHeatStockReq) (*PreHeatStockResp, error)
 	mustEmbedUnimplementedStockServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedStockServer) InsertStock(context.Context, *InsertStockReq) (*
 }
 func (UnimplementedStockServer) GetStock(context.Context, *GetStockReq) (*GetStockResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetStock not implemented")
+}
+func (UnimplementedStockServer) PreHeatStock(context.Context, *PreHeatStockReq) (*PreHeatStockResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method PreHeatStock not implemented")
 }
 func (UnimplementedStockServer) mustEmbedUnimplementedStockServer() {}
 func (UnimplementedStockServer) testEmbeddedByValue()               {}
@@ -138,6 +154,24 @@ func _Stock_GetStock_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Stock_PreHeatStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PreHeatStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServer).PreHeatStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Stock_PreHeatStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServer).PreHeatStock(ctx, req.(*PreHeatStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Stock_ServiceDesc is the grpc.ServiceDesc for Stock service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var Stock_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getStock",
 			Handler:    _Stock_GetStock_Handler,
+		},
+		{
+			MethodName: "preHeatStock",
+			Handler:    _Stock_PreHeatStock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -29,7 +29,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*OrderItem, error)
 		Update(ctx context.Context, data *OrderItem) error
 		Delete(ctx context.Context, id int64) error
-		FindGIdsByOrderNo(ctx context.Context, orderNo string) ([]*OrderItem, error)
+		FindGIdsByOrderNo(ctx context.Context, orderNo int64) ([]*OrderItem, error)
 	}
 
 	defaultOrderItemModel struct {

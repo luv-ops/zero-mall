@@ -8,8 +8,6 @@ const (
 	UserExist           = "用户已存在"
 	PasswordError       = "密码错误"
 	CaptchaError        = "验证码错误"
-	PermissionSellError = "未获得售卖权"
-	GoodsArgError       = "商品参数错误"
 	GoodsNotFound       = "商品不存在"
 	AreaNotFound        = "地区不存在"
 	PhoneIllegal        = "手机号非法"
@@ -36,10 +34,11 @@ const (
 	RedisEmptyValue    = "_EMPTY_VALUE" //解决go中使用redis.get时，访问不存在的key，err是nil问题
 	DefaultReceiveArea = "area:default:"
 	GoodsBaseKey       = "goods:base:"
-	GoodsStockKey      = "goods:stock:"
-	MinShortTTL        = 30
-	ShortTTL           = 5 * 60
-	LongTTL            = 60 * 60
+	//大促商品库存预热key
+	StockGoodsKey = "stock:goods:"
+	MinShortTTL   = 30
+	ShortTTL      = 5 * 60
+	LongTTL       = 60 * 60
 )
 
 // mysql

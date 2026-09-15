@@ -33,7 +33,7 @@ func (m *customOrderItemModel) withSession(session sqlx.Session) OrderItemModel 
 	return NewOrderItemModel(sqlx.NewSqlConnFromSession(session))
 }
 
-func (m *defaultOrderModel) FindGIdsByOrderNo(ctx context.Context, orderNo string) ([]*OrderItem, error) {
+func (m *defaultOrderItemModel) FindGIdsByOrderNo(ctx context.Context, orderNo int64) ([]*OrderItem, error) {
 	sqlStr := fmt.Sprintf(`select goods_id,num from %s where order_no=?`, m.table)
 	var list []*OrderItem
 	err := m.conn.QueryRowsPartialCtx(ctx, &list, sqlStr, orderNo)

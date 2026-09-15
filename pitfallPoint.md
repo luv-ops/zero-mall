@@ -10,7 +10,7 @@ goctl rpc protoc proto/user.proto --go_out=. --go-grpc_out=. --zrpc_out=.
 ```
 ### goctl在线连接mysql自动创建表
 ```
-goctl model mysql datasource --url "root:3110940369w@tcp(127.0.0.1:3306)/zero_user" -t "user" --dir "internal/model
+goctl model mysql datasource --url "root:3110940369w@tcp(127.0.0.1:3306)/zero_user" -t "user" --dir "internal/model"
 ```
 
 ### 启动rpc和api 相同命令
@@ -19,6 +19,7 @@ goctl model mysql datasource --url "root:3110940369w@tcp(127.0.0.1:3306)/zero_us
  go run goods.go -f etc/goods.yaml
  go run order.go -f etc/order.yaml
  go run cart.go -f etc/cart.yaml
+ go run stock.go -f etc/stock.yaml
 ```
 
 ### 某些字段需要设置可选，比如请求体某些字段需要进行可选

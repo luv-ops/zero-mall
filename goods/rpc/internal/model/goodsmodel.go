@@ -99,3 +99,9 @@ func (m *defaultGoodsModel) FindRowByGoodsId(ctx context.Context, goodsId string
 	err := m.conn.QueryRowPartialCtx(ctx, &item, sqlStr, goodsId)
 	return &item, err
 }
+
+// PageBreakFind(ctx context.Context, categoryId int64, page int32, pageSize int32) ([]*Goods, error)
+//FindByOwnId(ctx context.Context, userId string) ([]*Goods, error)
+//UpdateFields(ctx context.Context, goodsId string, setMap map[string]any) (int64, error)
+//FindRowsByGoodsId(ctx context.Context, goodsIds []string) ([]*Goods, error)
+//FindRowByGoodsId(ctx context.Context, goodsId string) (*Goods, error)

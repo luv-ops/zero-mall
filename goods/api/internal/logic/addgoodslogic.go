@@ -29,7 +29,6 @@ func NewAddGoodsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddGoods
 
 func (l *AddGoodsLogic) AddGoods(req *types.AddGoodsReq) error {
 	// todo: add your logic here and delete this line
-	userId := l.ctx.Value("userId").(string)
 	resp, err := l.svcCtx.GoodsRpc.AddGoods(l.ctx, &goodsPb.AddGoodsReq{
 		Name:          req.Name,
 		Cover:         req.Cover,
@@ -38,7 +37,6 @@ func (l *AddGoodsLogic) AddGoods(req *types.AddGoodsReq) error {
 		Stock:         req.Stock,
 		CategoryId:    req.CategoryId,
 		Desc:          req.Desc,
-		OwnUserId:     userId,
 	})
 	if err != nil {
 		return err

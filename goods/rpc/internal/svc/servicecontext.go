@@ -8,7 +8,6 @@ import (
 
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
@@ -21,7 +20,6 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Mysql.DataSource)
-	client := zrpc.MustNewClient(c.UserRpcConf)
 	rdb := redis.MustNewRedis(c.RedisConf)
 	pg := mq.ProducerConfig{
 		Endpoint: c.RocketMQConf.Endpoint,
@@ -34,7 +32,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:     c,
 		GoodsModel: model.NewGoodsModel(conn),
-		UserRpc:    userpb.NewUserClient(client.Conn()),
 		Redis:      rdb,
 		Producer:   pro,
 	}

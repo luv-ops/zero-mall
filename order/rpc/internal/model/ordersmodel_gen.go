@@ -17,29 +17,29 @@ import (
 )
 
 var (
-	orderFieldNames          = builder.RawFieldNames(&Order{})
-	orderRows                = strings.Join(orderFieldNames, ",")
-	orderRowsExpectAutoSet   = strings.Join(stringx.Remove(orderFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	orderRowsWithPlaceHolder = strings.Join(stringx.Remove(orderFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	ordersFieldNames          = builder.RawFieldNames(&Orders{})
+	ordersRows                = strings.Join(ordersFieldNames, ",")
+	ordersRowsExpectAutoSet   = strings.Join(stringx.Remove(ordersFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	ordersRowsWithPlaceHolder = strings.Join(stringx.Remove(ordersFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 )
 
 type (
-	orderModel interface {
-		Insert(ctx context.Context, data *Order) (sql.Result, error)
-		FindOne(ctx context.Context, id int64) (*Order, error)
-		FindOneByOrderNo(ctx context.Context, orderNo int64) (*Order, error)
-		Update(ctx context.Context, data *Order) error
+	ordersModel interface {
+		Insert(ctx context.Context, data *Orders) (sql.Result, error)
+		FindOne(ctx context.Context, id int64) (*Orders, error)
+		FindOneByOrderNo(ctx context.Context, orderNo int64) (*Orders, error)
+		Update(ctx context.Context, data *Orders) error
 		Delete(ctx context.Context, id int64) error
-		TxInsert(ctx context.Context, orderData *Order, orderItemData []*OrderItem) (int64, error)
-		CloseConditional(ctx context.Context, orderNo string) (int64, error)
+		TxInsert(ctx context.Context, orderData *Orders, orderItemData []*OrderItem, txLogData *TransactionLog) (int64, error)
+		CloseConditional(ctx context.Context, orderNo int64) (int64, error)
 	}
 
-	defaultOrderModel struct {
+	defaultOrdersModel struct {
 		conn  sqlx.SqlConn
 		table string
 	}
 
-	Order struct {
+	Orders struct {
 		Id          int64          `db:"id"`           // 自增主键id
 		OrderNo     int64          `db:"order_no"`     // 雪花id
 		UserId      string         `db:"user_id"`      // 下单用户ID（来自user服务）
@@ -59,22 +59,22 @@ type (
 	}
 )
 
-func newOrderModel(conn sqlx.SqlConn) *defaultOrderModel {
-	return &defaultOrderModel{
+func newOrdersModel(conn sqlx.SqlConn) *defaultOrdersModel {
+	return &defaultOrdersModel{
 		conn:  conn,
-		table: "`order`",
+		table: "`orders`",
 	}
 }
 
-func (m *defaultOrderModel) Delete(ctx context.Context, id int64) error {
+func (m *defaultOrdersModel) Delete(ctx context.Context, id int64) error {
 	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 	_, err := m.conn.ExecCtx(ctx, query, id)
 	return err
 }
 
-func (m *defaultOrderModel) FindOne(ctx context.Context, id int64) (*Order, error) {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", orderRows, m.table)
-	var resp Order
+func (m *defaultOrdersModel) FindOne(ctx context.Context, id int64) (*Orders, error) {
+	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", ordersRows, m.table)
+	var resp Orders
 	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
@@ -86,9 +86,9 @@ func (m *defaultOrderModel) FindOne(ctx context.Context, id int64) (*Order, erro
 	}
 }
 
-func (m *defaultOrderModel) FindOneByOrderNo(ctx context.Context, orderNo int64) (*Order, error) {
-	var resp Order
-	query := fmt.Sprintf("select %s from %s where `order_no` = ? limit 1", orderRows, m.table)
+func (m *defaultOrdersModel) FindOneByOrderNo(ctx context.Context, orderNo int64) (*Orders, error) {
+	var resp Orders
+	query := fmt.Sprintf("select %s from %s where `order_no` = ? limit 1", ordersRows, m.table)
 	err := m.conn.QueryRowCtx(ctx, &resp, query, orderNo)
 	switch err {
 	case nil:
@@ -100,18 +100,18 @@ func (m *defaultOrderModel) FindOneByOrderNo(ctx context.Context, orderNo int64)
 	}
 }
 
-func (m *defaultOrderModel) Insert(ctx context.Context, data *Order) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, orderRowsExpectAutoSet)
+func (m *defaultOrdersModel) Insert(ctx context.Context, data *Orders) (sql.Result, error) {
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, ordersRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.OrderNo, data.UserId, data.TotalCent, data.PayCent, data.Status, data.PayType, data.PayTime, data.DeliverTime, data.ReceiveTime, data.CancelTime, data.Remark, data.ExpireTime, data.DeletedAt)
 	return ret, err
 }
 
-func (m *defaultOrderModel) Update(ctx context.Context, newData *Order) error {
-	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, orderRowsWithPlaceHolder)
+func (m *defaultOrdersModel) Update(ctx context.Context, newData *Orders) error {
+	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, ordersRowsWithPlaceHolder)
 	_, err := m.conn.ExecCtx(ctx, query, newData.OrderNo, newData.UserId, newData.TotalCent, newData.PayCent, newData.Status, newData.PayType, newData.PayTime, newData.DeliverTime, newData.ReceiveTime, newData.CancelTime, newData.Remark, newData.ExpireTime, newData.DeletedAt, newData.Id)
 	return err
 }
 
-func (m *defaultOrderModel) tableName() string {
+func (m *defaultOrdersModel) tableName() string {
 	return m.table
 }

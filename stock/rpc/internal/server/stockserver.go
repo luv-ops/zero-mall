@@ -32,3 +32,8 @@ func (s *StockServer) GetStock(ctx context.Context, in *stockPb.GetStockReq) (*s
 	l := logic.NewGetStockLogic(ctx, s.svcCtx)
 	return l.GetStock(in)
 }
+
+func (s *StockServer) PreHeatStock(ctx context.Context, in *stockPb.PreHeatStockReq) (*stockPb.PreHeatStockResp, error) {
+	l := logic.NewPreHeatStockLogic(ctx, s.svcCtx)
+	return l.PreHeatStock(in)
+}

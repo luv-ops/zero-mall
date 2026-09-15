@@ -17,7 +17,14 @@ message getStockReq{
 message getStockResp{
   int64 stock=1;
 }
+message preHeatStockReq{
+  repeated string goodsId=1;
+}
+message preHeatStockResp{
+  bool ok=1;
+}
 service stock{
   rpc insertStock (insertStockReq) returns (insertStockResp);
   rpc getStock   (getStockReq) returns (getStockResp);
+  rpc preHeatStock (preHeatStockReq) returns (preHeatStockResp);
 }

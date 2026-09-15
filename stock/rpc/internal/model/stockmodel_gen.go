@@ -20,7 +20,7 @@ import (
 var (
 	stockFieldNames          = builder.RawFieldNames(&Stock{})
 	stockRows                = strings.Join(stockFieldNames, ",")
-	stockRowsExpectAutoSet   = strings.Join(stringx.Remove(stockFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	stockRowsExpectAutoSet   = strings.Join(stringx.Remove(stockFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	stockRowsWithPlaceHolder = strings.Join(stringx.Remove(stockFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 )
 
@@ -32,6 +32,8 @@ type (
 		Update(ctx context.Context, data *Stock) error
 		Delete(ctx context.Context, id int64) error
 		StockBatchReturn(ctx context.Context, list []*mq.ReturnStockItem) (int64, error)
+		BatchFrozenStock(ctx context.Context, list []*mq.FrozenItem) (int64, error)
+		GetStockByGoodsIds(ctx context.Context, goodsIds []string) ([]*Stock, error)
 	}
 
 	defaultStockModel struct {
@@ -92,8 +94,8 @@ func (m *defaultStockModel) FindOneByGoodsId(ctx context.Context, goodsId string
 }
 
 func (m *defaultStockModel) Insert(ctx context.Context, data *Stock) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, stockRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Id, data.GoodsId, data.AvailableStock, data.FrozenStock, data.Version)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, stockRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.GoodsId, data.AvailableStock, data.FrozenStock, data.Version)
 	return ret, err
 }
 

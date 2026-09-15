@@ -33,15 +33,15 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//加载lua脚本
 	sha, err := rdb.ScriptLoadCtx(ctx, luaScript.AddCartScript)
 	if err != nil {
-		log.Fatalf("SCRIPT LOAD add_cart lua failed: %v", err)
+		log.Fatalf("SCRIPT LOAD add_cart luaScript failed: %v", err)
 	}
 	sha2, err := rdb.ScriptLoadCtx(context.Background(), luaScript.BackFillScript)
 	if err != nil {
-		log.Fatalf("SCRIPT LOAD back_fill lua failed: %v", err)
+		log.Fatalf("SCRIPT LOAD back_fill luaScript failed: %v", err)
 	}
 	sha3, err := rdb.ScriptLoadCtx(context.Background(), luaScript.UpdateCartScript)
 	if err != nil {
-		log.Fatalf("SCRIPT LOAD update_cart lua failed: %v", err)
+		log.Fatalf("SCRIPT LOAD update_cart luaScript failed: %v", err)
 	}
 	//注入goodsRpc
 	client := zrpc.MustNewClient(c.GoodsRpcConf)

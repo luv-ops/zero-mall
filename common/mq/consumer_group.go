@@ -3,7 +3,6 @@ package mq
 import (
 	"fmt"
 
-	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
 )
 
@@ -29,7 +28,6 @@ func (m *ConsumerManager) Start() {
 		if err := cr.Start(); err != nil {
 			panic(fmt.Sprintf("mq: start consumer[%s] failed: %v", cr.Name(), err))
 		}
-		logx.Info("mq: start consumer[%s] success", cr.Name())
 	}
 }
 

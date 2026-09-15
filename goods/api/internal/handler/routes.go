@@ -40,11 +40,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: OnOffGoodsHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/goods/self",
-				Handler: GetAdminGoodsListHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodPatch,
 				Path:    "/goods/stock",
 				Handler: UpdateStockHandler(serverCtx),

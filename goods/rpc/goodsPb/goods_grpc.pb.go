@@ -23,7 +23,6 @@ const (
 	Goods_GetGoodsDetail_FullMethodName    = "/goods.goods/GetGoodsDetail"
 	Goods_AddGoods_FullMethodName          = "/goods.goods/AddGoods"
 	Goods_OnOffGoods_FullMethodName        = "/goods.goods/OnOffGoods"
-	Goods_GetAdminGoodsList_FullMethodName = "/goods.goods/GetAdminGoodsList"
 	Goods_BatchGetGoodsInfo_FullMethodName = "/goods.goods/BatchGetGoodsInfo"
 )
 
@@ -35,7 +34,6 @@ type GoodsClient interface {
 	GetGoodsDetail(ctx context.Context, in *GoodsDetailReq, opts ...grpc.CallOption) (*GoodsDetailResp, error)
 	AddGoods(ctx context.Context, in *AddGoodsReq, opts ...grpc.CallOption) (*AddGoodsResp, error)
 	OnOffGoods(ctx context.Context, in *OnOffGoodsReq, opts ...grpc.CallOption) (*OnOffGoodsResp, error)
-	GetAdminGoodsList(ctx context.Context, in *AdminGoodsListReq, opts ...grpc.CallOption) (*AdminGoodsListResp, error)
 	BatchGetGoodsInfo(ctx context.Context, in *BatchGetGoodsInfoReq, opts ...grpc.CallOption) (*BatchGetGoodsInfoResp, error)
 }
 
@@ -87,16 +85,6 @@ func (c *goodsClient) OnOffGoods(ctx context.Context, in *OnOffGoodsReq, opts ..
 	return out, nil
 }
 
-func (c *goodsClient) GetAdminGoodsList(ctx context.Context, in *AdminGoodsListReq, opts ...grpc.CallOption) (*AdminGoodsListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminGoodsListResp)
-	err := c.cc.Invoke(ctx, Goods_GetAdminGoodsList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *goodsClient) BatchGetGoodsInfo(ctx context.Context, in *BatchGetGoodsInfoReq, opts ...grpc.CallOption) (*BatchGetGoodsInfoResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BatchGetGoodsInfoResp)
@@ -115,7 +103,6 @@ type GoodsServer interface {
 	GetGoodsDetail(context.Context, *GoodsDetailReq) (*GoodsDetailResp, error)
 	AddGoods(context.Context, *AddGoodsReq) (*AddGoodsResp, error)
 	OnOffGoods(context.Context, *OnOffGoodsReq) (*OnOffGoodsResp, error)
-	GetAdminGoodsList(context.Context, *AdminGoodsListReq) (*AdminGoodsListResp, error)
 	BatchGetGoodsInfo(context.Context, *BatchGetGoodsInfoReq) (*BatchGetGoodsInfoResp, error)
 	mustEmbedUnimplementedGoodsServer()
 }
@@ -138,9 +125,6 @@ func (UnimplementedGoodsServer) AddGoods(context.Context, *AddGoodsReq) (*AddGoo
 }
 func (UnimplementedGoodsServer) OnOffGoods(context.Context, *OnOffGoodsReq) (*OnOffGoodsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method OnOffGoods not implemented")
-}
-func (UnimplementedGoodsServer) GetAdminGoodsList(context.Context, *AdminGoodsListReq) (*AdminGoodsListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAdminGoodsList not implemented")
 }
 func (UnimplementedGoodsServer) BatchGetGoodsInfo(context.Context, *BatchGetGoodsInfoReq) (*BatchGetGoodsInfoResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchGetGoodsInfo not implemented")
@@ -238,24 +222,6 @@ func _Goods_OnOffGoods_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Goods_GetAdminGoodsList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminGoodsListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GoodsServer).GetAdminGoodsList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Goods_GetAdminGoodsList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoodsServer).GetAdminGoodsList(ctx, req.(*AdminGoodsListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Goods_BatchGetGoodsInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BatchGetGoodsInfoReq)
 	if err := dec(in); err != nil {
@@ -296,10 +262,6 @@ var Goods_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "OnOffGoods",
 			Handler:    _Goods_OnOffGoods_Handler,
-		},
-		{
-			MethodName: "GetAdminGoodsList",
-			Handler:    _Goods_GetAdminGoodsList_Handler,
 		},
 		{
 			MethodName: "BatchGetGoodsInfo",

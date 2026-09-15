@@ -68,23 +68,6 @@ type UpdateStock {
 	Num     int64  `json:"num"`
 }
 
-type SelfGoodsItem {
-	GoodsId       string `json:"goodsId"`
-	Name          string `json:"name"`
-	Cover         string `json:"cover"`
-	Price         string `json:"price"`
-	OriginalPrice string `json:"originalPrice"`
-	Stock         int64  `json:"stone"`
-	Sales         int64  `json:"sales"`
-	CategoryId    int64  `json:"categoryId"`
-	Status        int64  `json:"status"`
-}
-
-type SelfGoodsListResp {
-	List  []*SelfGoodsItem `json:"list"`
-	Total int64            `json:"total"`
-}
-
 service goods {
 	@handler GetGoodsList
 	get /goods/list (GoodsListReq) returns (GoodsListResp)
@@ -105,8 +88,5 @@ service goods {
 
 	@handler UpdateStock
 	patch /goods/stock (UpdateStock)
-
-	@handler GetAdminGoodsList
-	get /goods/self returns (SelfGoodsListResp)
 }
 

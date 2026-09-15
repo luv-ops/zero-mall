@@ -53,11 +53,6 @@ func (s *UserServer) GetRegion(ctx context.Context, in *userpb.GetRegionReq) (*u
 	return l.GetRegion(in)
 }
 
-func (s *UserServer) GetSellPower(ctx context.Context, in *userpb.GetSellPowerReq) (*userpb.GetSellPowerResp, error) {
-	l := logic.NewGetSellPowerLogic(ctx, s.svcCtx)
-	return l.GetSellPower(in)
-}
-
 func (s *UserServer) AddRecAddress(ctx context.Context, in *userpb.AddReceiveAddressReq) (*userpb.AddReceiveAddressResp, error) {
 	l := logic.NewAddRecAddressLogic(ctx, s.svcCtx)
 	return l.AddRecAddress(in)

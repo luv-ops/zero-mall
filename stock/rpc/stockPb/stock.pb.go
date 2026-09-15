@@ -205,6 +205,94 @@ func (x *GetStockResp) GetStock() int64 {
 	return 0
 }
 
+type PreHeatStockReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GoodsId       []string               `protobuf:"bytes,1,rep,name=goodsId,proto3" json:"goodsId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PreHeatStockReq) Reset() {
+	*x = PreHeatStockReq{}
+	mi := &file_proto_stock_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PreHeatStockReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PreHeatStockReq) ProtoMessage() {}
+
+func (x *PreHeatStockReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_stock_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PreHeatStockReq.ProtoReflect.Descriptor instead.
+func (*PreHeatStockReq) Descriptor() ([]byte, []int) {
+	return file_proto_stock_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PreHeatStockReq) GetGoodsId() []string {
+	if x != nil {
+		return x.GoodsId
+	}
+	return nil
+}
+
+type PreHeatStockResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ok            bool                   `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PreHeatStockResp) Reset() {
+	*x = PreHeatStockResp{}
+	mi := &file_proto_stock_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PreHeatStockResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PreHeatStockResp) ProtoMessage() {}
+
+func (x *PreHeatStockResp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_stock_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PreHeatStockResp.ProtoReflect.Descriptor instead.
+func (*PreHeatStockResp) Descriptor() ([]byte, []int) {
+	return file_proto_stock_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PreHeatStockResp) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
 var File_proto_stock_proto protoreflect.FileDescriptor
 
 const file_proto_stock_proto_rawDesc = "" +
@@ -218,10 +306,15 @@ const file_proto_stock_proto_rawDesc = "" +
 	"\vgetStockReq\x12\x18\n" +
 	"\agoodsId\x18\x01 \x01(\tR\agoodsId\"$\n" +
 	"\fgetStockResp\x12\x14\n" +
-	"\x05stock\x18\x01 \x01(\x03R\x05stock2z\n" +
+	"\x05stock\x18\x01 \x01(\x03R\x05stock\"+\n" +
+	"\x0fpreHeatStockReq\x12\x18\n" +
+	"\agoodsId\x18\x01 \x03(\tR\agoodsId\"\"\n" +
+	"\x10preHeatStockResp\x12\x0e\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok2\xbb\x01\n" +
 	"\x05stock\x12<\n" +
 	"\vinsertStock\x12\x15.stock.insertStockReq\x1a\x16.stock.insertStockResp\x123\n" +
-	"\bgetStock\x12\x12.stock.getStockReq\x1a\x13.stock.getStockRespB\vZ\t./stockPbb\x06proto3"
+	"\bgetStock\x12\x12.stock.getStockReq\x1a\x13.stock.getStockResp\x12?\n" +
+	"\fpreHeatStock\x12\x16.stock.preHeatStockReq\x1a\x17.stock.preHeatStockRespB\vZ\t./stockPbb\x06proto3"
 
 var (
 	file_proto_stock_proto_rawDescOnce sync.Once
@@ -235,20 +328,24 @@ func file_proto_stock_proto_rawDescGZIP() []byte {
 	return file_proto_stock_proto_rawDescData
 }
 
-var file_proto_stock_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_stock_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_stock_proto_goTypes = []any{
-	(*InsertStockReq)(nil),  // 0: stock.insertStockReq
-	(*InsertStockResp)(nil), // 1: stock.insertStockResp
-	(*GetStockReq)(nil),     // 2: stock.getStockReq
-	(*GetStockResp)(nil),    // 3: stock.getStockResp
+	(*InsertStockReq)(nil),   // 0: stock.insertStockReq
+	(*InsertStockResp)(nil),  // 1: stock.insertStockResp
+	(*GetStockReq)(nil),      // 2: stock.getStockReq
+	(*GetStockResp)(nil),     // 3: stock.getStockResp
+	(*PreHeatStockReq)(nil),  // 4: stock.preHeatStockReq
+	(*PreHeatStockResp)(nil), // 5: stock.preHeatStockResp
 }
 var file_proto_stock_proto_depIdxs = []int32{
 	0, // 0: stock.stock.insertStock:input_type -> stock.insertStockReq
 	2, // 1: stock.stock.getStock:input_type -> stock.getStockReq
-	1, // 2: stock.stock.insertStock:output_type -> stock.insertStockResp
-	3, // 3: stock.stock.getStock:output_type -> stock.getStockResp
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: stock.stock.preHeatStock:input_type -> stock.preHeatStockReq
+	1, // 3: stock.stock.insertStock:output_type -> stock.insertStockResp
+	3, // 4: stock.stock.getStock:output_type -> stock.getStockResp
+	5, // 5: stock.stock.preHeatStock:output_type -> stock.preHeatStockResp
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -265,7 +362,7 @@ func file_proto_stock_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_stock_proto_rawDesc), len(file_proto_stock_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

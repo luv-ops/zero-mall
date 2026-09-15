@@ -55,23 +55,6 @@ type OnOffGoodsReq struct {
 	Status  int64  `path:"status"`
 }
 
-type SelfGoodsItem struct {
-	GoodsId       string `json:"goodsId"`
-	Name          string `json:"name"`
-	Cover         string `json:"cover"`
-	Price         string `json:"price"`
-	OriginalPrice string `json:"originalPrice"`
-	Stock         int64  `json:"stone"`
-	Sales         int64  `json:"sales"`
-	CategoryId    int64  `json:"categoryId"`
-	Status        int64  `json:"status"`
-}
-
-type SelfGoodsListResp struct {
-	List  []*SelfGoodsItem `json:"list"`
-	Total int64            `json:"total"`
-}
-
 type UpdateStock struct {
 	GoodsId string `json:"goodsId"`
 	Num     int64  `json:"num"`

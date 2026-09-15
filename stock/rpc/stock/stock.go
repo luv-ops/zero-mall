@@ -14,14 +14,17 @@ import (
 )
 
 type (
-	GetStockReq     = stockPb.GetStockReq
-	GetStockResp    = stockPb.GetStockResp
-	InsertStockReq  = stockPb.InsertStockReq
-	InsertStockResp = stockPb.InsertStockResp
+	GetStockReq      = stockPb.GetStockReq
+	GetStockResp     = stockPb.GetStockResp
+	InsertStockReq   = stockPb.InsertStockReq
+	InsertStockResp  = stockPb.InsertStockResp
+	PreHeatStockReq  = stockPb.PreHeatStockReq
+	PreHeatStockResp = stockPb.PreHeatStockResp
 
 	Stock interface {
 		InsertStock(ctx context.Context, in *InsertStockReq, opts ...grpc.CallOption) (*InsertStockResp, error)
 		GetStock(ctx context.Context, in *GetStockReq, opts ...grpc.CallOption) (*GetStockResp, error)
+		PreHeatStock(ctx context.Context, in *PreHeatStockReq, opts ...grpc.CallOption) (*PreHeatStockResp, error)
 	}
 
 	defaultStock struct {
@@ -43,4 +46,9 @@ func (m *defaultStock) InsertStock(ctx context.Context, in *InsertStockReq, opts
 func (m *defaultStock) GetStock(ctx context.Context, in *GetStockReq, opts ...grpc.CallOption) (*GetStockResp, error) {
 	client := stockPb.NewStockClient(m.cli.Conn())
 	return client.GetStock(ctx, in, opts...)
+}
+
+func (m *defaultStock) PreHeatStock(ctx context.Context, in *PreHeatStockReq, opts ...grpc.CallOption) (*PreHeatStockResp, error) {
+	client := stockPb.NewStockClient(m.cli.Conn())
+	return client.PreHeatStock(ctx, in, opts...)
 }
