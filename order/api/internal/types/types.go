@@ -45,6 +45,10 @@ type OrderItemVO struct {
 	SubtotalPrice string `json:"subtotalPrice"` //单行商品小计 =单价*数量（优惠前）
 }
 
+type OrderOffReq struct {
+	OrderNo string `json:"orderNo"`
+}
+
 type OrderPreviewReq struct {
 	GoodsIds []string `json:"goodsIds"`
 }

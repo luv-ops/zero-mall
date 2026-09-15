@@ -189,7 +189,7 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 		TimeStamp: time.Now().Unix(),
 	}
 	data, _ := json.Marshal(msg)
-	err = l.svcCtx.Producer.SendDelay(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicOrderOff, data, l.svcCtx.Config.RocketMqConf.DelayOffOrderDuration)
+	err = l.svcCtx.Producer.SendDelay(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicDelayOrderOff, data, l.svcCtx.Config.RocketMqConf.DelayOffOrderDuration)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "createOrder send delay", err.Error())
 		//TODO 投递失败插入本地消息表，人工介入

@@ -6,7 +6,7 @@
 local key=KEYS[1]
 local num=tonumber(ARGV[1])
 local frozen=tonumber(redis.call("HGET",key,"frozen"))
-if frozen>=num and frozen>0 then
+if frozen>=num then
     redis.call("HINCRBY",key,"frozen",0-num)
     redis.call("HINCRBY",key,"available",num)
     return 1

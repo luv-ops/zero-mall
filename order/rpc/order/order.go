@@ -19,6 +19,8 @@ type (
 	OrderDetailReq   = orderPb.OrderDetailReq
 	OrderDetailResp  = orderPb.OrderDetailResp
 	OrderItemVO      = orderPb.OrderItemVO
+	OrderOffReq      = orderPb.OrderOffReq
+	OrderOffResp     = orderPb.OrderOffResp
 	OrderPreviewReq  = orderPb.OrderPreviewReq
 	OrderPreviewResp = orderPb.OrderPreviewResp
 	PreviewItemVO    = orderPb.PreviewItemVO
@@ -27,6 +29,7 @@ type (
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*CreateOrderResp, error)
 		GetOrderDetail(ctx context.Context, in *OrderDetailReq, opts ...grpc.CallOption) (*OrderDetailResp, error)
 		PreviewOrder(ctx context.Context, in *OrderPreviewReq, opts ...grpc.CallOption) (*OrderPreviewResp, error)
+		OffOrder(ctx context.Context, in *OrderOffReq, opts ...grpc.CallOption) (*OrderOffResp, error)
 	}
 
 	defaultOrder struct {
@@ -53,4 +56,9 @@ func (m *defaultOrder) GetOrderDetail(ctx context.Context, in *OrderDetailReq, o
 func (m *defaultOrder) PreviewOrder(ctx context.Context, in *OrderPreviewReq, opts ...grpc.CallOption) (*OrderPreviewResp, error) {
 	client := orderPb.NewOrderClient(m.cli.Conn())
 	return client.PreviewOrder(ctx, in, opts...)
+}
+
+func (m *defaultOrder) OffOrder(ctx context.Context, in *OrderOffReq, opts ...grpc.CallOption) (*OrderOffResp, error) {
+	client := orderPb.NewOrderClient(m.cli.Conn())
+	return client.OffOrder(ctx, in, opts...)
 }

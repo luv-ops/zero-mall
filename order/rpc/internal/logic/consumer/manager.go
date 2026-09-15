@@ -11,8 +11,8 @@ func NewConsumerManager(svc *svc.ServiceContext) (*mq.ConsumerManager, error) {
 	orderOffLogic := NewOrderOffConsumer(svc)
 	cg := mq.ConsumerConfig{
 		Endpoint:          svc.Config.RocketMqConf.Endpoint,
-		Topic:             svc.Config.RocketMqConf.Topics.TopicOrderOff,
-		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.TopicOffGroup,
+		Topic:             svc.Config.RocketMqConf.Topics.TopicDelayOrderOff,
+		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.TopicDelayOffGroup,
 		AwaitDuration:     svc.Config.RocketMqConf.Consumer.AwaitDuration,
 		MaxMsgNum:         svc.Config.RocketMqConf.Consumer.MaxMsgNum,
 		InvisibleDuration: svc.Config.RocketMqConf.Consumer.InvisibleDuration,

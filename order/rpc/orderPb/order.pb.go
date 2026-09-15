@@ -661,6 +661,94 @@ func (x *PreviewItemVO) GetSubtotalPrice() string {
 	return ""
 }
 
+type OrderOffReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderNo       string                 `protobuf:"bytes,1,opt,name=orderNo,proto3" json:"orderNo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderOffReq) Reset() {
+	*x = OrderOffReq{}
+	mi := &file_proto_order_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderOffReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderOffReq) ProtoMessage() {}
+
+func (x *OrderOffReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_order_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderOffReq.ProtoReflect.Descriptor instead.
+func (*OrderOffReq) Descriptor() ([]byte, []int) {
+	return file_proto_order_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *OrderOffReq) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+type OrderOffResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ok            bool                   `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderOffResp) Reset() {
+	*x = OrderOffResp{}
+	mi := &file_proto_order_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderOffResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderOffResp) ProtoMessage() {}
+
+func (x *OrderOffResp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_order_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderOffResp.ProtoReflect.Descriptor instead.
+func (*OrderOffResp) Descriptor() ([]byte, []int) {
+	return file_proto_order_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *OrderOffResp) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
 var File_proto_order_proto protoreflect.FileDescriptor
 
 const file_proto_order_proto_rawDesc = "" +
@@ -729,11 +817,16 @@ const file_proto_order_proto_rawDesc = "" +
 	"goodsPrice\x12,\n" +
 	"\x12goods_origin_price\x18\a \x01(\tR\x10goodsOriginPrice\x12\x1b\n" +
 	"\tgoods_num\x18\x05 \x01(\x03R\bgoodsNum\x12%\n" +
-	"\x0esubtotal_price\x18\x06 \x01(\tR\rsubtotalPrice2\xc7\x01\n" +
+	"\x0esubtotal_price\x18\x06 \x01(\tR\rsubtotalPrice\"'\n" +
+	"\vOrderOffReq\x12\x18\n" +
+	"\aorderNo\x18\x01 \x01(\tR\aorderNo\"\x1e\n" +
+	"\fOrderOffResp\x12\x0e\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok2\xfc\x01\n" +
 	"\x05order\x12<\n" +
 	"\vCreateOrder\x12\x15.order.CreateOrderReq\x1a\x16.order.CreateOrderResp\x12?\n" +
 	"\x0eGetOrderDetail\x12\x15.order.OrderDetailReq\x1a\x16.order.OrderDetailResp\x12?\n" +
-	"\fPreviewOrder\x12\x16.order.OrderPreviewReq\x1a\x17.order.OrderPreviewRespB\vZ\t./orderPbb\x06proto3"
+	"\fPreviewOrder\x12\x16.order.OrderPreviewReq\x1a\x17.order.OrderPreviewResp\x123\n" +
+	"\bOffOrder\x12\x12.order.OrderOffReq\x1a\x13.order.OrderOffRespB\vZ\t./orderPbb\x06proto3"
 
 var (
 	file_proto_order_proto_rawDescOnce sync.Once
@@ -747,7 +840,7 @@ func file_proto_order_proto_rawDescGZIP() []byte {
 	return file_proto_order_proto_rawDescData
 }
 
-var file_proto_order_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_proto_order_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_proto_order_proto_goTypes = []any{
 	(*CreateOrderReq)(nil),   // 0: order.CreateOrderReq
 	(*CreateOrderResp)(nil),  // 1: order.CreateOrderResp
@@ -757,6 +850,8 @@ var file_proto_order_proto_goTypes = []any{
 	(*OrderPreviewReq)(nil),  // 5: order.OrderPreviewReq
 	(*OrderPreviewResp)(nil), // 6: order.OrderPreviewResp
 	(*PreviewItemVO)(nil),    // 7: order.PreviewItemVO
+	(*OrderOffReq)(nil),      // 8: order.OrderOffReq
+	(*OrderOffResp)(nil),     // 9: order.OrderOffResp
 }
 var file_proto_order_proto_depIdxs = []int32{
 	4, // 0: order.OrderDetailResp.item_list:type_name -> order.OrderItemVO
@@ -764,11 +859,13 @@ var file_proto_order_proto_depIdxs = []int32{
 	0, // 2: order.order.CreateOrder:input_type -> order.CreateOrderReq
 	2, // 3: order.order.GetOrderDetail:input_type -> order.OrderDetailReq
 	5, // 4: order.order.PreviewOrder:input_type -> order.OrderPreviewReq
-	1, // 5: order.order.CreateOrder:output_type -> order.CreateOrderResp
-	3, // 6: order.order.GetOrderDetail:output_type -> order.OrderDetailResp
-	6, // 7: order.order.PreviewOrder:output_type -> order.OrderPreviewResp
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
+	8, // 5: order.order.OffOrder:input_type -> order.OrderOffReq
+	1, // 6: order.order.CreateOrder:output_type -> order.CreateOrderResp
+	3, // 7: order.order.GetOrderDetail:output_type -> order.OrderDetailResp
+	6, // 8: order.order.PreviewOrder:output_type -> order.OrderPreviewResp
+	9, // 9: order.order.OffOrder:output_type -> order.OrderOffResp
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -786,7 +883,7 @@ func file_proto_order_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_order_proto_rawDesc), len(file_proto_order_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

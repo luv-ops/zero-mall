@@ -31,7 +31,8 @@ type (
 		Update(ctx context.Context, data *Orders) error
 		Delete(ctx context.Context, id int64) error
 		TxInsert(ctx context.Context, orderData *Orders, orderItemData []*OrderItem, txLogData *TransactionLog) (int64, error)
-		CloseConditional(ctx context.Context, orderNo int64) (int64, error)
+		CloseOrderTimeOut(ctx context.Context, orderNo int64) (int64, error)
+		CloseOrderByUser(ctx context.Context, orderNo int64) (int64, error)
 	}
 
 	defaultOrdersModel struct {

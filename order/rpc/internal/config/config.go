@@ -22,14 +22,14 @@ type Config struct {
 	RocketMqConf struct {
 		Endpoint string
 		Topics   struct {
-			TopicOrderOff    string
-			TopicDelCart     string
-			TopicReturnStock string
-			TopicFrozenStock string
+			TopicDelayOrderOff string
+			TopicDelCart       string
+			TopicReturnStock   string
+			TopicFrozenStock   string
 		}
 		Consumer struct {
 			Group struct {
-				TopicOffGroup string
+				TopicDelayOffGroup string
 			}
 			AwaitDuration     time.Duration
 			MaxMsgNum         int32

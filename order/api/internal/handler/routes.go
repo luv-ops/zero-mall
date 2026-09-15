@@ -25,6 +25,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: getOrderDetailHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPatch,
+				Path:    "/order/off",
+				Handler: offOrderHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/order/preview",
 				Handler: previewOrderHandler(serverCtx),

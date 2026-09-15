@@ -79,9 +79,15 @@ message PreviewItemVO {
   int64 goods_num =5;     //购买数量
   string subtotal_price =6;//该商品小计
 }
-
+message OrderOffReq{
+  string orderNo=1;
+}
+message OrderOffResp{
+  bool ok=1;
+}
 service order{
   rpc CreateOrder (CreateOrderReq) returns (CreateOrderResp);
   rpc GetOrderDetail (OrderDetailReq) returns (OrderDetailResp);
   rpc PreviewOrder (OrderPreviewReq) returns (OrderPreviewResp);
+  rpc OffOrder (OrderOffReq) returns (OrderOffResp);
 }

@@ -72,6 +72,10 @@ type PreviewItemVO {
 	SubtotalPrice string `json:"subtotalPrice"` //该商品小计
 }
 
+type OrderOffReq {
+	OrderNo string `json:"orderNo"`
+}
+
 @server (
 	jwt: Auth
 )
@@ -84,5 +88,8 @@ service order {
 
 	@handler previewOrder
 	post /order/preview (OrderPreviewReq) returns (OrderPreviewResp)
+
+	@handler offOrder
+	patch /order/off (OrderOffReq)
 }
 

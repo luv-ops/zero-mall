@@ -52,7 +52,7 @@ func (l *OrderOffConsumer) orderOff(ctx context.Context, msg *mq.OrderOffMessage
 	}
 
 	//先查询订单状态是否为未支付，如果未支付才能取消订单
-	num, err := l.svc.OrderModel.CloseConditional(ctx, msg.OrderNo)
+	num, err := l.svc.OrderModel.CloseOrderTimeOut(ctx, msg.OrderNo)
 	if err != nil {
 		return err
 	}

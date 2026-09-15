@@ -22,6 +22,7 @@ const (
 	Order_CreateOrder_FullMethodName    = "/order.order/CreateOrder"
 	Order_GetOrderDetail_FullMethodName = "/order.order/GetOrderDetail"
 	Order_PreviewOrder_FullMethodName   = "/order.order/PreviewOrder"
+	Order_OffOrder_FullMethodName       = "/order.order/OffOrder"
 )
 
 // OrderClient is the client API for Order service.
@@ -31,6 +32,7 @@ type OrderClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*CreateOrderResp, error)
 	GetOrderDetail(ctx context.Context, in *OrderDetailReq, opts ...grpc.CallOption) (*OrderDetailResp, error)
 	PreviewOrder(ctx context.Context, in *OrderPreviewReq, opts ...grpc.CallOption) (*OrderPreviewResp, error)
+	OffOrder(ctx context.Context, in *OrderOffReq, opts ...grpc.CallOption) (*OrderOffResp, error)
 }
 
 type orderClient struct {
@@ -71,6 +73,16 @@ func (c *orderClient) PreviewOrder(ctx context.Context, in *OrderPreviewReq, opt
 	return out, nil
 }
 
+func (c *orderClient) OffOrder(ctx context.Context, in *OrderOffReq, opts ...grpc.CallOption) (*OrderOffResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderOffResp)
+	err := c.cc.Invoke(ctx, Order_OffOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServer is the server API for Order service.
 // All implementations must embed UnimplementedOrderServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type OrderServer interface {
 	CreateOrder(context.Context, *CreateOrderReq) (*CreateOrderResp, error)
 	GetOrderDetail(context.Context, *OrderDetailReq) (*OrderDetailResp, error)
 	PreviewOrder(context.Context, *OrderPreviewReq) (*OrderPreviewResp, error)
+	OffOrder(context.Context, *OrderOffReq) (*OrderOffResp, error)
 	mustEmbedUnimplementedOrderServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedOrderServer) GetOrderDetail(context.Context, *OrderDetailReq)
 }
 func (UnimplementedOrderServer) PreviewOrder(context.Context, *OrderPreviewReq) (*OrderPreviewResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PreviewOrder not implemented")
+}
+func (UnimplementedOrderServer) OffOrder(context.Context, *OrderOffReq) (*OrderOffResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method OffOrder not implemented")
 }
 func (UnimplementedOrderServer) mustEmbedUnimplementedOrderServer() {}
 func (UnimplementedOrderServer) testEmbeddedByValue()               {}
@@ -172,6 +188,24 @@ func _Order_PreviewOrder_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Order_OffOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderOffReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).OffOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Order_OffOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).OffOrder(ctx, req.(*OrderOffReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Order_ServiceDesc is the grpc.ServiceDesc for Order service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PreviewOrder",
 			Handler:    _Order_PreviewOrder_Handler,
+		},
+		{
+			MethodName: "OffOrder",
+			Handler:    _Order_OffOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

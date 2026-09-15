@@ -37,3 +37,8 @@ func (s *OrderServer) PreviewOrder(ctx context.Context, in *orderPb.OrderPreview
 	l := logic.NewPreviewOrderLogic(ctx, s.svcCtx)
 	return l.PreviewOrder(in)
 }
+
+func (s *OrderServer) OffOrder(ctx context.Context, in *orderPb.OrderOffReq) (*orderPb.OrderOffResp, error) {
+	l := logic.NewOffOrderLogic(ctx, s.svcCtx)
+	return l.OffOrder(in)
+}

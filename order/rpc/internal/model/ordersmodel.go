@@ -104,9 +104,19 @@ func InsertTxLog(ctx context.Context, session sqlx.Session, txLogData *Transacti
 	return num, err
 }
 
-func (m *defaultOrdersModel) CloseConditional(ctx context.Context, orderNo int64) (int64, error) {
+func (m *defaultOrdersModel) CloseOrderTimeOut(ctx context.Context, orderNo int64) (int64, error) {
 	sqlStr := fmt.Sprintf(`update %s set status=4,cancel_time= NOW(),updated_at= NOW()
 where order_no=? and status=0 and expire_time< NOW()`, m.table)
+	res, err := m.conn.ExecCtx(ctx, sqlStr, orderNo)
+	if err != nil {
+		return 0, err
+	}
+	num, err := res.RowsAffected()
+	return num, err
+}
+func (m *defaultOrdersModel) CloseOrderByUser(ctx context.Context, orderNo int64) (int64, error) {
+	sqlStr := fmt.Sprintf(`update %s set status=4,cancel_time= NOW(),updated_at= NOW()
+where order_no=? and status=0 and expire_time>=NOW()`, m.table)
 	res, err := m.conn.ExecCtx(ctx, sqlStr, orderNo)
 	if err != nil {
 		return 0, err

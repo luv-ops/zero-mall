@@ -45,7 +45,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 	pg := mq.ProducerConfig{
 		Endpoint: c.RocketMqConf.Endpoint,
-		Topics:   []string{c.RocketMqConf.Topics.TopicOrderOff},
+		Topics:   []string{c.RocketMqConf.Topics.TopicDelayOrderOff},
 	}
 	pro, err := mq.NewProducer(&pg)
 	if err != nil {
