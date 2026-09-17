@@ -5,10 +5,16 @@ Etcd:
   - 127.0.0.1:2379
   Key: goods.rpc
 Mysql:
-  DataSource: root:your_mysql_password@tcp(127.0.0.1:3306)/zero_goods?charset=utf8mb4&parseTime=True&loc=Local
+  DataSource: root:your_password@tcp(127.0.0.1:3306)/zero_goods?charset=utf8mb4&parseTime=True&loc=Local
 
-UserRpcConf:
-  Etcd:
-    Hosts:
-    - 127.0.0.1:2379
-    Key: user.rpc
+RedisConf:
+  Host: 127.0.0.1:6379
+  Type: node
+Log:
+  Mode: console
+  Encoding: plain
+  Level: info
+RocketMqConf:
+  Endpoint: 127.0.0.1:8081
+  Topics:
+    TopicInsertStock: stock_insert_topic

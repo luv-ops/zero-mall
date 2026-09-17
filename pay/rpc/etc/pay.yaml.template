@@ -1,0 +1,21 @@
+Name: pay.rpc
+ListenOn: 0.0.0.0:8087
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: pay.rpc
+Mysql:
+  DataSource: root:your_password@tcp(127.0.0.1:3306)/zero_pay?charset=utf8mb4&parseTime=True&loc=Local
+BalanceRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: balance.rpc
+RocketMqConf:
+  Endpoint: 127.0.0.1:8081
+  Topics:
+    TopicPaySuccess: pay_success_topic
+Log:
+  Mode: console
+  Encoding: plain
+  Level: info

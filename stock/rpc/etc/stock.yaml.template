@@ -1,0 +1,31 @@
+Name: stock.rpc
+ListenOn: 0.0.0.0:8086
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: stock.rpc
+Mysql:
+  DataSource: root:your_passwrd@tcp(127.0.0.1:3306)/zero_stock?charset=utf8mb4&parseTime=True&loc=Local
+RocketMqConf:
+  Endpoint: 127.0.0.1:8081
+  Topics:
+    TopicInsertStock: stock_insert_topic
+    TopicReturnStock: stock_return_topic
+    TopicFrozenStock: stock_frozen_topic
+    TopicDeductStock: stock_deduct_topic
+  Consumer:
+    Group:
+      StockInsertGroup: stock_insert_group
+      StockReturnGroup: stock_return_group
+      StockFrozenGroup: stock_frozen_group
+      StockDeductGroup: stock_deduct_group
+    AwaitDuration: 5s
+    MaxMsgNum: 16
+    InvisibleDuration: 15s
+RedisConf:
+  Host: 127.0.0.1:6379
+  Type: node
+Log:
+  Mode: console
+  Encoding: plain
+  Level: info

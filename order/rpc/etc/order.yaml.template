@@ -5,7 +5,7 @@ Etcd:
   - 127.0.0.1:2379
   Key: order.rpc
 Mysql:
-  DataSource: root:your_mysql_password@tcp(127.0.0.1:3306)/zero_order?charset=utf8mb4&parseTime=True&loc=Local
+  DataSource: root:your_password@tcp(127.0.0.1:3306)/zero_order?charset=utf8mb4&parseTime=True&loc=Local
 RedisConf:
   Host: 127.0.0.1:6379
   Type: node
@@ -19,7 +19,37 @@ GoodsRpcConf:
     Hosts:
       - 127.0.0.1:2379
     Key: goods.rpc
+UserRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc
+PayRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: pay.rpc
+RocketMqConf:
+  Endpoint: 127.0.0.1:8081
+  Topics:
+    TopicDelayOrderOff: order_delay_off_topic
+    TopicDelCart: cart_del_topic
+    TopicReturnStock: stock_return_topic
+    TopicFrozenStock: stock_frozen_topic
+    TopicPaySuccess: pay_success_topic
+    TopicDeductStock: stock_deduct_topic
+  Consumer:
+    Group:
+      DelayOffGroup: delay_off_group
+      PaySuccessGroup: pay_success_group
+    AwaitDuration: 5s
+    MaxMsgNum: 16
+    InvisibleDuration: 15s
+  DelayOffOrderDuration: 1800s
 Log:
   Mode: console
   Encoding: plain
   Level: info
+Snowflake:
+  NodeId: 1
+

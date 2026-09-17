@@ -1,0 +1,22 @@
+Name: balance.rpc
+ListenOn: 0.0.0.0:8088
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: balance.rpc
+Mysql:
+  DataSource: root:your_password@tcp(127.0.0.1:3306)/zero_balance?charset=utf8mb4&parseTime=True&loc=Local
+RocketMqConf:
+  Endpoint: 127.0.0.1:8081
+  Topics:
+    TopicInsertBalance: balance_insert_topic
+  Consumer:
+    Group:
+      BalanceInsertGroup: balance_insert_group
+    AwaitDuration: 5s
+    MaxMsgNum: 16
+    InvisibleDuration: 15s
+Log:
+  Mode: console
+  Encoding: plain
+  Level: info

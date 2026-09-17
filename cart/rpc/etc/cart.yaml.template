@@ -5,22 +5,22 @@ Etcd:
   - 127.0.0.1:2379
   Key: cart.rpc
 Mysql:
-  DataSource: root:your_mysql_password@tcp(127.0.0.1:3306)/zero_cart?charset=utf8mb4&parseTime=True&loc=Local
+  DataSource: root:your_password@tcp(127.0.0.1:3306)/zero_cart?charset=utf8mb4&parseTime=True&loc=Local
 RedisConf:
   Host: 127.0.0.1:6379
   Type: node
-  Pass: ""
-  Db: 1
 RocketMqConf:
   Endpoint: 127.0.0.1:8081
-  Producer:
+  Topics:
     TopicSyncFiling: cart_change_topic
+    TopicDelCart: cart_del_topic
   Consumer:
-    Group: cart_filing_group
-    TopicSyncFiling: cart_change_topic
+    Group:
+      GroupCartFiling: cart_filing_group
+      GroupCartDel: cart_del_group
     AwaitDuration: 5s
     MaxMsgNum: 16
-    LoopDuration: 10s
+    InvisibleDuration: 15s
 GoodsRpcConf:
   Etcd:
     Hosts:
