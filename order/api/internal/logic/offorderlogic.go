@@ -30,8 +30,10 @@ func NewOffOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *OffOrder
 
 func (l *OffOrderLogic) OffOrder(req *types.OrderOffReq) error {
 	// todo: add your logic here and delete this line
+	userId := l.ctx.Value("userId").(string)
 	res, err := l.svcCtx.OrderRpc.OffOrder(l.ctx, &orderPb.OrderOffReq{
 		OrderNo: req.OrderNo,
+		UserId:  userId,
 	})
 	if err != nil {
 		return err

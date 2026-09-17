@@ -111,3 +111,35 @@ func (m *defaultStockModel) GetStockByGoodsIds(ctx context.Context, goodsIds []s
 
 	return list, err
 }
+func (m *defaultStockModel) BatchDeductStock(ctx context.Context, list []*mq.DeductStockItem) (int64, error) {
+	var sum int64
+	err := m.conn.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
+		for _, item := range list {
+			num, err := m.BatchDeduct(ctx, session, item)
+			if err != nil {
+				return err
+			}
+			sum += num
+		}
+		return nil
+	})
+	return sum, err
+}
+func (m *defaultStockModel) BatchDeduct(ctx context.Context, session sqlx.Session, item *mq.DeductStockItem) (int64, error) {
+	var stock Stock
+	//先获取版本号
+	selectStr := fmt.Sprintf("select version from %s where goods_id=?", m.table)
+	err := session.QueryRowPartialCtx(ctx, &stock, selectStr, item.GoodsId)
+	if err != nil {
+		return 0, err
+	}
+	//乐观锁
+	sqlStr := fmt.Sprintf("update %s set frozen_stock=frozen_stock-? , version=version+1 where goods_id=? and version=? and frozen_stock>=?", m.table)
+	vals := []interface{}{item.Num, item.GoodsId, stock.Version, item.Num}
+	res, err := session.ExecCtx(ctx, sqlStr, vals...)
+	if err != nil {
+		return 0, err
+	}
+	num, err := res.RowsAffected()
+	return num, err
+}

@@ -157,17 +157,13 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 	//开启消息事务
 	tx := l.svcCtx.TxProducer.BeginTransaction()
 	//发送半消息,预冻结库存
-	receipt, err := l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicFrozenStock, stockData, tx)
+	_, err = l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicFrozenStock, stockData, tx)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "createOrder", err.Error())
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)
 	}
-	transactionData := &model.TransactionLog{
-		TxId:    receipt.TransactionId,
-		OrderNo: snowId,
-	}
 	//插入三张表 order,order_item,transactionLog
-	num, err := l.svcCtx.OrderModel.TxInsert(l.ctx, orderData, orderItemData, transactionData)
+	num, err := l.svcCtx.OrderModel.TxInsert(l.ctx, orderData, orderItemData)
 	if err != nil {
 		//回滚
 		_ = tx.RollBack()

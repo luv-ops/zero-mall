@@ -34,7 +34,7 @@ func (m *customOrdersModel) withSession(session sqlx.Session) OrdersModel {
 	return NewOrdersModel(sqlx.NewSqlConnFromSession(session))
 }
 
-func (m *defaultOrdersModel) TxInsert(ctx context.Context, orderData *Orders, orderItemData []*OrderItem, txLogData *TransactionLog) (int64, error) {
+func (m *defaultOrdersModel) TxInsert(ctx context.Context, orderData *Orders, orderItemData []*OrderItem) (int64, error) {
 	var sum int64
 	err := m.conn.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		num1, err := InsertOrder(ctx, session, orderData)
@@ -45,8 +45,7 @@ func (m *defaultOrdersModel) TxInsert(ctx context.Context, orderData *Orders, or
 		if err != nil {
 			return err
 		}
-		num3, err := InsertTxLog(ctx, session, txLogData)
-		sum = num1 + num2 + num3
+		sum = num1 + num2
 		return nil
 	})
 	return sum, err
@@ -93,17 +92,6 @@ func InsertOrderItems(ctx context.Context, session sqlx.Session, orderData []*Or
 	num, err := res.RowsAffected()
 	return num, err
 }
-func InsertTxLog(ctx context.Context, session sqlx.Session, txLogData *TransactionLog) (int64, error) {
-	sqlStr := fmt.Sprintf("insert into %s (tx_id,order_no) values (?,?)", "transaction_log")
-	vals := []any{txLogData.TxId, txLogData.OrderNo}
-	res, err := session.ExecCtx(ctx, sqlStr, vals...)
-	if err != nil {
-		return 0, err
-	}
-	num, err := res.RowsAffected()
-	return num, err
-}
-
 func (m *defaultOrdersModel) CloseOrderTimeOut(ctx context.Context, orderNo int64) (int64, error) {
 	sqlStr := fmt.Sprintf(`update %s set status=4,cancel_time= NOW(),updated_at= NOW()
 where order_no=? and status=0 and expire_time< NOW()`, m.table)
@@ -118,6 +106,16 @@ func (m *defaultOrdersModel) CloseOrderByUser(ctx context.Context, orderNo int64
 	sqlStr := fmt.Sprintf(`update %s set status=4,cancel_time= NOW(),updated_at= NOW()
 where order_no=? and status=0 and expire_time>=NOW()`, m.table)
 	res, err := m.conn.ExecCtx(ctx, sqlStr, orderNo)
+	if err != nil {
+		return 0, err
+	}
+	num, err := res.RowsAffected()
+	return num, err
+}
+func (m *defaultOrdersModel) UpdateStatus(ctx context.Context, orderNo int64, status int64) (int64, error) {
+	sqlStr := fmt.Sprintf(`update %s set status=?,updated_at= NOW()
+where order_no=? and status=0 and expire_time>=NOW()`, m.table)
+	res, err := m.conn.ExecCtx(ctx, sqlStr, status, orderNo)
 	if err != nil {
 		return 0, err
 	}

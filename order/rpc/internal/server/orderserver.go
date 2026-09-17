@@ -42,3 +42,8 @@ func (s *OrderServer) OffOrder(ctx context.Context, in *orderPb.OrderOffReq) (*o
 	l := logic.NewOffOrderLogic(ctx, s.svcCtx)
 	return l.OffOrder(in)
 }
+
+func (s *OrderServer) PayOrder(ctx context.Context, in *orderPb.OrderPayReq) (*orderPb.OrderPayResp, error) {
+	l := logic.NewPayOrderLogic(ctx, s.svcCtx)
+	return l.PayOrder(in)
+}

@@ -81,8 +81,16 @@ message PreviewItemVO {
 }
 message OrderOffReq{
   string orderNo=1;
+  string userId=2;
 }
 message OrderOffResp{
+  bool ok=1;
+}
+message OrderPayReq{
+  string userId=1;
+  string orderNo=2;
+}
+message OrderPayResp{
   bool ok=1;
 }
 service order{
@@ -90,4 +98,5 @@ service order{
   rpc GetOrderDetail (OrderDetailReq) returns (OrderDetailResp);
   rpc PreviewOrder (OrderPreviewReq) returns (OrderPreviewResp);
   rpc OffOrder (OrderOffReq) returns (OrderOffResp);
+  rpc PayOrder (OrderPayReq) returns (OrderPayResp);
 }

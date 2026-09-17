@@ -37,3 +37,18 @@ type FrozenItem struct {
 	GoodsId string `json:"goodsId"`
 	Num     int64  `json:"num"`
 }
+type PaySuccessMsg struct {
+	OrderNo int64  `json:"orderNo"`
+	PayNo   string `json:"payNo"`
+}
+type DeductStockItem struct {
+	OrderNo int64  `json:"orderNo"`
+	GoodsId string `json:"goodsId"`
+	Num     int64  `json:"num"`
+}
+type DeductStockMsg struct {
+	List []*DeductStockItem `json:"list"`
+}
+type InsertBalanceMsg struct {
+	UserId string `json:"userId"`
+}

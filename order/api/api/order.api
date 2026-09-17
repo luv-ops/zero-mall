@@ -76,6 +76,10 @@ type OrderOffReq {
 	OrderNo string `json:"orderNo"`
 }
 
+type PayOrderReq {
+	OrderNo string `json:"orderNo"`
+}
+
 @server (
 	jwt: Auth
 )
@@ -91,5 +95,8 @@ service order {
 
 	@handler offOrder
 	patch /order/off (OrderOffReq)
+
+	@handler payOrder
+	post /order/pay (PayOrderReq)
 }
 

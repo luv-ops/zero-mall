@@ -62,6 +62,10 @@ type OrderPreviewResp struct {
 	ItemList        []*PreviewItemVO `json:"itemList"`
 }
 
+type PayOrderReq struct {
+	OrderNo string `json:"orderNo"`
+}
+
 type PreviewItemVO struct {
 	GoodsId       string `json:"goodsId"`
 	GoodsName     string `json:"goodsName"`

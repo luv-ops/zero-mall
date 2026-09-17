@@ -32,7 +32,10 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
-	defer s.Stop()
+	defer func() {
+		_ = ctx.Producer.Stop()
+		s.Stop()
+	}()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

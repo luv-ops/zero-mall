@@ -12,7 +12,7 @@ func NewConsumerManager(svc *svc.ServiceContext) (*mq.ConsumerManager, error) {
 	cg := mq.ConsumerConfig{
 		Endpoint:          svc.Config.RocketMqConf.Endpoint,
 		Topic:             svc.Config.RocketMqConf.Topics.TopicDelayOrderOff,
-		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.TopicDelayOffGroup,
+		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.DelayOffGroup,
 		AwaitDuration:     svc.Config.RocketMqConf.Consumer.AwaitDuration,
 		MaxMsgNum:         svc.Config.RocketMqConf.Consumer.MaxMsgNum,
 		InvisibleDuration: svc.Config.RocketMqConf.Consumer.InvisibleDuration,
@@ -21,7 +21,20 @@ func NewConsumerManager(svc *svc.ServiceContext) (*mq.ConsumerManager, error) {
 	if err != nil {
 		return nil, err
 	}
+	cg2 := mq.ConsumerConfig{
+		Endpoint:          svc.Config.RocketMqConf.Endpoint,
+		Topic:             svc.Config.RocketMqConf.Topics.TopicPaySuccess,
+		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.PaySuccessGroup,
+		AwaitDuration:     svc.Config.RocketMqConf.Consumer.AwaitDuration,
+		MaxMsgNum:         svc.Config.RocketMqConf.Consumer.MaxMsgNum,
+		InvisibleDuration: svc.Config.RocketMqConf.Consumer.InvisibleDuration,
+	}
+	paySuccessLogic := NewPaySuccessConsumer(svc)
+	payCr, err := mq.NewConsumer("pay-success", cg2, paySuccessLogic.Consume)
+	if err != nil {
+		return nil, err
+	}
 	mgr.Add(orderCr)
-
+	mgr.Add(payCr)
 	return mgr, nil
 }

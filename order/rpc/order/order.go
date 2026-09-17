@@ -21,6 +21,8 @@ type (
 	OrderItemVO      = orderPb.OrderItemVO
 	OrderOffReq      = orderPb.OrderOffReq
 	OrderOffResp     = orderPb.OrderOffResp
+	OrderPayReq      = orderPb.OrderPayReq
+	OrderPayResp     = orderPb.OrderPayResp
 	OrderPreviewReq  = orderPb.OrderPreviewReq
 	OrderPreviewResp = orderPb.OrderPreviewResp
 	PreviewItemVO    = orderPb.PreviewItemVO
@@ -30,6 +32,7 @@ type (
 		GetOrderDetail(ctx context.Context, in *OrderDetailReq, opts ...grpc.CallOption) (*OrderDetailResp, error)
 		PreviewOrder(ctx context.Context, in *OrderPreviewReq, opts ...grpc.CallOption) (*OrderPreviewResp, error)
 		OffOrder(ctx context.Context, in *OrderOffReq, opts ...grpc.CallOption) (*OrderOffResp, error)
+		PayOrder(ctx context.Context, in *OrderPayReq, opts ...grpc.CallOption) (*OrderPayResp, error)
 	}
 
 	defaultOrder struct {
@@ -61,4 +64,9 @@ func (m *defaultOrder) PreviewOrder(ctx context.Context, in *OrderPreviewReq, op
 func (m *defaultOrder) OffOrder(ctx context.Context, in *OrderOffReq, opts ...grpc.CallOption) (*OrderOffResp, error) {
 	client := orderPb.NewOrderClient(m.cli.Conn())
 	return client.OffOrder(ctx, in, opts...)
+}
+
+func (m *defaultOrder) PayOrder(ctx context.Context, in *OrderPayReq, opts ...grpc.CallOption) (*OrderPayResp, error) {
+	client := orderPb.NewOrderClient(m.cli.Conn())
+	return client.PayOrder(ctx, in, opts...)
 }

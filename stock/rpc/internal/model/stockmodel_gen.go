@@ -34,6 +34,7 @@ type (
 		StockBatchReturn(ctx context.Context, list []*mq.ReturnStockItem) (int64, error)
 		BatchFrozenStock(ctx context.Context, list []*mq.FrozenItem) (int64, error)
 		GetStockByGoodsIds(ctx context.Context, goodsIds []string) ([]*Stock, error)
+		BatchDeductStock(ctx context.Context, list []*mq.DeductStockItem) (int64, error)
 	}
 
 	defaultStockModel struct {

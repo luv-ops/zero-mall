@@ -46,8 +46,19 @@ func NewConsumerManager(svc *svc.ServiceContext) (*mq.ConsumerManager, error) {
 	if err != nil {
 		return nil, err
 	}
+	cg4 := mq.ConsumerConfig{
+		Endpoint:          svc.Config.RocketMqConf.Endpoint,
+		Topic:             svc.Config.RocketMqConf.Topics.TopicDeductStock,
+		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.StockDeductGroup,
+		AwaitDuration:     svc.Config.RocketMqConf.Consumer.AwaitDuration,
+		MaxMsgNum:         svc.Config.RocketMqConf.Consumer.MaxMsgNum,
+		InvisibleDuration: svc.Config.RocketMqConf.Consumer.InvisibleDuration,
+	}
+	stockDeduct := NewStockDeductConsumer(svc)
+	cr4, err := mq.NewConsumer("stock-deduct", cg4, stockDeduct.Consume)
 	mgr.Add(cr)
 	mgr.Add(cr2)
 	mgr.Add(cr3)
+	mgr.Add(cr4)
 	return mgr, nil
 }

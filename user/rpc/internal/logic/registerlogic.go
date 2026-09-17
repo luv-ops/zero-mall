@@ -2,8 +2,10 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"zeromall/common/constant"
+	"zeromall/common/mq"
 	"zeromall/user/rpc/internal/model"
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
@@ -68,6 +70,19 @@ func (l *RegisterLogic) Register(in *userpb.RegisterReq) (*userpb.RegisterResp, 
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, &newUser)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "register", "insert", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
+	//发送一条消息，插入余额
+	var msg mq.InsertBalanceMsg
+	msg.UserId = userid
+	data, err := json.Marshal(msg)
+	if err != nil {
+		l.Logger.Errorf(constant.MarshalErr, "register", "Marshal", err.Error())
+		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+	}
+	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicInsertBalance, data)
+	if err != nil {
+		l.Logger.Errorf(constant.WhereFailed, "register", "Send", err.Error())
 		return nil, status.Error(codes.Internal, constant.MiddlewareError)
 	}
 	return &userpb.RegisterResp{UserId: userid}, nil

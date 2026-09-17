@@ -38,6 +38,9 @@ func (l *OffOrderLogic) OffOrder(in *orderPb.OrderOffReq) (*orderPb.OrderOffResp
 		logx.Info(constant.WhereFailed, "offOrder", err)
 		return nil, status.Error(codes.Internal, constant.UnmarshalErr)
 	}
+	if order.UserId != in.UserId {
+		return nil, status.Error(codes.InvalidArgument, "此订单不属于你")
+	}
 	if order.Status != 0 {
 		return nil, status.Error(codes.Unavailable, "订单状态已变化不可取消")
 	}

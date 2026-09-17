@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"zeromall/common/constant"
-	"zeromall/common/convert"
 	"zeromall/user/rpc/internal/model"
 
 	"zeromall/user/rpc/internal/svc"
@@ -68,7 +67,6 @@ func (l *UserInfoLogic) UserInfo(in *userpb.UserInfoReq) (*userpb.UserInfoResp, 
 		Phone:    user.Phone,
 		Age:      user.Age,
 		Sex:      user.Sex,
-		Balance:  convert.CentsToYuanStr(user.BalanceCent),
 	}
 	//缓存
 	str, err := json.Marshal(&res)

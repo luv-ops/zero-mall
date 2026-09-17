@@ -17,6 +17,7 @@ type ServiceContext struct {
 	Redis           *redis.Redis
 	StockReturnSha  string
 	PreHeatStockSha string
+	StockDeductSha  string
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -32,11 +33,16 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		log.Fatalf("SCRIPT LOAD stock_preheat luaScript failed: %v", err)
 	}
+	sha3, err := rdb.ScriptLoadCtx(ctx, luaScript.StockDeduct)
+	if err != nil {
+		log.Fatalf("SCRIPT LOAD stock_deduct luaScript failed: %v", err)
+	}
 	return &ServiceContext{
 		Config:          c,
 		StockModel:      model.NewStockModel(conn),
 		Redis:           rdb,
 		StockReturnSha:  sha,
 		PreHeatStockSha: sha2,
+		StockDeductSha:  sha3,
 	}
 }

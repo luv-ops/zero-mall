@@ -8,6 +8,12 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-	Mysql     sqlx.SqlConf
-	RedisConf redis.RedisConf
+	Mysql        sqlx.SqlConf
+	RedisConf    redis.RedisConf
+	RocketMqConf struct {
+		Endpoint string
+		Topics   struct {
+			TopicInsertBalance string
+		}
+	}
 }

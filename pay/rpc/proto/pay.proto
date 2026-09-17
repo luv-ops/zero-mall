@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pay;
+
+option go_package = "./payPb";
+
+message CreatePayReq{
+  int64 orderNo=1;
+  string userId=2;
+  int64 payCent=3;
+}
+message CreatePayResp{
+  bool ok=1;
+}
+service Pay{
+  rpc createPay (CreatePayReq) returns (CreatePayResp);
+}

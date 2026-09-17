@@ -20,6 +20,8 @@ goctl model mysql datasource --url "root:3110940369w@tcp(127.0.0.1:3306)/zero_us
  go run order.go -f etc/order.yaml
  go run cart.go -f etc/cart.yaml
  go run stock.go -f etc/stock.yaml
+ go run pay.go -f etc/pay.yaml
+ go run balance.go -f etc/balance.yaml
 ```
 
 ### 某些字段需要设置可选，比如请求体某些字段需要进行可选

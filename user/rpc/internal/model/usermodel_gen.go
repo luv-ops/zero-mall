@@ -41,18 +41,17 @@ type (
 	}
 
 	User struct {
-		Id          int64          `db:"id"`           // 数据库自增主键，内部使用，不对外输出
-		UserId      string         `db:"user_id"`      // 业务唯一用户ID，UUID，对外暴露
-		Username    string         `db:"username"`     // 用户名，唯一
-		Password    string         `db:"password"`     // bcrypt加密后的密码
-		Age         uint64         `db:"age"`          // 年龄
-		Phone       string         `db:"phone"`        // 手机号
-		Sex         uint64         `db:"sex"`          // 性别 0未知 1男 2女
-		Avatar      sql.NullString `db:"avatar"`       // 头像图片url
-		CreateTime  time.Time      `db:"create_time"`  // 创建时间
-		UpdateTime  time.Time      `db:"update_time"`  // 更新时间
-		DeletedAt   sql.NullTime   `db:"deleted_at"`   // 软删除时间，NULL=未删除
-		BalanceCent int64          `db:"balance_cent"` // 余额(分)
+		Id         int64          `db:"id"`          // 数据库自增主键，内部使用，不对外输出
+		UserId     string         `db:"user_id"`     // 业务唯一用户ID，UUID，对外暴露
+		Username   string         `db:"username"`    // 用户名，唯一
+		Password   string         `db:"password"`    // bcrypt加密后的密码
+		Age        uint64         `db:"age"`         // 年龄
+		Phone      string         `db:"phone"`       // 手机号
+		Sex        uint64         `db:"sex"`         // 性别 0未知 1男 2女
+		Avatar     sql.NullString `db:"avatar"`      // 头像图片url
+		CreateTime time.Time      `db:"create_time"` // 创建时间
+		DeletedAt  sql.NullTime   `db:"deleted_at"`  // 软删除时间，NULL=未删除
+		UpdateTime time.Time      `db:"update_time"` // 更新时间
 	}
 )
 
@@ -112,14 +111,14 @@ func (m *defaultUserModel) FindOneByUserId(ctx context.Context, userId string) (
 }
 
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Username, data.Password, data.Age, data.Phone, data.Sex, data.Avatar, data.DeletedAt, data.BalanceCent)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Username, data.Password, data.Age, data.Phone, data.Sex, data.Avatar, data.DeletedAt)
 	return ret, err
 }
 
 func (m *defaultUserModel) Update(ctx context.Context, newData *User) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.Username, newData.Password, newData.Age, newData.Phone, newData.Sex, newData.Avatar, newData.DeletedAt, newData.BalanceCent, newData.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.Username, newData.Password, newData.Age, newData.Phone, newData.Sex, newData.Avatar, newData.DeletedAt, newData.Id)
 	return err
 }
 

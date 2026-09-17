@@ -16,6 +16,7 @@ type Config struct {
 	CartRpcConf  zrpc.RpcClientConf
 	GoodsRpcConf zrpc.RpcClientConf
 	UserRpcConf  zrpc.RpcClientConf
+	PayRpcConf   zrpc.RpcClientConf
 	Snowflake    struct {
 		NodeId int64
 	}
@@ -26,10 +27,13 @@ type Config struct {
 			TopicDelCart       string
 			TopicReturnStock   string
 			TopicFrozenStock   string
+			TopicPaySuccess    string
+			TopicDeductStock   string
 		}
 		Consumer struct {
 			Group struct {
-				TopicDelayOffGroup string
+				DelayOffGroup   string
+				PaySuccessGroup string
 			}
 			AwaitDuration     time.Duration
 			MaxMsgNum         int32

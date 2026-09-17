@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package balance;
+
+option go_package = "./balancePb";
+
+message DeductBalanceReq{
+  string userId=1;
+  int64 payCent=2;
+}
+message DeductBalanceResp{
+  bool ok=1;
+}
+message RefundBalanceReq{
+  string userId=1;
+  int64 payCent=2;
+}
+message RefundBalanceResp{
+  bool ok=1;
+}
+service Balance{
+  rpc deductBalance (DeductBalanceReq) returns (DeductBalanceResp);
+  rpc refundBalance (RefundBalanceReq) returns (RefundBalanceResp);
+}

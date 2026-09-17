@@ -4,13 +4,6 @@ package stock;
 
 option go_package = "./stockPb";
 
-message insertStockReq{
-  int64 stock=1;
-  string goodsId=2;
-}
-message insertStockResp{
-  bool ok=1;
-}
 message getStockReq{
   string goodsId=1;
 }
@@ -24,7 +17,6 @@ message preHeatStockResp{
   bool ok=1;
 }
 service stock{
-  rpc insertStock (insertStockReq) returns (insertStockResp);
   rpc getStock   (getStockReq) returns (getStockResp);
   rpc preHeatStock (preHeatStockReq) returns (preHeatStockResp);
 }

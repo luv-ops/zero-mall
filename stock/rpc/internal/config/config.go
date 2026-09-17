@@ -18,12 +18,14 @@ type Config struct {
 			TopicInsertStock string
 			TopicReturnStock string
 			TopicFrozenStock string
+			TopicDeductStock string
 		}
 		Consumer struct {
 			Group struct {
 				StockInsertGroup string
 				StockReturnGroup string
 				StockFrozenGroup string
+				StockDeductGroup string
 			}
 			AwaitDuration     time.Duration
 			MaxMsgNum         int32
