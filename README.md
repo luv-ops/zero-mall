@@ -66,4 +66,10 @@
 4. DB查询不到数据时，写入带较短TTL的特殊标记占位，阻挡后续无效请求打数据库；
 5.配合接口层参数合法性校验，双层防护缓存穿透。
 
+### 6.错误传递方式
+> 封装xerr和map，对于业务错误，应该清晰的返回给前端，而不是用rpc err 一层一层包装，让前端迷惑。
+1. api层调用rpc时的错误应该使用xerr.FromRpcErr，拿到业务错误码，如果不是xerr类型，则直接返回服务错误，不会包含中间件的敏感信息
+2. rpc层调用其他rpc层也应该使用xerr.FromRpcErr透传最底层rpc返回的错误。
+3. 如果每一个rpc错误无脑返回status.Error,最终返回给前端的响应会类似于这样:rpc error: code = Internal desc = rpc error: code = Internal desc = rpc error: code = Aborted desc =
+
 
