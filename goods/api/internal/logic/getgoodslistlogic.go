@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 
 	"zeromall/goods/api/internal/svc"
@@ -31,7 +31,7 @@ func NewGetGoodsListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetG
 func (l *GetGoodsListLogic) GetGoodsList(req *types.GoodsListReq) (resp *types.GoodsListResp, err error) {
 	// todo: add your logic here and delete this line
 	if req.Page <= 0 {
-		return nil, errors.New("参数page必须大于0")
+		return nil, xerr.NewCodeError(xerr.ParamErr)
 	}
 	res, err := l.svcCtx.GoodsRpc.GetGoodsList(l.ctx, &goodsPb.GoodsListReq{
 		CategoryId: req.CategoryId,
@@ -39,7 +39,7 @@ func (l *GetGoodsListLogic) GetGoodsList(req *types.GoodsListReq) (resp *types.G
 		PageSize:   req.PageSize,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	var list []*types.GoodsItem
 	for _, item := range res.List {

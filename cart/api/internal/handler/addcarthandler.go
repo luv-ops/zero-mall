@@ -5,13 +5,11 @@ package handler
 
 import (
 	"net/http"
-	"zeromall/common/Res"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zeromall/cart/api/internal/logic"
 	"zeromall/cart/api/internal/svc"
 	"zeromall/cart/api/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func AddCartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -23,7 +21,11 @@ func AddCartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewAddCartLogic(r.Context(), svcCtx)
-		err := l.AddCart(&req)
-		Res.Response(r, w, nil, err)
+		resp, err := l.AddCart(&req)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

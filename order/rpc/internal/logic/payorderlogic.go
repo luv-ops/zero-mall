@@ -4,14 +4,13 @@ import (
 	"context"
 	"strconv"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/pay/rpc/payPb"
 
 	"zeromall/order/rpc/internal/svc"
 	"zeromall/order/rpc/orderPb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type PayOrderLogic struct {
@@ -35,13 +34,13 @@ func (l *PayOrderLogic) PayOrder(in *orderPb.OrderPayReq) (*orderPb.OrderPayResp
 	order, err := l.svcCtx.OrderModel.FindOneByOrderNo(l.ctx, orderNo)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "payOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if order.UserId != in.UserId {
-		return nil, status.Error(codes.InvalidArgument, "此订单不属于你")
+		return nil, xerr.NewCodeError(xerr.PermissionDenied)
 	}
 	if order.Status != 0 {
-		return nil, status.Error(codes.Unavailable, "订单状态已变化，不可支付")
+		return nil, xerr.NewCodeError(xerr.OrderStatusChange)
 	}
 	//调用payRpc
 	res, err := l.svcCtx.PayRpc.CreatePay(l.ctx, &payPb.CreatePayReq{
@@ -51,7 +50,7 @@ func (l *PayOrderLogic) PayOrder(in *orderPb.OrderPayReq) (*orderPb.OrderPayResp
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "PayOrder", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.FromRpcError(err)
 	}
 	return &orderPb.OrderPayResp{
 		Ok: res.Ok,

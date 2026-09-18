@@ -4,13 +4,12 @@ import (
 	"context"
 	"errors"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/internal/model"
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type ChangeInfoLogic struct {
@@ -32,10 +31,10 @@ func (l *ChangeInfoLogic) ChangeInfo(in *userpb.ChangeInfoReq) (*userpb.ChangeIn
 	_, err := l.svcCtx.UserModel.FindOneByUserId(l.ctx, in.UserId)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
-			return nil, status.Error(codes.NotFound, constant.UserNotFound)
+			return nil, xerr.NewCodeError(xerr.NotFound)
 		}
 		l.Logger.Errorf(constant.MysqlFailed, "changeInfo", "select", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	updateMap := make(map[string]any)
 	if in.Username != nil {
@@ -53,12 +52,15 @@ func (l *ChangeInfoLogic) ChangeInfo(in *userpb.ChangeInfoReq) (*userpb.ChangeIn
 	if in.Age != nil {
 		updateMap["age"] = *in.Age
 	}
-	affectedRow, err := l.svcCtx.UserModel.UpdateField(l.ctx, updateMap, in.UserId)
+	num, err := l.svcCtx.UserModel.UpdateField(l.ctx, updateMap, in.UserId)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "changeInfo", "update", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
+	}
+	if num == 0 {
+		l.Logger.Infof("changeInfo", "user but no row was affected", in.UserId)
 	}
 	return &userpb.ChangeInfoResp{
-		Ok: affectedRow > 0,
+		Ok: true,
 	}, nil
 }

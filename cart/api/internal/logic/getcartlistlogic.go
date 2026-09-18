@@ -6,6 +6,7 @@ package logic
 import (
 	"context"
 	"zeromall/cart/rpc/cartPb"
+	"zeromall/common/xerr"
 
 	"zeromall/cart/api/internal/svc"
 	"zeromall/cart/api/internal/types"
@@ -34,7 +35,7 @@ func (l *GetCartListLogic) GetCartList() (resp *types.CartListResp, err error) {
 		UserId: userId,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	var list []*types.CartItem
 	if len(res.List) == 0 {

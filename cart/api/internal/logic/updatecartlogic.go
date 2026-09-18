@@ -6,6 +6,7 @@ package logic
 import (
 	"context"
 	"zeromall/cart/rpc/cartPb"
+	"zeromall/common/xerr"
 
 	"zeromall/cart/api/internal/svc"
 	"zeromall/cart/api/internal/types"
@@ -37,7 +38,7 @@ func (l *UpdateCartLogic) UpdateCart(req *types.UpdateCartReq) (resp *types.Upda
 		Selected: req.Selected,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	return &types.UpdateCartResp{
 		GoodsId:  res.GoodsId,

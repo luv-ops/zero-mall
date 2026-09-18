@@ -10,6 +10,7 @@ import (
 	"zeromall/cart/rpc/internal/logic/consumer"
 	"zeromall/cart/rpc/internal/server"
 	"zeromall/cart/rpc/internal/svc"
+	"zeromall/common/intercepter"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -34,6 +35,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(intercepter.ErrorInterceptor)
 	// 组装消费者
 	mgr, err := consumer.NewConsumerManager(ctx)
 	if err != nil {

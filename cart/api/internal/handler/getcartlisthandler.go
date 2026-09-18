@@ -5,8 +5,8 @@ package handler
 
 import (
 	"net/http"
-	"zeromall/common/Res"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zeromall/cart/api/internal/logic"
 	"zeromall/cart/api/internal/svc"
 )
@@ -15,6 +15,10 @@ func GetCartListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := logic.NewGetCartListLogic(r.Context(), svcCtx)
 		resp, err := l.GetCartList()
-		Res.Response(r, w, resp, err)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

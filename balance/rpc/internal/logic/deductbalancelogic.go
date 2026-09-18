@@ -3,13 +3,12 @@ package logic
 import (
 	"context"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/balance/rpc/balancePb"
 	"zeromall/balance/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type DeductBalanceLogic struct {
@@ -32,15 +31,15 @@ func (l *DeductBalanceLogic) DeductBalance(in *balancePb.DeductBalanceReq) (*bal
 	balance, err := l.svcCtx.BalanceModel.FindOneByUserId(l.ctx, in.UserId)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "select", "deduct balance model error", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if balance.AvailableCent < in.PayCent {
-		return nil, status.Error(codes.Aborted, "余额不足")
+		return nil, xerr.NewCodeError(xerr.BalanceNotEnough)
 	}
 	num, err := l.svcCtx.BalanceModel.DeductBalance(l.ctx, in.PayCent, balance.Version, in.UserId)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "deduct balance model error", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	return &balancePb.DeductBalanceResp{
 		Ok: num > 0,

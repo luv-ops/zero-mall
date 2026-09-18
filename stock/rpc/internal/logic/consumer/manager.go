@@ -35,7 +35,7 @@ func NewConsumerManager(svc *svc.ServiceContext) (*mq.ConsumerManager, error) {
 	}
 	cg3 := mq.ConsumerConfig{
 		Endpoint:          svc.Config.RocketMqConf.Endpoint,
-		Topic:             svc.Config.RocketMqConf.Topics.TopicFrozenStock,
+		Topic:             svc.Config.RocketMqConf.Topics.TopicTxFrozenStock,
 		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.StockFrozenGroup,
 		AwaitDuration:     svc.Config.RocketMqConf.Consumer.AwaitDuration,
 		MaxMsgNum:         svc.Config.RocketMqConf.Consumer.MaxMsgNum,

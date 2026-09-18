@@ -2,7 +2,6 @@ package model
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"

@@ -8,6 +8,8 @@ info (
 	version: "type version here"
 )
 
+type EmptyResp {}
+
 type AddGoodsReq {
 	Name          string `json:"name"`
 	Cover         string `json:"cover"`
@@ -81,12 +83,9 @@ service goods {
 )
 service goods {
 	@handler AddGoods
-	post /goods (AddGoodsReq)
+	post /goods (AddGoodsReq) returns (EmptyResp)
 
 	@handler OnOffGoods
-	patch /goods/:status (OnOffGoodsReq)
-
-	@handler UpdateStock
-	patch /goods/stock (UpdateStock)
+	patch /goods/:status (OnOffGoodsReq) returns (EmptyResp)
 }
 

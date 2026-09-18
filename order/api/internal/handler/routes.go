@@ -20,11 +20,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: createOrderHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/order/detail/:orderNo",
-				Handler: getOrderDetailHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodPatch,
 				Path:    "/order/off",
 				Handler: offOrderHandler(serverCtx),

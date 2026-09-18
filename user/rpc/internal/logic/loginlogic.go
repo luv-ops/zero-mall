@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/internal/model"
 
 	"zeromall/user/rpc/internal/svc"
@@ -11,8 +12,6 @@ import (
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"golang.org/x/crypto/bcrypt"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type LoginLogic struct {
@@ -34,15 +33,15 @@ func (l *LoginLogic) Login(in *userpb.LoginReq) (*userpb.LoginResp, error) {
 	user, err := l.svcCtx.UserModel.FindOneByPhone(l.ctx, in.Phone)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
-			return nil, status.Error(codes.NotFound, constant.UserNotFound)
+			return nil, xerr.NewCodeError(xerr.NotFound)
 		}
 		l.Logger.Errorf(constant.MysqlFailed, "login", "FindOneByPhone", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//判断密码
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(in.Password))
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, constant.PasswordError)
+		return nil, xerr.NewCodeError(xerr.PasswordErr)
 	}
 	//密码正确
 	return &userpb.LoginResp{

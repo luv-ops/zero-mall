@@ -6,7 +6,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
+	"zeromall/common/apiHandler"
 	"zeromall/goods/api/internal/config"
 	"zeromall/goods/api/internal/handler"
 	"zeromall/goods/api/internal/svc"
@@ -25,7 +25,7 @@ func main() {
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
-
+	apiHandler.ApiHandler()
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 

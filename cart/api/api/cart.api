@@ -8,6 +8,8 @@ info (
 	version: "type version here"
 )
 
+type EmptyResp {}
+
 type AddCartReq {
 	GoodsId string `json:"goodsId"`
 	AddNum  int64  `json:"addNum"`
@@ -47,13 +49,13 @@ type CartListResp {
 )
 service Cart {
 	@handler AddCart
-	post /cart/add (AddCartReq)
+	post /cart/add (AddCartReq) returns (EmptyResp)
 
 	@handler UpdateCart
 	patch /cart/item (UpdateCartReq) returns (UpdateCartResp)
 
 	@handler BatchDelete
-	delete /cart/items (BatchDeleteReq)
+	delete /cart/items (BatchDeleteReq) returns (EmptyResp)
 
 	@handler GetCartList
 	get /cart/list returns (CartListResp)

@@ -28,11 +28,6 @@ func (s *OrderServer) CreateOrder(ctx context.Context, in *orderPb.CreateOrderRe
 	return l.CreateOrder(in)
 }
 
-func (s *OrderServer) GetOrderDetail(ctx context.Context, in *orderPb.OrderDetailReq) (*orderPb.OrderDetailResp, error) {
-	l := logic.NewGetOrderDetailLogic(ctx, s.svcCtx)
-	return l.GetOrderDetail(in)
-}
-
 func (s *OrderServer) PreviewOrder(ctx context.Context, in *orderPb.OrderPreviewReq) (*orderPb.OrderPreviewResp, error) {
 	l := logic.NewPreviewOrderLogic(ctx, s.svcCtx)
 	return l.PreviewOrder(in)

@@ -13,6 +13,9 @@ type AddGoodsReq struct {
 	Desc          string `json:"desc"`
 }
 
+type EmptyResp struct {
+}
+
 type GoodsDetailReq struct {
 	GoodsId string `path:"goodsId"`
 }

@@ -4,12 +4,11 @@ import (
 	"context"
 	"zeromall/common/constant"
 	"zeromall/common/convert"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/goods/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GetGoodsListLogic struct {
@@ -31,7 +30,7 @@ func (l *GetGoodsListLogic) GetGoodsList(in *goodsPb.GoodsListReq) (*goodsPb.Goo
 	res, err := l.svcCtx.GoodsModel.PageBreakFind(l.ctx, in.CategoryId, in.Page, in.PageSize)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "getGoodsList ", "pageBreak", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	var list []*goodsPb.GoodsItem
 

@@ -5,8 +5,8 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"zeromall/cart/rpc/cartPb"
+	"zeromall/common/xerr"
 
 	"zeromall/cart/api/internal/svc"
 	"zeromall/cart/api/internal/types"
@@ -28,18 +28,15 @@ func NewBatchDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Batch
 	}
 }
 
-func (l *BatchDeleteLogic) BatchDelete(req *types.BatchDeleteReq) error {
+func (l *BatchDeleteLogic) BatchDelete(req *types.BatchDeleteReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(string)
-	res, err := l.svcCtx.CartRpc.BatchDelete(l.ctx, &cartPb.BatchDeleteReq{
+	_, err = l.svcCtx.CartRpc.BatchDelete(l.ctx, &cartPb.BatchDeleteReq{
 		UserId:   userId,
 		GoodsIds: req.GoodsIds,
 	})
 	if err != nil {
-		return err
+		return nil, xerr.FromRpcError(err)
 	}
-	if res.Ok != true {
-		return errors.New("批量删除失败")
-	}
-	return nil
+	return nil, nil
 }

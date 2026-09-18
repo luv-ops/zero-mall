@@ -25,6 +25,9 @@ type CartListResp struct {
 	CartList []*CartItem `json:"cartList"`
 }
 
+type EmptyResp struct {
+}
+
 type UpdateCartReq struct {
 	GoodsId  string `json:"goodsId"`
 	Num      int64  `json:"num"`

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"zeromall/common/intercepter"
 	"zeromall/stock/rpc/internal/logic/consumer"
 
 	"zeromall/stock/rpc/internal/config"
@@ -33,6 +34,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(intercepter.ErrorInterceptor)
 	group := service.NewServiceGroup()
 	manager, err := consumer.NewConsumerManager(ctx)
 	if err != nil {

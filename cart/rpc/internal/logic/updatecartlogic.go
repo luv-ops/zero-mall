@@ -6,13 +6,12 @@ import (
 	"time"
 	"zeromall/common/constant"
 	"zeromall/common/mq"
+	"zeromall/common/xerr"
 
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/cart/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UpdateCartLogic struct {
@@ -37,10 +36,10 @@ func (l *UpdateCartLogic) UpdateCart(in *cartPb.UpdateCartReq) (*cartPb.UpdateCa
 		ok, err := l.svcCtx.Redis.HdelCtx(l.ctx, key, in.GoodsId)
 		if err != nil {
 			l.Logger.Errorf("redis hdel err:%v", err)
-			return nil, status.Error(codes.Internal, constant.MiddlewareError)
+			return nil, xerr.Server()
 		}
 		if !ok {
-			return nil, status.Error(codes.Unknown, "删除失败")
+			return nil, xerr.NewCodeError(xerr.DeleteCartErr)
 		}
 		return &cartPb.UpdateCartResp{
 			GoodsId: in.GoodsId,
@@ -50,11 +49,11 @@ func (l *UpdateCartLogic) UpdateCart(in *cartPb.UpdateCartReq) (*cartPb.UpdateCa
 	res, err := l.svcCtx.Redis.EvalShaCtx(l.ctx, l.svcCtx.UpdateCartSha, keys, in.GoodsId, in.Num, in.Selected)
 	if err != nil {
 		l.Logger.Errorf("redis eval err:%v", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if res == -1 {
 		l.Logger.Errorf("redis update err:%v", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//生产消息
 	msg := mq.CartChangeMsg{
@@ -65,12 +64,12 @@ func (l *UpdateCartLogic) UpdateCart(in *cartPb.UpdateCartReq) (*cartPb.UpdateCa
 	jsonStr, err := json.Marshal(msg)
 	if err != nil {
 		l.Logger.Errorf("json marshell err %v in %v", err, "UpdateCart")
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicSyncFiling, jsonStr)
 	if err != nil {
 		logx.Errorf("send msg err %v", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	return &cartPb.UpdateCartResp{
 		GoodsId:  in.GoodsId,

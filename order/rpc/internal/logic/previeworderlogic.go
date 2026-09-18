@@ -4,6 +4,7 @@ import (
 	"context"
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/user/rpc/userpb"
 
@@ -12,8 +13,6 @@ import (
 
 	"github.com/shopspring/decimal"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type PreviewOrderLogic struct {
@@ -39,7 +38,7 @@ func (l *PreviewOrderLogic) PreviewOrder(in *orderPb.OrderPreviewReq) (*orderPb.
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "previewOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.FromRpcError(err)
 	}
 	cartMap := make(map[string]*cartPb.PreviewItemVO)
 	for _, v := range cartResp.ItemList {
@@ -51,7 +50,7 @@ func (l *PreviewOrderLogic) PreviewOrder(in *orderPb.OrderPreviewReq) (*orderPb.
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "previewOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.FromRpcError(err)
 	}
 	goodsMap := make(map[string]*goodsPb.GoodsInfoItem)
 	for _, v := range goodsRes.List {
@@ -86,7 +85,7 @@ func (l *PreviewOrderLogic) PreviewOrder(in *orderPb.OrderPreviewReq) (*orderPb.
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.RpcError, "previewOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.FromRpcError(err)
 	}
 	return &orderPb.OrderPreviewResp{
 		TotalAmount:     totalAmount.String(),

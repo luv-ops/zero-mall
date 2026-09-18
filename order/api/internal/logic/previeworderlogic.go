@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/order/rpc/orderPb"
 
 	"zeromall/order/api/internal/svc"
@@ -31,13 +31,16 @@ func NewPreviewOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Prev
 func (l *PreviewOrderLogic) PreviewOrder(req *types.OrderPreviewReq) (resp *types.OrderPreviewResp, err error) {
 	// todo: add your logic here and delete this line
 	if len(req.GoodsIds) == 0 {
-		return nil, errors.New("param error")
+		return nil, xerr.NewCodeError(xerr.ParamErr)
 	}
 	userId := l.ctx.Value("userId").(string)
 	res, err := l.svcCtx.OrderRpc.PreviewOrder(l.ctx, &orderPb.OrderPreviewReq{
 		UserId:   userId,
 		GoodsIds: req.GoodsIds,
 	})
+	if err != nil {
+		return nil, xerr.FromRpcError(err)
+	}
 	var itemList []*types.PreviewItemVO
 	for _, v := range res.ItemList {
 		itemList = append(itemList, &types.PreviewItemVO{
@@ -56,5 +59,5 @@ func (l *PreviewOrderLogic) PreviewOrder(req *types.OrderPreviewReq) (resp *type
 		TotalAmount:     res.TotalAmount,
 		PayAmount:       res.PayAmount,
 		ItemList:        itemList,
-	}, err
+	}, nil
 }

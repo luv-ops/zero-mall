@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/internal/model"
 
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserInfoLogic struct {
@@ -36,12 +35,12 @@ func (l *UserInfoLogic) UserInfo(in *userpb.UserInfoReq) (*userpb.UserInfoResp, 
 	var res userpb.UserInfoResp
 	if err == nil {
 		if jsonStr == constant.RedisEmptyValue {
-			return nil, status.Error(codes.NotFound, constant.UserNotFound)
+			return nil, xerr.NewCodeError(xerr.NotFound)
 		} else if jsonStr != "" {
 			err = json.Unmarshal([]byte(jsonStr), &res)
 			if err != nil {
 				l.Logger.Errorf(constant.UnmarshalErr, "userInfo", err.Error())
-				return nil, status.Error(codes.Internal, constant.MiddlewareError)
+				return nil, xerr.Server()
 			}
 			return &res, nil
 		}
@@ -55,10 +54,10 @@ func (l *UserInfoLogic) UserInfo(in *userpb.UserInfoReq) (*userpb.UserInfoResp, 
 			if err != nil {
 				l.Logger.Errorf(constant.RedisFailed, "setEx", "userInfo", err.Error())
 			}
-			return nil, status.Error(codes.NotFound, constant.UserNotFound)
+			return nil, xerr.NewCodeError(xerr.NotFound)
 		}
 		l.Logger.Errorf(constant.MysqlFailed, "userInfo", "FindOneByUserId", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	res = userpb.UserInfoResp{
 		UserId:   in.UserId,

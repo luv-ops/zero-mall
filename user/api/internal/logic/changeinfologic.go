@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/userpb"
 
 	"zeromall/user/api/internal/svc"
@@ -28,10 +28,10 @@ func NewChangeInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Change
 	}
 }
 
-func (l *ChangeInfoLogic) ChangeInfo(req *types.ChangeInfoReq) error {
+func (l *ChangeInfoLogic) ChangeInfo(req *types.ChangeInfoReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(string)
-	res, err := l.svcCtx.UserRpc.ChangeInfo(l.ctx, &userpb.ChangeInfoReq{
+	_, err = l.svcCtx.UserRpc.ChangeInfo(l.ctx, &userpb.ChangeInfoReq{
 		UserId:   userId,
 		Username: req.UserName,
 		Avatar:   req.Avatar,
@@ -40,11 +40,8 @@ func (l *ChangeInfoLogic) ChangeInfo(req *types.ChangeInfoReq) error {
 		Region:   req.Region,
 	})
 	if err != nil {
-		return err
-	}
-	if res.Ok == false {
-		return errors.New("修改失败")
+		return nil, xerr.FromRpcError(err)
 	}
 
-	return nil
+	return nil, nil
 }

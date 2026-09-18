@@ -5,9 +5,11 @@ package logic
 
 import (
 	"context"
+	"zeromall/common/xerr"
+	"zeromall/order/rpc/orderPb"
+
 	"zeromall/order/api/internal/svc"
 	"zeromall/order/api/internal/types"
-	"zeromall/order/rpc/orderPb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -34,7 +36,7 @@ func (l *CreateOrderLogic) CreateOrder(req *types.CreateOrderReq) (resp *types.C
 		GoodsIds: req.GoodsIds,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	return &types.CreateOrderResp{
 		OrderNo: res.OrderNo,

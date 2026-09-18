@@ -3,14 +3,13 @@ package logic
 import (
 	"context"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/stock/rpc/internal/svc"
 	"zeromall/stock/rpc/stockPb"
 
 	"github.com/redis/go-redis/v9"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type PreHeatStockLogic struct {
@@ -33,7 +32,7 @@ func (l *PreHeatStockLogic) PreHeatStock(in *stockPb.PreHeatStockReq) (*stockPb.
 	stocks, err := l.svcCtx.StockModel.GetStockByGoodsIds(l.ctx, in.GoodsId)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "preheatStock ", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	var cmds []*redis.Cmd
 	err = l.svcCtx.Redis.PipelinedCtx(l.ctx, func(pipeliner redis.Pipeliner) error {
@@ -46,7 +45,7 @@ func (l *PreHeatStockLogic) PreHeatStock(in *stockPb.PreHeatStockReq) (*stockPb.
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "pipeline err in preheat", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	ok := true
 	for i, cmd := range cmds {

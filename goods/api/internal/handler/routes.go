@@ -39,11 +39,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/goods/:status",
 				Handler: OnOffGoodsHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodPatch,
-				Path:    "/goods/stock",
-				Handler: UpdateStockHandler(serverCtx),
-			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)

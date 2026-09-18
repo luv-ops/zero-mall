@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"errors"
+	"zeromall/common/xerr"
+	"zeromall/user/rpc/internal/model"
 
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
@@ -27,7 +30,10 @@ func (l *GetReceiveAddressLogic) GetReceiveAddress(in *userpb.GetReceiveAddressR
 	// todo: add your logic here and delete this line
 	list, err := l.svcCtx.RecAddressModel.FindAddressWithArea(l.ctx, in.UserId)
 	if err != nil {
-		return nil, err
+		if errors.Is(err, model.ErrNotFound) {
+			return nil, xerr.NewCodeError(xerr.NotFound)
+		}
+		return nil, xerr.Server()
 	}
 	var itemList []*userpb.AddressItem
 	for _, v := range list {

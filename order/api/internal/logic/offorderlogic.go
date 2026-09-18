@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/order/rpc/orderPb"
 
 	"zeromall/order/api/internal/svc"
@@ -28,18 +28,16 @@ func NewOffOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *OffOrder
 	}
 }
 
-func (l *OffOrderLogic) OffOrder(req *types.OrderOffReq) error {
+func (l *OffOrderLogic) OffOrder(req *types.OrderOffReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(string)
-	res, err := l.svcCtx.OrderRpc.OffOrder(l.ctx, &orderPb.OrderOffReq{
+	_, err = l.svcCtx.OrderRpc.OffOrder(l.ctx, &orderPb.OrderOffReq{
 		OrderNo: req.OrderNo,
 		UserId:  userId,
 	})
 	if err != nil {
-		return err
+		return nil, xerr.FromRpcError(err)
 	}
-	if res.Ok == false {
-		return errors.New("取消订单失败")
-	}
-	return nil
+
+	return nil, nil
 }

@@ -20,28 +20,6 @@ message CreateOrderResp {
   string order_no = 1;
 }
 
-// 订单详情请求 orderNo来自url路径参数
-message OrderDetailReq {
-  string order_no = 1;
-}
-
-// 订单详情响应
-message OrderDetailResp {
-  string order_no = 1;                  //雪花业务订单号
-  int64 status = 2;                    //订单状态码
-  string receiver_name = 3;
-  string receiver_phone = 4;
-  string receiver_address = 5;
-  string remark = 6;                   //用户备注
-  string total_goods_amount = 7;
-  string pay_amount = 8;               //用户实际支付金额
-  int64 pay_type = 9;                  //0未选择 1微信 2支付宝
-  int64 create_time = 10;              //创建时间 毫秒时间戳
-  int64 pay_time = 11;                 //支付成功时间，0未支付
-  int64 expire_time = 12;              //待支付过期时间
-  repeated OrderItemVO item_list =13;  //订单商品明细
-}
-
 // 订单明细VO
 message OrderItemVO {
   string goods_id =1;
@@ -95,7 +73,6 @@ message OrderPayResp{
 }
 service order{
   rpc CreateOrder (CreateOrderReq) returns (CreateOrderResp);
-  rpc GetOrderDetail (OrderDetailReq) returns (OrderDetailResp);
   rpc PreviewOrder (OrderPreviewReq) returns (OrderPreviewResp);
   rpc OffOrder (OrderOffReq) returns (OrderOffResp);
   rpc PayOrder (OrderPayReq) returns (OrderPayResp);

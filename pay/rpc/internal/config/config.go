@@ -12,7 +12,7 @@ type Config struct {
 	RocketMqConf   struct {
 		Endpoint string
 		Topics   struct {
-			TopicPaySuccess string
+			TopicTxPaySuccess string
 		}
 	}
 }

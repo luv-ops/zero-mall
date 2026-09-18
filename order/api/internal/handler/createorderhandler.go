@@ -5,13 +5,11 @@ package handler
 
 import (
 	"net/http"
-	"zeromall/common/Res"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zeromall/order/api/internal/logic"
 	"zeromall/order/api/internal/svc"
 	"zeromall/order/api/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func createOrderHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -24,6 +22,10 @@ func createOrderHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewCreateOrderLogic(r.Context(), svcCtx)
 		resp, err := l.CreateOrder(&req)
-		Res.Response(r, w, resp, err)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

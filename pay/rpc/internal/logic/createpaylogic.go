@@ -7,6 +7,7 @@ import (
 	"zeromall/balance/rpc/balancePb"
 	"zeromall/common/constant"
 	"zeromall/common/mq"
+	"zeromall/common/xerr"
 	"zeromall/pay/rpc/internal/model"
 
 	"zeromall/pay/rpc/internal/svc"
@@ -14,8 +15,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type CreatePayLogic struct {
@@ -43,13 +42,13 @@ func (l *CreatePayLogic) CreatePay(in *payPb.CreatePayReq) (*payPb.CreatePayResp
 	data, err := json.Marshal(msg)
 	if err != nil {
 		l.Logger.Errorf(constant.MarshalErr, "createOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	tx := l.svcCtx.TxProducer.BeginTransaction()
-	_, err = l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicPaySuccess, data, tx)
+	_, err = l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicTxPaySuccess, data, tx)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "createPay", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//调用balanceRpc扣减余额
 	res, err := l.svcCtx.BalanceRpc.DeductBalance(l.ctx, &balancePb.DeductBalanceReq{
@@ -58,11 +57,11 @@ func (l *CreatePayLogic) CreatePay(in *payPb.CreatePayReq) (*payPb.CreatePayResp
 	})
 	if err != nil {
 		_ = tx.RollBack()
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, xerr.FromRpcError(err)
 	}
 	if res.Ok == false {
 		_ = tx.RollBack()
-		return nil, status.Error(codes.Internal, "扣款失败")
+		return nil, xerr.NewCodeError(xerr.DeductBalanceErr)
 	}
 	//插入mysql
 	pay := model.Pay{
@@ -89,11 +88,11 @@ func (l *CreatePayLogic) CreatePay(in *payPb.CreatePayReq) (*payPb.CreatePayResp
 		}
 		_ = tx.RollBack()
 		l.Logger.Errorf(constant.WhereFailed, "createPay", "插入支付记录失败")
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if e := tx.Commit(); e != nil {
 		l.Logger.Errorf(constant.WhereFailed, "commit err", e.Error())
-		return nil, status.Error(codes.Internal, e.Error())
+		return nil, xerr.Server()
 	}
 	num, _ := resp.RowsAffected()
 

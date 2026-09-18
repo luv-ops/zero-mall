@@ -2,13 +2,13 @@ package logic
 
 import (
 	"context"
+	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/balance/rpc/balancePb"
 	"zeromall/balance/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type RefundBalanceLogic struct {
@@ -29,7 +29,8 @@ func (l *RefundBalanceLogic) RefundBalance(in *balancePb.RefundBalanceReq) (*bal
 	// todo: add your logic here and delete this line
 	num, err := l.svcCtx.BalanceModel.RefundBalance(l.ctx, in.PayCent, in.UserId)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "退款失败")
+		l.Logger.Errorf(constant.MysqlFailed, "refund balance model error", err.Error())
+		return nil, xerr.Server()
 	}
 	return &balancePb.RefundBalanceResp{
 		Ok: num > 0,

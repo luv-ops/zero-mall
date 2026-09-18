@@ -15,10 +15,10 @@ type Config struct {
 	RocketMqConf struct {
 		Endpoint string
 		Topics   struct {
-			TopicInsertStock string
-			TopicReturnStock string
-			TopicFrozenStock string
-			TopicDeductStock string
+			TopicInsertStock   string
+			TopicReturnStock   string
+			TopicTxFrozenStock string
+			TopicDeductStock   string
 		}
 		Consumer struct {
 			Group struct {

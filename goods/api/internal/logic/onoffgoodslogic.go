@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 
 	"zeromall/goods/api/internal/svc"
@@ -28,17 +28,14 @@ func NewOnOffGoodsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *OnOffG
 	}
 }
 
-func (l *OnOffGoodsLogic) OnOffGoods(req *types.OnOffGoodsReq) error {
+func (l *OnOffGoodsLogic) OnOffGoods(req *types.OnOffGoodsReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
-	res, err := l.svcCtx.GoodsRpc.OnOffGoods(l.ctx, &goodsPb.OnOffGoodsReq{
+	_, err = l.svcCtx.GoodsRpc.OnOffGoods(l.ctx, &goodsPb.OnOffGoodsReq{
 		GoodsId: req.GoodsId,
 		Status:  req.Status,
 	})
 	if err != nil {
-		return err
+		return nil, xerr.FromRpcError(err)
 	}
-	if res.Ok != true {
-		return errors.New("修改失败")
-	}
-	return nil
+	return nil, nil
 }

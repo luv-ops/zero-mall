@@ -26,8 +26,8 @@ type Config struct {
 			TopicDelayOrderOff string
 			TopicDelCart       string
 			TopicReturnStock   string
-			TopicFrozenStock   string
-			TopicPaySuccess    string
+			TopicTxFrozenStock string
+			TopicTxPaySuccess  string
 			TopicDeductStock   string
 		}
 		Consumer struct {

@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 
 	"zeromall/goods/api/internal/svc"
@@ -31,13 +31,13 @@ func NewGetGoodsDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetGoodsDetailLogic) GetGoodsDetail(req *types.GoodsDetailReq) (resp *types.GoodsDetailResp, err error) {
 	// todo: add your logic here and delete this line
 	if req.GoodsId == "" {
-		return nil, errors.New("goods id is empty")
+		return nil, xerr.NewCodeError(xerr.ParamErr)
 	}
 	res, err := l.svcCtx.GoodsRpc.GetGoodsDetail(l.ctx, &goodsPb.GoodsDetailReq{
 		GoodsId: req.GoodsId,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 
 	return &types.GoodsDetailResp{

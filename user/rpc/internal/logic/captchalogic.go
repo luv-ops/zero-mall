@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"math/rand"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	codes "google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type CaptchaLogic struct {
@@ -37,16 +36,16 @@ func (l *CaptchaLogic) Captcha(in *userpb.CaptchaReq) (*userpb.CaptchaResp, erro
 	ok, err := l.svcCtx.Redis.SetnxExCtx(l.ctx, limitKey, "1", 60)
 	if err != nil {
 		l.Logger.Errorf(constant.RedisFailed, "captcha limit", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if !ok {
-		return nil, status.Error(codes.ResourceExhausted, constant.MsgSmsTooFrequently)
+		return nil, xerr.NewCodeError(xerr.MsgSmsTooFrequently)
 	}
 	code := fmt.Sprintf("%06d", rand.Intn(1000000))
 	err = l.svcCtx.Redis.SetexCtx(l.ctx, codeKey, code, 300)
 	if err != nil {
 		l.Logger.Errorf(constant.RedisFailed, "captcha code", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	return &userpb.CaptchaResp{
 		Captcha: code,

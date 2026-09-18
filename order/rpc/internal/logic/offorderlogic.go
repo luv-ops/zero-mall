@@ -7,13 +7,12 @@ import (
 	"time"
 	"zeromall/common/constant"
 	"zeromall/common/mq"
+	"zeromall/common/xerr"
 
 	"zeromall/order/rpc/internal/svc"
 	"zeromall/order/rpc/orderPb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type OffOrderLogic struct {
@@ -36,32 +35,30 @@ func (l *OffOrderLogic) OffOrder(in *orderPb.OrderOffReq) (*orderPb.OrderOffResp
 	order, err := l.svcCtx.OrderModel.FindOneByOrderNo(l.ctx, orderNo)
 	if err != nil {
 		logx.Info(constant.WhereFailed, "offOrder", err)
-		return nil, status.Error(codes.Internal, constant.UnmarshalErr)
+		return nil, xerr.Server()
 	}
 	if order.UserId != in.UserId {
-		return nil, status.Error(codes.InvalidArgument, "此订单不属于你")
+		return nil, xerr.NewCodeError(xerr.PermissionDenied)
 	}
 	if order.Status != 0 {
-		return nil, status.Error(codes.Unavailable, "订单状态已变化不可取消")
+		return nil, xerr.NewCodeError(xerr.OrderStatusChange)
 	}
 	if order.ExpireTime.Before(time.Now()) {
-		return nil, status.Error(codes.Unavailable, "订单已超时关闭")
+		return nil, xerr.NewCodeError(xerr.OrderNotCancel)
 	}
 	num, err := l.svcCtx.OrderModel.CloseOrderByUser(l.ctx, orderNo)
 	if err != nil {
 		logx.Info(constant.WhereFailed, "offOrder", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if num == 0 {
-		return &orderPb.OrderOffResp{
-			Ok: false,
-		}, nil
+		return nil, xerr.NewCodeError(xerr.OrderOffErr)
 	}
 	//发送普通消息归还库存
 	items, err := l.svcCtx.OrderItemModel.FindGIdsByOrderNo(l.ctx, orderNo)
 	if err != nil {
 		logx.Info(constant.WhereFailed, "offOrder", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	var list []*mq.ReturnStockItem
 	for _, item := range items {
@@ -75,11 +72,12 @@ func (l *OffOrderLogic) OffOrder(in *orderPb.OrderOffReq) (*orderPb.OrderOffResp
 	data, err := json.Marshal(msg)
 	if err != nil {
 		l.Logger.Errorf(constant.MarshalErr, "OffOrder", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicReturnStock, data)
 	if err != nil {
 		logx.Info("send msg error", err)
+		return nil, xerr.Server()
 	}
 	return &orderPb.OrderOffResp{
 		Ok: true,

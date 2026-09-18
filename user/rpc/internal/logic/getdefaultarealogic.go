@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
@@ -45,7 +46,7 @@ func (l *GetDefaultAreaLogic) GetDefaultArea(in *userpb.GetDefaultAreaReq) (*use
 	res, err := l.svcCtx.RecAddressModel.FindOneByUIdWithDefault(l.ctx, in.UserId)
 	if err != nil {
 		l.Logger.Errorf("getDefaultArea FindOneByUId err:%v", err)
-		return nil, err
+		return nil, xerr.Server()
 	}
 	if res == nil {
 		return nil, nil

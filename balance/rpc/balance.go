@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"zeromall/balance/rpc/internal/logic/consumer"
+	"zeromall/common/intercepter"
 
 	"zeromall/balance/rpc/balancePb"
 	"zeromall/balance/rpc/internal/config"
@@ -33,6 +34,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(intercepter.ErrorInterceptor)
 	manager, err := consumer.NewConsumerManager(ctx)
 	if err != nil {
 		panic(err)

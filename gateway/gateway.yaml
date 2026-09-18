@@ -4,7 +4,62 @@ Port: 8000
 Upstreams:
   - Name: user-api
     Http:
-      Target: 127.0.0.1:8888   # 后端服务地址
+      Target: 127.0.0.1:8889   # 后端服务地址
     Mappings:                   # 路由映射规则[reference:4]
+      - Method: Post
+        Path: /register
+      - Method: Post
+        Path: /login
       - Method: Get
         Path: /captcha
+      - Method: Get
+        Path: /userInfo
+      - Method: Patch
+        Path: /userInfo
+      - Method: Get
+        Path: /region
+      - Method: Get
+        Path: /user/:userId
+      - Method: Post
+        Path: /address/receive
+      - Method: Get
+        Path: /address/receive
+  - Name: goods-api
+    Http:
+      Target: 127.0.0.1:8890
+    Mappings:
+      - Method: Get
+        Path: /goods/list
+      - Method: Get
+        Path: /goods/detail/:goodsId
+      - Method: Post
+        Path: /goods
+      - Method: Patch
+        Path: /goods/:status
+      - Method: Patch
+        Path: /goods/stock
+
+  - Name: cart-api
+    Http:
+      Target: 127.0.0.1:8891
+    Mappings:
+      - Method: Post
+        Path: /cart/add
+      - Method: Patch
+        Path: /cart/item
+      - Method: Delete
+        Path: /cart/items
+      - Method: Get
+        Path: /cart/list
+  - Name: order-api
+    Http:
+      Target: 127.0.0.1:8892
+    Mappings:
+      - Method: Post
+        Path: /order
+      - Method: Post
+        Path: /order/preview
+      - Method: Patch
+        Path: /order/off
+      - Method: Post
+        Path: /order/pay

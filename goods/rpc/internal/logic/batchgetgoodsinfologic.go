@@ -2,15 +2,13 @@ package logic
 
 import (
 	"context"
-	"zeromall/common/constant"
 	"zeromall/common/convert"
+	"zeromall/common/xerr"
 
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/goods/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type BatchGetGoodsInfoLogic struct {
@@ -33,12 +31,12 @@ func (l *BatchGetGoodsInfoLogic) BatchGetGoodsInfo(in *goodsPb.BatchGetGoodsInfo
 	var list []*goodsPb.GoodsInfoItem
 	resp, err := l.svcCtx.GoodsModel.FindRowsByGoodsId(l.ctx, in.GoodsIds)
 	if err != nil {
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 
 	for _, v := range resp {
 		if v.Status != 1 {
-			return nil, status.Error(codes.FailedPrecondition, "有商品已经下架")
+			return nil, xerr.NewCodeError(xerr.GoodsNotSell)
 		}
 		list = append(list, &goodsPb.GoodsInfoItem{
 			GoodsId:       v.GoodsId,

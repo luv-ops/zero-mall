@@ -5,13 +5,13 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"zeromall/common/Regx"
-	"zeromall/common/constant"
 	"zeromall/common/jwt"
+	"zeromall/common/xerr"
+	"zeromall/user/rpc/userpb"
+
 	"zeromall/user/api/internal/svc"
 	"zeromall/user/api/internal/types"
-	"zeromall/user/rpc/userpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.LoginResp, err error) {
 	// todo: add your logic here and delete this line
 	if !Regx.IsValidPhone(req.Phone) {
-		return nil, errors.New(constant.PhoneIllegal)
+		return nil, xerr.NewCodeError(xerr.PhoneIllegal)
 	}
 	rpcRes, err := l.svcCtx.UserRpc.Register(l.ctx, &userpb.RegisterReq{
 		Phone:    req.Phone,
@@ -41,11 +41,11 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.LoginResp,
 		Captcha:  req.Captcha,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	token, err := jwt.GenerateToken(rpcRes.UserId, l.svcCtx.Config.Auth.AccessExpire, l.svcCtx.Config.Auth.AccessSecret)
 	if err != nil {
-		return nil, err
+		return nil, xerr.Server()
 	}
-	return &types.LoginResp{Token: token}, err
+	return &types.LoginResp{Token: token}, nil
 }

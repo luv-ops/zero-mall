@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/userpb"
 
 	"zeromall/user/api/internal/svc"
@@ -31,13 +31,13 @@ func NewGetOtherInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetO
 func (l *GetOtherInfoLogic) GetOtherInfo(req *types.OthersBaseInfoReq) (resp *types.OthersBaseInfoResp, err error) {
 	// todo: add your logic here and delete this line
 	if req.UserId == "" {
-		return nil, errors.New("参数不合法")
+		return nil, xerr.NewCodeError(xerr.ParamErr)
 	}
 	res, err := l.svcCtx.UserRpc.UserInfo(l.ctx, &userpb.UserInfoReq{
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 
 	return &types.OthersBaseInfoResp{

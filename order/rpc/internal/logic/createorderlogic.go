@@ -9,7 +9,7 @@ import (
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/common/constant"
 	"zeromall/common/mq"
-
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/order/rpc/internal/model"
 	"zeromall/order/rpc/internal/svc"
@@ -17,8 +17,6 @@ import (
 
 	"github.com/shopspring/decimal"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type CreateOrderLogic struct {
@@ -44,7 +42,7 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "previewOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.FromRpcError(err)
 	}
 	cartMap := make(map[string]*cartPb.PreviewItemVO)
 	for _, v := range cartResp.ItemList {
@@ -56,7 +54,8 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 	})
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "previewOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		//rpc调用者直接返回err
+		return nil, xerr.FromRpcError(err)
 	}
 	goodsMap := make(map[string]*goodsPb.GoodsInfoItem)
 	for _, v := range goodsRes.List {
@@ -132,7 +131,6 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 				l.Logger.Errorf("回滚失败", "unFrozenStockSha", err.Error())
 				continue
 			}
-			return nil, status.Error(codes.Internal, "库存不足")
 		}
 	}
 	//插入三张表 order,order_item,transactionLog
@@ -152,15 +150,15 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 	stockData, err := json.Marshal(stockMsg)
 	if err != nil {
 		l.Logger.Errorf(constant.MarshalErr, "createOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//开启消息事务
 	tx := l.svcCtx.TxProducer.BeginTransaction()
 	//发送半消息,预冻结库存
-	_, err = l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicFrozenStock, stockData, tx)
+	_, err = l.svcCtx.TxProducer.SendWithTransaction(l.ctx, l.svcCtx.Config.RocketMqConf.Topics.TopicTxFrozenStock, stockData, tx)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "createOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//插入三张表 order,order_item,transactionLog
 	num, err := l.svcCtx.OrderModel.TxInsert(l.ctx, orderData, orderItemData)
@@ -168,15 +166,15 @@ func (l *CreateOrderLogic) CreateOrder(in *orderPb.CreateOrderReq) (*orderPb.Cre
 		//回滚
 		_ = tx.RollBack()
 		l.Logger.Errorf(constant.WhereFailed, "createOrder", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//提交后，消费者才能真正收到消息
 	if err := tx.Commit(); err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "commit err", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if num == 0 {
-		l.Logger.Infof("createOrder没有出现错误，但是没有任何行被影响")
+		return nil, xerr.NewCodeError(xerr.CreateOrderErr)
 	}
 	// 发送延迟消息，用于超时关闭订单
 	msg := mq.OrderOffMessage{

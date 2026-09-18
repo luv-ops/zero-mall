@@ -23,7 +23,7 @@ func NewConsumerManager(svc *svc.ServiceContext) (*mq.ConsumerManager, error) {
 	}
 	cg2 := mq.ConsumerConfig{
 		Endpoint:          svc.Config.RocketMqConf.Endpoint,
-		Topic:             svc.Config.RocketMqConf.Topics.TopicPaySuccess,
+		Topic:             svc.Config.RocketMqConf.Topics.TopicTxPaySuccess,
 		ConsumerGroup:     svc.Config.RocketMqConf.Consumer.Group.PaySuccessGroup,
 		AwaitDuration:     svc.Config.RocketMqConf.Consumer.AwaitDuration,
 		MaxMsgNum:         svc.Config.RocketMqConf.Consumer.MaxMsgNum,

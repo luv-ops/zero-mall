@@ -4,13 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/cart/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type BatchGetCartLogic struct {
@@ -33,21 +32,21 @@ func (l *BatchGetCartLogic) BatchGetCart(in *cartPb.BatchGetCartReq) (*cartPb.Ba
 	jsonArr, err := l.svcCtx.Redis.HmgetCtx(l.ctx, key, in.GoodsIds...)
 	if err != nil {
 		l.Logger.Errorf(constant.RedisFailed, "batchGetCart", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	var itemList []*cartPb.PreviewItemVO
 	for idx, goodsId := range in.GoodsIds {
 		jsonStr := jsonArr[idx]
 		if jsonStr == "" {
-			return nil, status.Error(codes.NotFound, "商品已不在购物车中")
+			return nil, xerr.NewCodeError(xerr.GoodsNotInCart)
 		}
 		var item cartPb.CartItemRedis
 		err = json.Unmarshal([]byte(jsonStr), &item)
 		if err != nil {
-			return nil, status.Errorf(codes.Internal, constant.UnmarshalErr, "batchGetCart", err.Error())
+			return nil, xerr.Server()
 		}
 		if item.Selected != 1 {
-			return nil, status.Error(codes.Unavailable, "商品未勾选")
+			return nil, xerr.NewCodeError(xerr.GoodsNotSelected)
 		}
 		//不拿金额，不信任redis存储的金额
 		itemList = append(itemList, &cartPb.PreviewItemVO{

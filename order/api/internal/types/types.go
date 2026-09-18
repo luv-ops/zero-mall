@@ -15,24 +15,7 @@ type CreateOrderResp struct {
 	OrderNo string `json:"orderNo"`
 }
 
-type OrderDetailReq struct {
-	OrderNo string `json:"orderNo"`
-}
-
-type OrderDetailResp struct {
-	OrderNo          string         `json:"orderNo"`
-	Status           int64          `json:"status"` //订单状态码
-	ReceiverName     string         `json:"receiverName"`
-	ReceiverPhone    string         `json:"receiverPhone"`
-	ReceiverAddress  string         `json:"receiverAddress"`
-	Remark           string         `json:"remark"` //用户备注
-	TotalGoodsAmount string         `json:"totalGoodsAmount"`
-	PayAmount        string         `json:"payAmount"`  //用户实际支付金额
-	PayType          int64          `json:"payType"`    //0未选择 1微信 2支付宝
-	CreateTime       int64          `json:"createTime"` //创建时间 毫秒时间戳
-	PayTime          int64          `json:"payTime"`    //支付成功时间，0未支付
-	ExpireTime       int64          `json:"expireTime"` //待支付过期时间
-	ItemList         []*OrderItemVO `json:"itemList"`   //订单商品明细
+type EmptyResp struct {
 }
 
 type OrderItemVO struct {

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"zeromall/common/intercepter"
 	"zeromall/common/mq"
 	"zeromall/order/rpc/internal/config"
 	"zeromall/order/rpc/internal/logic/consumer"
@@ -34,6 +35,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(intercepter.ErrorInterceptor)
 	mgr, err := consumer.NewConsumerManager(ctx)
 	if err != nil {
 		panic(err)
@@ -41,7 +43,7 @@ func main() {
 	checker := txProducer.NewOrderTransactionChecker(ctx)
 	pg := mq.ProducerConfig{
 		Endpoint: c.RocketMqConf.Endpoint,
-		Topics:   []string{c.RocketMqConf.Topics.TopicFrozenStock},
+		Topics:   []string{c.RocketMqConf.Topics.TopicTxFrozenStock},
 	}
 	txPro, err := mq.NewTxProducer(&pg, checker)
 	if err != nil {

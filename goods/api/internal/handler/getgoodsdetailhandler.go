@@ -5,13 +5,11 @@ package handler
 
 import (
 	"net/http"
-	"zeromall/common/Res"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zeromall/goods/api/internal/logic"
 	"zeromall/goods/api/internal/svc"
 	"zeromall/goods/api/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func GetGoodsDetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -24,6 +22,10 @@ func GetGoodsDetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewGetGoodsDetailLogic(r.Context(), svcCtx)
 		resp, err := l.GetGoodsDetail(&req)
-		Res.Response(r, w, resp, err)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

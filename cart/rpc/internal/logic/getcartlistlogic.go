@@ -6,11 +6,10 @@ import (
 	"zeromall/cart/rpc/cartPb"
 	"zeromall/cart/rpc/internal/svc"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GetCartListLogic struct {
@@ -33,7 +32,7 @@ func (l *GetCartListLogic) GetCartList(in *cartPb.GetCartListReq) (*cartPb.GetCa
 	//获取redis
 	redisMap, err := l.svcCtx.Redis.HgetallCtx(l.ctx, key)
 	if err != nil {
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	var list []*cartPb.CartItem
 	if len(redisMap) == 0 {

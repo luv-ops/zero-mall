@@ -5,13 +5,11 @@ package handler
 
 import (
 	"net/http"
-	"zeromall/common/Res"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zeromall/cart/api/internal/logic"
 	"zeromall/cart/api/internal/svc"
 	"zeromall/cart/api/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func BatchDeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -23,7 +21,11 @@ func BatchDeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewBatchDeleteLogic(r.Context(), svcCtx)
-		err := l.BatchDelete(&req)
-		Res.Response(r, w, nil, err)
+		resp, err := l.BatchDelete(&req)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

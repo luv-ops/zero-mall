@@ -5,8 +5,8 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"zeromall/cart/rpc/cartPb"
+	"zeromall/common/xerr"
 
 	"zeromall/cart/api/internal/svc"
 	"zeromall/cart/api/internal/types"
@@ -28,19 +28,16 @@ func NewAddCartLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddCartLo
 	}
 }
 
-func (l *AddCartLogic) AddCart(req *types.AddCartReq) error {
+func (l *AddCartLogic) AddCart(req *types.AddCartReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(string)
-	res, err := l.svcCtx.CartRpc.AddCart(l.ctx, &cartPb.AddCartReq{
+	_, err = l.svcCtx.CartRpc.AddCart(l.ctx, &cartPb.AddCartReq{
 		UserId:  userId,
 		GoodsId: req.GoodsId,
 		AddNum:  req.AddNum,
 	})
 	if err != nil {
-		return err
+		return nil, xerr.FromRpcError(err)
 	}
-	if !res.Ok {
-		return errors.New("添加至购物车失败")
-	}
-	return nil
+	return nil, nil
 }

@@ -35,6 +35,9 @@ type ChangeInfoReq struct {
 	Region   *int64  `json:"region,optional,omitempty"`
 }
 
+type EmptyResp struct {
+}
+
 type GetReceiveAddressResp struct {
 	List []*AddressItem `json:"list"`
 }

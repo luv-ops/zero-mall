@@ -8,6 +8,8 @@ info (
 	version: "type version here"
 )
 
+type EmptyResp {}
+
 type RegisterReq {
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
@@ -117,7 +119,7 @@ service user {
 	get /userInfo returns (UserInfoResp)
 
 	@handler changeInfo
-	patch /userInfo (ChangeInfoReq)
+	patch /userInfo (ChangeInfoReq) returns (EmptyResp)
 
 	@handler getRegion
 	get /region (GetRegionReq) returns (GetRegionResp)
@@ -126,7 +128,7 @@ service user {
 	get /user/:userId (OthersBaseInfoReq) returns (OthersBaseInfoResp)
 
 	@handler addReceiveAddress
-	post /address/receive (AddReceiveAddressReq)
+	post /address/receive (AddReceiveAddressReq) returns (EmptyResp)
 
 	@handler getReceiveAddress
 	get /address/receive returns (GetReceiveAddressResp)

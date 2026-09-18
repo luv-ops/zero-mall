@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/userpb"
 
 	"zeromall/user/api/internal/svc"
@@ -32,12 +32,9 @@ func (l *GetUserInfoLogic) GetUserInfo() (resp *types.UserInfoResp, err error) {
 	// todo: add your logic here and delete this line
 	//解析token
 	userId := l.ctx.Value("userId").(string)
-	if userId == "" {
-		return nil, errors.New("请输入正确的用户id")
-	}
 	res, err := l.svcCtx.UserRpc.UserInfo(l.ctx, &userpb.UserInfoReq{UserId: userId})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	return &types.UserInfoResp{
 		UserId:   res.UserId,

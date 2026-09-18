@@ -5,7 +5,7 @@ package logic
 
 import (
 	"context"
-	"errors"
+	"zeromall/common/xerr"
 	"zeromall/order/rpc/orderPb"
 
 	"zeromall/order/api/internal/svc"
@@ -28,18 +28,15 @@ func NewPayOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PayOrder
 	}
 }
 
-func (l *PayOrderLogic) PayOrder(req *types.PayOrderReq) error {
+func (l *PayOrderLogic) PayOrder(req *types.PayOrderReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(string)
-	res, err := l.svcCtx.OrderRpc.PayOrder(l.ctx, &orderPb.OrderPayReq{
+	_, err = l.svcCtx.OrderRpc.PayOrder(l.ctx, &orderPb.OrderPayReq{
 		UserId:  userId,
 		OrderNo: req.OrderNo,
 	})
 	if err != nil {
-		return err
+		return nil, xerr.FromRpcError(err)
 	}
-	if res.Ok == false {
-		return errors.New("支付失败")
-	}
-	return nil
+	return nil, nil
 }

@@ -5,6 +5,7 @@ package logic
 
 import (
 	"context"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/userpb"
 
 	"zeromall/user/api/internal/svc"
@@ -32,7 +33,7 @@ func (l *GetReceiveAddressLogic) GetReceiveAddress() (resp *types.GetReceiveAddr
 	userId := l.ctx.Value("userId").(string)
 	res, err := l.svcCtx.UserRpc.GetReceiveAddress(l.ctx, &userpb.GetReceiveAddressReq{UserId: userId})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	var list []*types.AddressItem
 	for _, v := range res.List {

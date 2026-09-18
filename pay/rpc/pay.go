@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"zeromall/common/intercepter"
 	"zeromall/common/mq"
 	"zeromall/pay/rpc/internal/logic/txProducer"
 
@@ -34,9 +35,10 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(intercepter.ErrorInterceptor)
 	pg := mq.ProducerConfig{
 		Endpoint: c.RocketMqConf.Endpoint,
-		Topics:   []string{c.RocketMqConf.Topics.TopicPaySuccess},
+		Topics:   []string{c.RocketMqConf.Topics.TopicTxPaySuccess},
 	}
 	checker := txProducer.NewPayTransactionChecker(ctx)
 	txPro, err := mq.NewTxProducer(&pg, checker)

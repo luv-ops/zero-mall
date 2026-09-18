@@ -7,12 +7,11 @@ import (
 	"errors"
 	"zeromall/common/constant"
 	"zeromall/common/convert"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/goods/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GetGoodsDetailLogic struct {
@@ -38,12 +37,12 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 	//查询到redis
 	if err == nil {
 		if val == constant.RedisEmptyValue {
-			return nil, status.Error(codes.NotFound, "商品不存在")
+			return nil, xerr.NewCodeError(xerr.NotFound)
 		} else if val != "" {
 			err = json.Unmarshal([]byte(val), &detail)
 			if err != nil {
 				l.Logger.Errorf(constant.UnmarshalErr, "getGoodsDetail", err)
-				return nil, status.Error(codes.Internal, constant.MiddlewareError)
+				return nil, xerr.Server()
 			}
 			return &detail, nil
 		}
@@ -55,10 +54,10 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 			//缓存空值，设置ttl 5分钟较短
 			_ = l.svcCtx.Redis.SetexCtx(l.ctx, key, constant.RedisEmptyValue, constant.ShortTTL)
 
-			return nil, status.Error(codes.NotFound, constant.GoodsNotFound)
+			return nil, xerr.NewCodeError(xerr.NotFound)
 		}
 		l.Logger.Errorf(constant.MysqlFailed, "getGoodsDetail ", "select", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 
 	detail = goodsPb.GoodsDetailResp{
@@ -74,7 +73,7 @@ func (l *GetGoodsDetailLogic) GetGoodsDetail(in *goodsPb.GoodsDetailReq) (*goods
 	jsonStr, err := json.Marshal(&detail)
 	if err != nil {
 		l.Logger.Errorf(constant.MarshalErr, "getGoodsDetail ", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	//写回redis
 	err = l.svcCtx.Redis.SetexCtx(l.ctx, key, string(jsonStr), constant.LongTTL)

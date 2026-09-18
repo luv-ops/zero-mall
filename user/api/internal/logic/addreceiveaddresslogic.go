@@ -5,9 +5,8 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"zeromall/common/Regx"
-	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/userpb"
 
 	"zeromall/user/api/internal/svc"
@@ -30,14 +29,14 @@ func NewAddReceiveAddressLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 	}
 }
 
-func (l *AddReceiveAddressLogic) AddReceiveAddress(req *types.AddReceiveAddressReq) error {
+func (l *AddReceiveAddressLogic) AddReceiveAddress(req *types.AddReceiveAddressReq) (resp *types.EmptyResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(string)
 	//校验手机号
 	if !Regx.IsValidPhone(req.ReceivePhone) {
-		return errors.New(constant.PhoneIllegal)
+		return nil, xerr.NewCodeError(xerr.PhoneIllegal)
 	}
-	resp, err := l.svcCtx.UserRpc.AddRecAddress(l.ctx, &userpb.AddReceiveAddressReq{
+	_, err = l.svcCtx.UserRpc.AddRecAddress(l.ctx, &userpb.AddReceiveAddressReq{
 		UserId:       userId,
 		ReceiveName:  req.ReceiveName,
 		ReceivePhone: req.ReceivePhone,
@@ -46,11 +45,8 @@ func (l *AddReceiveAddressLogic) AddReceiveAddress(req *types.AddReceiveAddressR
 		IsDefault:    req.IsDefault,
 	})
 	if err != nil {
-		l.Logger.Errorf("AddReceiveAddress err:%v", err)
-		return err
+		return nil, xerr.FromRpcError(err)
 	}
-	if !resp.Ok {
-		return errors.New("新增收货地址失败")
-	}
-	return nil
+
+	return nil, nil
 }

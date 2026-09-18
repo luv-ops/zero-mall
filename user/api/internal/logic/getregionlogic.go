@@ -5,9 +5,11 @@ package logic
 
 import (
 	"context"
+	"zeromall/common/xerr"
+	"zeromall/user/rpc/userpb"
+
 	"zeromall/user/api/internal/svc"
 	"zeromall/user/api/internal/types"
-	"zeromall/user/rpc/userpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +35,7 @@ func (l *GetRegionLogic) GetRegion(req *types.GetRegionReq) (resp *types.GetRegi
 		Pid:   req.PId,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.FromRpcError(err)
 	}
 	var list []*types.RegionItem
 	for _, item := range res.List {

@@ -3,13 +3,12 @@ package logic
 import (
 	"context"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/goods/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type OnOffGoodsLogic struct {
@@ -33,7 +32,7 @@ func (l *OnOffGoodsLogic) OnOffGoods(in *goodsPb.OnOffGoodsReq) (*goodsPb.OnOffG
 	num, err := l.svcCtx.GoodsModel.UpdateFields(l.ctx, in.GoodsId, dataMap)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "onOffGoods", "update", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 
 	return &goodsPb.OnOffGoodsResp{

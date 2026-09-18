@@ -5,13 +5,11 @@ package handler
 
 import (
 	"net/http"
-	"zeromall/common/Res"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zeromall/user/api/internal/logic"
 	"zeromall/user/api/internal/svc"
 	"zeromall/user/api/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func registerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -24,6 +22,10 @@ func registerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewRegisterLogic(r.Context(), svcCtx)
 		resp, err := l.Register(&req)
-		Res.Response(r, w, resp, err)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

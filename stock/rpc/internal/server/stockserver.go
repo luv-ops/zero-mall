@@ -23,11 +23,6 @@ func NewStockServer(svcCtx *svc.ServiceContext) *StockServer {
 	}
 }
 
-func (s *StockServer) InsertStock(ctx context.Context, in *stockPb.InsertStockReq) (*stockPb.InsertStockResp, error) {
-	l := logic.NewInsertStockLogic(ctx, s.svcCtx)
-	return l.InsertStock(in)
-}
-
 func (s *StockServer) GetStock(ctx context.Context, in *stockPb.GetStockReq) (*stockPb.GetStockResp, error) {
 	l := logic.NewGetStockLogic(ctx, s.svcCtx)
 	return l.GetStock(in)

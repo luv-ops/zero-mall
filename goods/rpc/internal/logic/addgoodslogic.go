@@ -7,14 +7,13 @@ import (
 	"zeromall/common/constant"
 	"zeromall/common/convert"
 	"zeromall/common/mq"
+	"zeromall/common/xerr"
 	"zeromall/goods/rpc/goodsPb"
 	"zeromall/goods/rpc/internal/model"
 	"zeromall/goods/rpc/internal/svc"
 
 	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type AddGoodsLogic struct {
@@ -47,7 +46,7 @@ func (l *AddGoodsLogic) AddGoods(in *goodsPb.AddGoodsReq) (*goodsPb.AddGoodsResp
 	result, err := l.svcCtx.GoodsModel.Insert(l.ctx, &goods)
 	if err != nil {
 		l.Logger.Errorf(constant.MysqlFailed, "addFoods", "insert", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	num, _ := result.RowsAffected()
 	//库存已从goods表移除，发送一条消息，插入库存
@@ -59,14 +58,17 @@ func (l *AddGoodsLogic) AddGoods(in *goodsPb.AddGoodsReq) (*goodsPb.AddGoodsResp
 	data, err := json.Marshal(msg)
 	if err != nil {
 		l.Logger.Errorf(constant.MarshalErr, "addFoods", "jsonMarshal", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	err = l.svcCtx.Producer.Send(l.ctx, l.svcCtx.Config.RocketMQConf.Topics.TopicInsertStock, data)
 	if err != nil {
 		l.Logger.Errorf(constant.WhereFailed, "addFoods", "send", err.Error())
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
+	}
+	if num == 0 {
+		return nil, xerr.NewCodeError(xerr.AddGoodsErr)
 	}
 	return &goodsPb.AddGoodsResp{
-		Ok: num > 0,
+		Ok: true,
 	}, nil
 }

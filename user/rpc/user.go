@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
+	"zeromall/common/intercepter"
 	"zeromall/user/rpc/internal/config"
 	"zeromall/user/rpc/internal/server"
 	"zeromall/user/rpc/internal/svc"
@@ -32,6 +32,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(intercepter.ErrorInterceptor)
 	defer func() {
 		_ = ctx.Producer.Stop()
 		s.Stop()

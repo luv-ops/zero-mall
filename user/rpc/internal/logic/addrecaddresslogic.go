@@ -2,16 +2,14 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"zeromall/common/constant"
+	"zeromall/common/xerr"
 	"zeromall/user/rpc/internal/model"
 
 	"zeromall/user/rpc/internal/svc"
 	"zeromall/user/rpc/userpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type AddRecAddressLogic struct {
@@ -33,15 +31,15 @@ func (l *AddRecAddressLogic) AddRecAddress(in *userpb.AddReceiveAddressReq) (*us
 	//先根据addressId查地区是否是3级地区
 	ok, err := l.svcCtx.AreaModel.AreaLevel3IsExist(l.ctx, in.AddressId)
 	if err != nil {
-		return nil, err
+		return nil, xerr.Server()
 	}
 	if !ok {
-		return nil, errors.New("非3级地区")
+		return nil, xerr.NewCodeError(xerr.ParamErr)
 	}
 	//先查询一次收货地址表，判断是否用户已经有收货地址，如果没有将第一条插入的is_default设置为1
 	exist, err := l.svcCtx.RecAddressModel.ExistReceiveAddr(l.ctx, in.UserId)
 	if err != nil {
-		return nil, err
+		return nil, xerr.Server()
 	}
 	if !exist {
 		in.IsDefault = 1
@@ -57,7 +55,7 @@ func (l *AddRecAddressLogic) AddRecAddress(in *userpb.AddReceiveAddressReq) (*us
 	})
 	if err != nil {
 		l.Logger.Errorf("AddRecAddress Insert err:%v", err)
-		return nil, status.Error(codes.Internal, constant.MiddlewareError)
+		return nil, xerr.Server()
 	}
 	if in.IsDefault == 1 {
 		key := constant.DefaultReceiveArea + in.UserId
@@ -67,7 +65,10 @@ func (l *AddRecAddressLogic) AddRecAddress(in *userpb.AddReceiveAddressReq) (*us
 			l.Logger.Errorf("AddRecAddress DelCtx err:%v", err)
 		}
 	}
+	if num == 0 {
+		l.Logger.Infof("AddRecAddress Insert success but no row was affected")
+	}
 	return &userpb.AddReceiveAddressResp{
-		Ok: num > 0,
+		Ok: true,
 	}, nil
 }
